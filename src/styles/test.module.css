@@ -1,0 +1,13 @@
+.test {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10rem;
+}
+
+.test_input {
+  margin: 10px 0px;
+}
+.test_button {
+  margin: 10px 0px;
+  margin-left: 8rem;
+}
