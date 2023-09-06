@@ -3,6 +3,10 @@
   flex-direction: column;
   margin-left: 10rem;
 }
+.test_div {
+  display: flex;
+  flex-direction: column;
+}
 
 .test_input {
   margin: 10px 0px;

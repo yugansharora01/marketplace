@@ -1,17 +1,51 @@
 import mongoose from "mongoose";
 
+const NFTSchema = new mongoose.Schema({
+  Details: {
+    type: String,
+    required: true,
+  },
+  Stats: {
+    type: String,
+    required: true,
+  },
+  Traits: {
+    type: String,
+    required: true,
+  },
+  Count: {
+    type: Number,
+    required: true,
+  },
+  Description: String,
+  CreatedAt: {
+    type: Date,
+  },
+});
+
 const collectionsSchema = new mongoose.Schema({
-  collectionName: {
+  CollectionName: {
     type: String,
     required: [true, "Please provide a Collection Name"],
   },
-  author: {
+  Description: {
     type: String,
-    required: [true, "Please provide a Collection Owner"],
+  },
+  Chain: {
+    type: String,
+    required: [true, "Please provide a chain"],
+  },
+  TotalVolume: {
+    type: Number,
   },
   NFTs: {
-    type: String,
+    type: [NFTSchema],
     required: [true, "Collection cannot be empty"],
+  },
+  CreatedAt: {
+    type: Date,
+    default: () => Date.now(),
+    immutable: true,
   },
 });
 
