@@ -5,6 +5,7 @@ import axios from "axios";
 
 const test = () => {
   const [NFT, setNFT] = useState({
+    Name: "",
     Details: "",
     Stats: "",
     Traits: "",
@@ -103,6 +104,16 @@ const test = () => {
       </div>
       <div className={Style.test_div}>
         <h1>NFTs</h1>
+        <div className={Style.test_input}>
+          <label>Name</label>
+          <input
+            id="NFTName"
+            type="text"
+            value={NFT.Name}
+            onChange={(e) => setNFT({ ...NFT, Name: e.target.value })}
+            placeholder="NFT Name"
+          />
+        </div>
         <div className={Style.test_input}>
           <label>Details</label>
           <input
