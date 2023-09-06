@@ -12,7 +12,7 @@ export async function POST(request) {
     const { CollectionName, Description, Chain, TotalVolume, CreatedAt, NFTs } =
       reqBody;
 
-    console.log(NFTs);
+    console.log(reqBody);
 
     //check if user exists
     const collection = await Collections.findOne({ CollectionName });
@@ -20,28 +20,35 @@ export async function POST(request) {
     if (collection) {
       return NextResponse.json({ error: "Collection exists" }, { status: 400 });
     }
-    let NFTarray = [];
-    //Creating the NFTs
-    for (const ele of NFTs) {
-      const newNFT = new NFTsModel({
-        Name: ele.Name,
-        Details: ele.Details,
-        Stats: ele.Stats,
-        Traits: ele.Traits,
-        Count: ele.Count,
-        Description: ele.Description,
-        CreatedAt: ele.CreatedAt,
-      });
 
-      await newNFT.save();
-      let { _id } = newNFT;
-      NFTarray.push(_id);
+    try {
+      let NFTarray = [];
 
-      console.log("NFT saved:");
-      console.log(newNFT);
+      //Creating the NFTs
+      for (const ele of NFTs) {
+        const newNFT = new NFTsModel({
+          Name: ele.Name,
+          Details: ele.Details,
+          Stats: ele.Stats,
+          Traits: ele.Traits,
+          Count: ele.Count,
+          Description: ele.Description,
+          CreatedAt: ele.CreatedAt,
+        });
+
+        await newNFT.save();
+        let { _id } = newNFT;
+        NFTarray.push(_id);
+
+        console.log("NFT saved:");
+        console.log(newNFT);
+      }
+    } catch (error) {
+      return NextResponse.json(
+        { error: "NFT error " + error.message },
+        { status: 502 }
+      );
     }
-
-    console.log(NFTarray);
 
     for (const NFTid of NFTarray) {
       const exists = await NFTsModel.findOne({ _id: NFTid });
@@ -61,12 +68,8 @@ export async function POST(request) {
       NFTs: NFTarray,
     });
 
-    console.log("Before save");
-    console.log(newCollection);
-
     const Collection = await newCollection.save();
 
-    console.log("after save");
     console.log(Collection);
 
     NFTarray = [];

@@ -19,7 +19,7 @@ const collectionsSchema = new mongoose.Schema({
   NFTs: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "NFTsModel",
+      ref: "nfts",
     },
   ],
   CreatedAt: {

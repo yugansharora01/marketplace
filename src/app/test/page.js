@@ -30,13 +30,13 @@ const test = () => {
       console.log(collection);
       const response = await axios.post("/api/Collections", collection);
       console.log("Success submission " + response.data);
-      collection.NFTs = [];
     } catch (error) {
       console.log("Collection submit failed " + error.response.data);
       console.log(error.response);
     } finally {
       setLoading(false);
     }
+    collection.NFTs = [];
   };
 
   return (

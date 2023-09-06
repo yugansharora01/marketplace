@@ -1,20 +1,49 @@
 import mongoose from "mongoose";
 
+const DetailsSchema = new mongoose.Schema({
+  ContractAddress: {
+    type: String,
+    required: true,
+  },
+  TokenID: {
+    type: String,
+    required: true,
+  },
+  TokenStandard: {
+    type: String,
+    required: true,
+  },
+  Chain: {
+    type: String,
+    required: true,
+  },
+  Metadata: {
+    type: String,
+    required: true,
+  },
+  LastUpdated: {
+    type: Date,
+    required: true,
+  },
+});
+
 const NFTSchema = new mongoose.Schema({
   Name: {
     type: String,
     required: true,
   },
   Details: {
-    type: String,
+    type: DetailsSchema,
     required: true,
   },
   Stats: {
-    type: String,
+    type: Map,
+    of: String,
     required: true,
   },
   Traits: {
-    type: String,
+    type: Map,
+    of: String,
     required: true,
   },
   Count: {
