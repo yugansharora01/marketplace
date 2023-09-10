@@ -14,16 +14,13 @@ const DropZone = ({
   itemName,
   website,
   description,
-  royalties,
-  fileSize,
-  category,
-  properties,
   image,
 }) => {
   const [fileUrl, setFileUrl] = useState(null);
 
   const onDrop = useCallback(async (acceptedFile) => {
     setFileUrl(acceptedFile[0]);
+    console.log(acceptedFile[0]);
   });
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -78,25 +75,6 @@ const DropZone = ({
                 <p>
                   <span>Description</span>
                   {description || ""}
-                </p>
-              </div>
-
-              <div className={Style.DropZone_box_aside_box_preview_three}>
-                <p>
-                  <span>Royalties</span>
-                  {royalties || ""}
-                </p>
-                <p>
-                  <span>FileSize</span>
-                  {fileSize || ""}
-                </p>
-                <p>
-                  <span>Properties</span>
-                  {properties || ""}
-                </p>
-                <p>
-                  <span>Category</span>
-                  {category || ""}
                 </p>
               </div>
             </div>

@@ -15,6 +15,8 @@ const test = () => {
 
   const [collection, setCollection] = useState({
     CollectionName: "",
+    BannerImage: "",
+    ProfileImage: "",
     Description: "",
     Chain: "",
     TotalVolume: 0,

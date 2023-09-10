@@ -1,11 +1,38 @@
 "use client";
 import React from "react";
+import images from "../../../img";
 
 //INTERNAL IMPORT
 import Style from "../../styles/upload-nft.module.css";
 import { UploadNFT } from "../../UploadNFT/uploadNFTIndex";
 
 const uploadNFT = () => {
+  const collectionArray = [
+    {
+      image: images.nft_image_1,
+      category: "Sports",
+    },
+    {
+      image: images.nft_image_2,
+      category: "Arts",
+    },
+    {
+      image: images.nft_image_3,
+      category: "Music",
+    },
+    {
+      image: images.nft_image_1,
+      category: "Digital",
+    },
+    {
+      image: images.nft_image_2,
+      category: "Time",
+    },
+    {
+      image: images.nft_image_3,
+      category: "Photography",
+    },
+  ];
   return (
     <div className={Style.uploadNFT}>
       <div className={Style.uploadNFT_box}>
@@ -26,7 +53,7 @@ const uploadNFT = () => {
         </div>
 
         <div className={Style.uploadNFT_box_form}>
-          <UploadNFT />
+          <UploadNFT collectionArray={collectionArray} />
         </div>
       </div>
     </div>

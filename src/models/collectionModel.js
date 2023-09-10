@@ -6,11 +6,25 @@ const collectionsSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide a Collection Name"],
   },
+  Owner: {
+    type: String,
+    required: [true, "No Owner Found"],
+  },
+  BannerImage: {
+    type: String,
+  },
+  ProfileImage: {
+    type: String,
+  },
   Description: {
+    type: String,
+  },
+  Category: {
     type: String,
   },
   Chain: {
     type: String,
+    default: "Ethereum",
     required: [true, "Please provide a chain"],
   },
   TotalVolume: {
