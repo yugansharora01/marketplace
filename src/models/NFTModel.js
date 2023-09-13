@@ -11,7 +11,7 @@ const DetailsSchema = new mongoose.Schema({
   },
   TokenStandard: {
     type: String,
-    required: true,
+    default: "ERC-20",
   },
   Chain: {
     type: String,

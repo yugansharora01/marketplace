@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { MdOutlineHttp, MdOutlineAttachFile } from "react-icons/md";
-import { FaPercent } from "react-icons/fa";
-import { AiTwotonePropertySafety } from "react-icons/ai";
+import { MdOutlineHttp } from "react-icons/md";
 import { TiTick } from "react-icons/ti";
 import Image from "next/image";
 
@@ -12,8 +10,9 @@ import formStyle from "../AccountPage/Form/Form.module.css";
 import images from "../../img";
 import { Button } from "../component/componentindex";
 import { DropZone } from "./uploadNFTIndex.js";
+import axios from "axios";
 
-const UploadNFT = ({ collectionArray }) => {
+const UploadNFT = ({ collectionArray, setId }) => {
   const [active, setActive] = useState(0);
   const [itemName, setItemName] = useState("");
   const [website, setWebsite] = useState("");
@@ -22,6 +21,41 @@ const UploadNFT = ({ collectionArray }) => {
   const [fileSize, setFileSize] = useState("");
   const [category, setCategory] = useState(0);
   const [properties, setProperties] = useState("");
+  const [fileUrl, setFileUrl] = useState(null);
+  const [file, setFile] = useState(null);
+  const [file1, setFile1] = useState(null);
+  const [selectedId, setSelectedId] = useState("");
+  const [nftData, setNftData] = useState({
+    Name: "",
+    Details: {
+      ContractAddress: "",
+      TokenID: "",
+      TokenStandard: "ERC-20",
+      Chain: "",
+      Metadata: "",
+      LastUpdated: Date.now(),
+    },
+    Stats: {},
+    Traits: {},
+    Count: 0,
+    Description: "",
+    CreatedAt: Date.now(),
+  });
+
+  const OnUpload = async () => {
+    try {
+      console.log("file:" + file);
+      console.log(file);
+      const response = await axios.post("/api/NFTs", { file, fileUrl });
+      console.log("Success upload " + response.data);
+    } catch (error) {
+      console.log("File upload failed " + error);
+      console.log(error);
+    } finally {
+    }
+    console.log("fileUrl");
+    console.log(fileUrl);
+  };
 
   return (
     <div className={Style.upload}>
@@ -37,6 +71,11 @@ const UploadNFT = ({ collectionArray }) => {
         category={category}
         properties={properties}
         image={images.upload}
+        fileUrl={fileUrl}
+        setFileUrl={setFileUrl}
+        file={file}
+        setFile={setFile}
+        setFile1={setFile1}
       />
 
       <div className={Style.upload_box}>
@@ -51,7 +90,7 @@ const UploadNFT = ({ collectionArray }) => {
         </div>
 
         <div className={formStyle.Form_box_input}>
-          <label htmlFor="website">Website</label>
+          <label htmlFor="website">MetaData</label>
           <div className={formStyle.Form_box_input_box}>
             <div className={formStyle.Form_box_input_box_icon}>
               <MdOutlineHttp />
@@ -109,6 +148,7 @@ const UploadNFT = ({ collectionArray }) => {
                       alt="background image"
                       width={70}
                       height={70}
+                      onClick={() => setSelectedId(el.id)}
                       className={Style.upload_box_slider_box_img_img}
                     />
                   </div>
@@ -125,7 +165,7 @@ const UploadNFT = ({ collectionArray }) => {
         <div className={Style.upload_box_btn}>
           <Button
             btnName="Upload"
-            handleClick={() => {}}
+            handleClick={OnUpload}
             classStyle={Style.upload_box_btn_style}
           />
           <Button

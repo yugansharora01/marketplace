@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 
@@ -15,12 +15,14 @@ const DropZone = ({
   website,
   description,
   image,
+  fileUrl,
+  setFileUrl,
+  setFile,
 }) => {
-  const [fileUrl, setFileUrl] = useState(null);
-
   const onDrop = useCallback(async (acceptedFile) => {
-    setFileUrl(acceptedFile[0]);
-    console.log(acceptedFile[0]);
+    setFileUrl(URL.createObjectURL(acceptedFile[0]));
+    setFile(acceptedFile[0]);
+    console.log(URL.createObjectURL(acceptedFile[0]));
   });
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -52,12 +54,7 @@ const DropZone = ({
       {fileUrl && (
         <aside className={Style.DropZone_box_aside}>
           <div className={Style.DropZone_box_aside_box}>
-            <Image
-              src={images.nft_image_1}
-              alt="nft image"
-              width={200}
-              height={200}
-            />
+            <Image src={fileUrl} alt="nft image" width={200} height={200} />
 
             <div className={Style.DropZone_box_aside_box_preview}>
               <div className={Style.DropZone_box_aside_box_preview_one}>

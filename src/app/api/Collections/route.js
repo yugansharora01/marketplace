@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { connect } from "@/dbConfig/dbConfig";
 import Collections from "@/models/collectionModel";
+import { Router, useRouter } from "next/navigation";
 import NFTsModel from "@/models/NFTModel";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -56,4 +57,20 @@ export async function POST(request) {
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 501 });
   }
+}
+
+export async function GET(request) {
+  const owner = request.nextUrl.searchParams.get("Owner");
+  const collections = await Collections.find({ Owner: owner });
+  console.log(collections);
+  return NextResponse.json(
+    {
+      message: "Collection created successfully",
+      data: collections,
+      success: true,
+    },
+    {
+      status: 200,
+    }
+  );
 }

@@ -1,38 +1,46 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import images from "../../../img";
 
 //INTERNAL IMPORT
 import Style from "../../styles/upload-nft.module.css";
 import { UploadNFT } from "../../UploadNFT/uploadNFTIndex";
+import axios from "axios";
 
 const uploadNFT = () => {
-  const collectionArray = [
-    {
-      image: images.nft_image_1,
-      category: "Sports",
-    },
-    {
-      image: images.nft_image_2,
-      category: "Arts",
-    },
-    {
-      image: images.nft_image_3,
-      category: "Music",
-    },
-    {
-      image: images.nft_image_1,
-      category: "Digital",
-    },
-    {
-      image: images.nft_image_2,
-      category: "Time",
-    },
-    {
-      image: images.nft_image_3,
-      category: "Photography",
-    },
-  ];
+  const [collectionArray, setCollectionArray] = useState([]);
+
+  useEffect(() => {
+    const GetCollections = async () => {
+      try {
+        const res = await axios.get("/api/Collections", {
+          params: {
+            Owner: "MetaRivals",
+          },
+        });
+        console.log(res.data.data);
+
+        res.data.data.forEach((ele) => {
+          console.log(ele);
+          const newData = {
+            image: ele.BannerImage,
+            category: "LOL",
+            id: ele._id,
+          };
+          setCollectionArray((oldArray) => [...oldArray, newData]);
+        });
+
+        console.log("Success retrieval " + res.data);
+      } catch (error) {
+        console.log("Collection retrieval failed " + error);
+        console.log(error.response);
+      } finally {
+        console.log(collectionArray);
+      }
+    };
+    GetCollections();
+  }, []);
+
   return (
     <div className={Style.uploadNFT}>
       <div className={Style.uploadNFT_box}>

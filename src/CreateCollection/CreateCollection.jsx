@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineHttp, MdOutlineAttachFile } from "react-icons/md";
 import Image from "next/image";
 import axios from "axios";
@@ -13,12 +13,18 @@ import { DropZone } from "./CreateCollectionIndex.js";
 
 const CreateCollection = () => {
   const [loading, setLoading] = useState(false);
+  const [BannerImage, setBannerImage] = useState("");
+  const [ProfileImage, setProfileImage] = useState("");
+  const [BannerImageUrl, setBannerImageUrl] = useState("");
+  const [ProfileImageUrl, setProfileImageUrl] = useState("");
 
   const [collection, setCollection] = useState({
     CollectionName: "",
     Owner: "MetaRivals",
-    BannerImage: "Banner",
-    ProfileImage: "Profile",
+    BannerImage:
+      "https://ivory-possible-rooster-796.mypinata.cloud/ipfs/QmUwck5p9khT4iYXiWmNZzvb3TAQU46Lyt69aaUwFPiNnm?_gl=1*ka6i6f*_ga*MTEzMjkxNjA4NS4xNjk0NDQ4OTkz*_ga_5RMPXG14TE*MTY5NDYyMTc4NS42LjEuMTY5NDYyMTc4OC41Ny4wLjA.",
+    ProfileImage:
+      "https://ivory-possible-rooster-796.mypinata.cloud/ipfs/Qmab7dNcGwkvYN2rasWd2v5MSiFajb5YcLwLyxTgCQWx1k?_gl=1*ka6i6f*_ga*MTEzMjkxNjA4NS4xNjk0NDQ4OTkz*_ga_5RMPXG14TE*MTY5NDYyMTc4NS42LjEuMTY5NDYyMTc4OC41Ny4wLjA.",
     Category: "",
     Description: "",
     Chain: "Ethereum",
@@ -26,6 +32,18 @@ const CreateCollection = () => {
     TotalVolume: 0,
     CreatedAt: Date.now(),
   });
+
+  // useEffect(() => {
+  //   setCollection({ ...collection, BannerImage: BannerImage });
+  //   console.log(collection.BannerImage);
+  //   console.log(BannerImage);
+  // }, [BannerImage]);
+
+  // useEffect(() => {
+  //   setCollection({ ...collection, ProfileImage: ProfileImage });
+  //   console.log(collection.ProfileImage);
+  //   console.log(ProfileImage);
+  // }, [ProfileImage]);
 
   const OnCreate = async () => {
     try {
@@ -43,37 +61,33 @@ const CreateCollection = () => {
   return (
     <div className={Style.upload}>
       <div className={Style.upload_banner}>
-        <h3>Banner Image</h3>
-        <p>
-          File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG,
-          GLB, GLTF. Max size: 100 MB
-        </p>
-        <DropZone
-          title="JPG, PNG, WEBM , MAX 100MB"
-          heading="Drag & drop file"
-          subHeading="or Browse media on your device"
-          itemName={collection.CollectionName}
-          website={collection.Website}
-          description={collection.Description}
-          image={images.upload}
-        />
+        <div className={formStyle.Form_box_input}>
+          <label htmlFor="nft">Banner Image IPFS link</label>
+          <input
+            type="text"
+            placeholder="Banner Image"
+            value={collection.BannerImage}
+            className={formStyle.Form_box_input_userName}
+            onChange={(e) =>
+              setCollection({ ...collection, BannerImage: e.target.value })
+            }
+          />
+        </div>
       </div>
 
       <div className={Style.upload_profile}>
-        <h3>Profile Image</h3>
-        <p>
-          File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG,
-          GLB, GLTF. Max size: 100 MB
-        </p>
-        <DropZone
-          title="JPG, PNG, WEBM , MAX 100MB"
-          heading="Drag & drop file"
-          subHeading="or Browse media on your device"
-          itemName={collection.CollectionName}
-          website={collection.Website}
-          description={collection.Description}
-          image={images.upload}
-        />
+        <div className={formStyle.Form_box_input}>
+          <label htmlFor="nft">Profile Image IPFS link</label>
+          <input
+            type="text"
+            placeholder="Profile Image"
+            value={collection.ProfileImage}
+            className={formStyle.Form_box_input_userName}
+            onChange={(e) =>
+              setCollection({ ...collection, ProfileImage: e.target.value })
+            }
+          />
+        </div>
       </div>
 
       <div className={Style.upload_box}>

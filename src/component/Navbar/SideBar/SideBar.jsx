@@ -36,6 +36,10 @@ const SideBar = ({ setOpenSideMenu }) => {
       link: "author-profile",
     },
     {
+      name: "Create Collection",
+      link: "Create-Collection",
+    },
+    {
       name: "NFT Details",
       link: "NFTdetails",
     },
