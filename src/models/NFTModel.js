@@ -1,29 +1,13 @@
 import mongoose from "mongoose";
 
-const DetailsSchema = new mongoose.Schema({
-  ContractAddress: {
+const MapSchema = new mongoose.Schema({
+  key: {
     type: String,
-    required: true,
+    ///required: true,
   },
-  TokenID: {
+  value: {
     type: String,
-    required: true,
-  },
-  TokenStandard: {
-    type: String,
-    default: "ERC-20",
-  },
-  Chain: {
-    type: String,
-    required: true,
-  },
-  Metadata: {
-    type: String,
-    required: true,
-  },
-  LastUpdated: {
-    type: Date,
-    required: true,
+    ///required: true,
   },
 });
 
@@ -32,27 +16,53 @@ const NFTSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Details: {
-    type: DetailsSchema,
-    required: true,
+  MediaLink: {
+    type: String,
+    ////required: true,
+  },
+  ContractAddress: {
+    type: String,
+    ////required: true,
+  },
+  TokenID: {
+    type: String,
+    ////required: true,
+  },
+  TokenStandard: {
+    type: String,
+    default: "ERC-20",
+  },
+  Chain: {
+    type: String,
+    ///required: true,
+  },
+  Metadata: {
+    type: String,
+    ///required: true,
+  },
+  LastUpdated: {
+    type: Date,
+    ///required: true,
   },
   Stats: {
-    type: Map,
-    of: String,
-    required: true,
+    type: [MapSchema],
+    ///required: true,
   },
   Traits: {
-    type: Map,
-    of: String,
-    required: true,
+    type: [MapSchema],
+    ///required: true,
   },
   Count: {
     type: Number,
-    required: true,
+    //required: true,
   },
   Description: String,
   CreatedAt: {
     type: Date,
+  },
+  CollectionID: {
+    type: String,
+    //required: true,
   },
 });
 

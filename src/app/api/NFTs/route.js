@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { connect } from "@/dbConfig/dbConfig";
-import Collections from "@/models/collectionModel";
 import NFTsModel from "@/models/NFTModel";
 import { NextRequest, NextResponse } from "next/server";
+import Collections from "@/models/collectionModel";
 
 connect();
 
@@ -10,81 +10,68 @@ export async function POST(request) {
   try {
     const reqBody = await request.json();
     const {
-      CollectionName,
-      BannerImage,
-      ProfileImage,
-      Description,
+      Name,
+      MediaLink,
+      ContractAddress,
+      TokenID,
+      TokenStandard,
       Chain,
-      TotalVolume,
-      CreatedAt /*, NFTs*/,
+      Metadata,
+      LastUpdated,
+      Stats,
+      Traits,
+      Count,
+      Description,
+      CreatedAt,
+      CollectionID,
     } = reqBody;
 
+    console.log("reqBody");
     console.log(reqBody);
 
     //check if user exists
-    const collection = await Collections.findOne({ CollectionName });
+    const nft = await NFTsModel.findOne({ Name });
 
-    if (collection) {
-      return NextResponse.json({ error: "Collection exists" }, { status: 400 });
+    if (nft) {
+      return NextResponse.json({ error: "nft exists" }, { status: 400 });
+    } else {
+      console.log("Good to go");
     }
 
-    // try {
-    //   let NFTarray = [];
-
-    //   //Creating the NFTs
-    //   for (const ele of NFTs) {
-    //     const newNFT = new NFTsModel({
-    //       Name: ele.Name,
-    //       Details: ele.Details,
-    //       Stats: ele.Stats,
-    //       Traits: ele.Traits,
-    //       Count: ele.Count,
-    //       Description: ele.Description,
-    //       CreatedAt: ele.CreatedAt,
-    //     });
-
-    //     await newNFT.save();
-    //     let { _id } = newNFT;
-    //     NFTarray.push(_id);
-
-    //     console.log("NFT saved:");
-    //     console.log(newNFT);
-    //   }
-    // } catch (error) {
-    //   return NextResponse.json(
-    //     { error: "NFT error " + error.message },
-    //     { status: 502 }
-    //   );
-    // }
-
-    // for (const NFTid of NFTarray) {
-    //   const exists = await NFTsModel.findOne({ _id: NFTid });
-    //   if (!exists) {
-    //     return NextResponse.json({ error: "NFTs not saved" }, { status: 401 });
-    //   } else {
-    //     console.log(NFTid + " exists ");
-    //   }
-    // }
-
-    const newCollection = new Collections({
-      CollectionName,
-      BannerImage,
-      ProfileImage,
-      Description,
+    const newNFT = new NFTsModel({
+      Name,
+      MediaLink,
+      ContractAddress,
+      TokenID,
+      TokenStandard,
       Chain,
-      TotalVolume,
+      Metadata,
+      LastUpdated,
+      Stats,
+      Traits,
+      Count,
+      Description,
       CreatedAt,
-      //NFTs: NFTarray,
+      CollectionID,
     });
 
-    const Collection = await newCollection.save();
+    const id = newNFT._id;
 
-    console.log(Collection);
+    const NFT = await newNFT.save();
 
-    //NFTarray = [];
+    console.log(NFT);
+
+    const collection = await Collections.findById(CollectionID);
+    collection.NFTs.push(id);
+
+    const collectionSaved = await collection.save();
+
+    console.log("collectionSaved");
+    console.log(collectionSaved);
+
     return NextResponse.json(
       {
-        message: "Collection created successfully",
+        message: "NFT created successfully",
         success: true,
       },
       {
