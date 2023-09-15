@@ -17,62 +17,16 @@ import Style from "./Footer.module.css";
 import { Discover, HelpCenter, helpCenter } from "../Navbar/index";
 
 const Footer = () => {
-  const discover = [
-    {
-      name: "Collection",
-      link: "collection",
-    },
-    {
-      name: "Search",
-      link: "search",
-    },
-    {
-      name: "Author Profile",
-      link: "author-profile",
-    },
-    {
-      name: "NFT Details",
-      link: "nft-details",
-    },
-    {
-      name: "Account Setting",
-      link: "account setting",
-    },
-    {
-      name: "Connect Wallet",
-      link: "connect-wallet",
-    },
-    {
-      name: "Blog",
-      link: "blog",
-    },
-  ];
-  const helpCenter = [
-    {
-      name: "About",
-      link: "about",
-    },
-    {
-      name: "Contact Us",
-      link: "contact-us",
-    },
-    {
-      name: "Sign Up",
-      link: "sign-up",
-    },
-    {
-      name: "Sign In",
-      link: "sign-in",
-    },
-    {
-      name: "Subscription",
-      link: "subscription",
-    },
-  ];
   return (
     <div className={Style.footer}>
       <div className={Style.footer_box_social}>
-        <Image src={images.logo} alt="footer logo" width={100} height={100} />
+        <Image
+          src={images.logo}
+          alt="footer logo"
+          width={100}
+          height={100}
+          className={Style.footer_box_social_img}
+        />
         <p>Discover the most outstanding articles on all topics of NFT</p>
         <div className={Style.footer_social}>
           <a href="#">

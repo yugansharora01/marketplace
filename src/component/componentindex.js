@@ -1,4 +1,4 @@
-import Button from "./Button/Button";
+import MyCustomButton from "./Button/MyCustomButton";
 import Footer from "./Footer/Footer";
 import NavBar from "./Navbar/Navbar";
 import HeroSection from "./HeroSection/HeroSection";
@@ -12,7 +12,7 @@ import LikeProfile from "./LikeProfile/LikeProfile";
 import Category from "./Category/Category";
 
 export {
-  Button,
+  MyCustomButton,
   Footer,
   NavBar,
   HeroSection,

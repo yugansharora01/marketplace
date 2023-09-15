@@ -5,7 +5,7 @@ import Image from "next/image";
 //INTERNAL IMPORT
 import Style from "./Brand.module.css";
 import images from "../../../img";
-import { Button } from "../componentindex";
+import { MyCustomButton } from "../componentindex";
 
 const Brand = () => {
   return (
@@ -17,8 +17,8 @@ const Brand = () => {
           <p>A creative agency that lead and inspire.</p>
 
           <div className={Style.Brand_box_left_btn}>
-            <Button btnName="Create" handleClick={() => {}} />
-            <Button btnName="Discover" handleClick={() => {}} />
+            <MyCustomButton btnName="Create" handleClick={() => {}} />
+            <MyCustomButton btnName="Discover" handleClick={() => {}} />
           </div>
         </div>
         <div className={Style.Brand_box_right}>

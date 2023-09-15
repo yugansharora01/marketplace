@@ -1,26 +1,40 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MdOutlineHttp } from "react-icons/md";
-import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 import { TiTick } from "react-icons/ti";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
+  Button,
+} from "@nextui-org/react";
 
 //INTERNAL IMPORT
 import Style from "./Upload.module.css";
 import formStyle from "../AccountPage/Form/Form.module.css";
-import images from "../../img";
-import { Button } from "../component/componentindex";
-import { DropZone } from "./uploadNFTIndex.js";
+import { MyCustomButton } from "../component/componentindex";
 import axios from "axios";
 import DynamicList from "./DynamicList/DynamicList";
 
-const UploadNFT = ({ collectionArray, setId }) => {
+const UploadNFT = ({ collectionArray }) => {
   const [active, setActive] = useState(0);
   const [traitArray, setTraitArray] = useState([]);
   const [statArray, setStatArray] = useState([]);
-  const [selectedId, setSelectedId] = useState("");
+  const [selectedKeys, setSelectedKeys] = useState(new Set(["chain"]));
+  const [chainsArray, setChainsArray] = useState([
+    {
+      data: "mainnet",
+    },
+    {
+      data: "sepolia",
+    },
+  ]);
 
   const [nftData, setNftData] = useState({
     Name: "",
+    Owner: "MetaRivals",
+    Price: 1,
     MediaLink:
       "https://ivory-possible-rooster-796.mypinata.cloud/ipfs/QmNrATouMgx9czM2co8YRBNdp5qTpmN8rmUgP4tonKsfuE?pinataGatewayToken=",
     ContractAddress: "",
@@ -121,6 +135,29 @@ const UploadNFT = ({ collectionArray, setId }) => {
           setArray={setStatArray}
         />
 
+        <Dropdown>
+          <DropdownTrigger>
+            <Button variant="bordered">{selectedKeys}</Button>
+          </DropdownTrigger>
+          <DropdownMenu
+            aria-label="Static Actions"
+            disallowEmptySelection
+            selectionMode="single"
+            selectedKeys={selectedKeys}
+            onSelectionChange={setSelectedKeys}
+          >
+            {chainsArray.map((el, i) => (
+              <DropdownItem
+                key={el.key ? el.key : el.data}
+                className={el.class}
+                color={el.color}
+              >
+                {el.data}
+              </DropdownItem>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
+
         <div className={formStyle.Form_box_input}>
           <label htmlFor="description">Description</label>
           <textarea
@@ -129,6 +166,7 @@ const UploadNFT = ({ collectionArray, setId }) => {
             cols="30"
             rows="6"
             placeholder="something about yourself in few words"
+            className={formStyle.Form_box_input_textarea}
             onChange={(e) =>
               setNftData({ ...nftData, Description: e.target.value })
             }
@@ -174,19 +212,21 @@ const UploadNFT = ({ collectionArray, setId }) => {
                     <TiTick />
                   </div>
                 </div>
-                <p>Crypto Legend - {el.category} </p>
+                <p>
+                  {el.Name} - {el.category}{" "}
+                </p>
               </div>
             ))}
           </div>
         </div>
 
         <div className={Style.upload_box_btn}>
-          <Button
+          <MyCustomButton
             btnName="Upload"
             handleClick={OnUpload}
             classStyle={Style.upload_box_btn_style}
           />
-          <Button
+          <MyCustomButton
             btnName="Preview"
             handleClick={() => {}}
             classStyle={Style.upload_box_btn_style}

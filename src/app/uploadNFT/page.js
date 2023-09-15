@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import images from "../../../img";
 
 //INTERNAL IMPORT
-import Style from "../../styles/upload-nft.module.css";
+import Style from "./upload-nft.module.css";
 import { UploadNFT } from "../../UploadNFT/uploadNFTIndex";
 import axios from "axios";
 
@@ -23,6 +23,7 @@ const uploadNFT = () => {
         res.data.data.forEach((ele) => {
           console.log(ele);
           const newData = {
+            Name: ele.Name,
             image: ele.BannerImage,
             category: "LOL",
             id: ele._id,

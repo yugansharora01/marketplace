@@ -9,7 +9,7 @@ import { CgMenuLeft, CgMenuRight } from "react-icons/cg";
 
 import Style from "./NavBar.module.css";
 import { Discover, HelpCenter, Profile, Notification, SideBar } from "./index";
-import { Button } from "../componentindex";
+import { MyCustomButton } from "../componentindex";
 
 import images from "../../../img";
 
@@ -113,7 +113,7 @@ const Navbar = () => {
           </div>
           {/*CREATE BUTTON SECTIONS*/}
           <div className={Style.navbar_container_right_button}>
-            <Button btnName="Create" handleClick={() => {}} />
+            <MyCustomButton btnName="Create" handleClick={() => {}} />
           </div>
 
           {/*USER PROFILE*/}

@@ -97,6 +97,8 @@
 
 .navbar_container_right_profile {
   border-radius: 50%;
+  width: 40px;
+  height: 40px;
 }
 
 .navbar_container_right_menuBtn {

@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const MapSchema = new mongoose.Schema({
   key: {
     type: String,
-    ///required: true,
+    required: true,
   },
   value: {
     type: String,
-    ///required: true,
+    required: true,
   },
 });
 
@@ -16,17 +16,24 @@ const NFTSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Owner: {
+    type: String,
+    required: true,
+  },
+  Price: {
+    type: Number,
+  },
   MediaLink: {
     type: String,
-    ////required: true,
+    required: true,
   },
   ContractAddress: {
     type: String,
-    ////required: true,
+    required: true,
   },
   TokenID: {
     type: String,
-    ////required: true,
+    required: true,
   },
   TokenStandard: {
     type: String,
@@ -34,27 +41,25 @@ const NFTSchema = new mongoose.Schema({
   },
   Chain: {
     type: String,
-    ///required: true,
+    required: true,
   },
   Metadata: {
     type: String,
-    ///required: true,
+    required: true,
   },
   LastUpdated: {
     type: Date,
-    ///required: true,
+    required: true,
   },
   Stats: {
     type: [MapSchema],
-    ///required: true,
   },
   Traits: {
     type: [MapSchema],
-    ///required: true,
   },
   Count: {
     type: Number,
-    //required: true,
+    required: true,
   },
   Description: String,
   CreatedAt: {
@@ -62,7 +67,7 @@ const NFTSchema = new mongoose.Schema({
   },
   CollectionID: {
     type: String,
-    //required: true,
+    required: true,
   },
 });
 

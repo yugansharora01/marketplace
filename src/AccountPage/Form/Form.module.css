@@ -6,6 +6,10 @@
   margin-top: 2rem;
 }
 
+.Form_box_input_textarea {
+  border: 1px solid var(--icons-color);
+}
+
 .Form_box_input label {
   display: block;
   width: 100%;

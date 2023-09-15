@@ -8,7 +8,7 @@ import axios from "axios";
 import Style from "./CreateCollection.module.css";
 import formStyle from "../AccountPage/Form/Form.module.css";
 import images from "../../img";
-import { Button } from "../component/componentindex";
+import { MyCustomButton } from "../component/componentindex";
 import { DropZone } from "./CreateCollectionIndex.js";
 
 const CreateCollection = () => {
@@ -157,7 +157,7 @@ const CreateCollection = () => {
         </div>
 
         <div className={Style.upload_box_btn}>
-          <Button
+          <MyCustomButton
             btnName="Create"
             handleClick={OnCreate}
             classStyle={Style.upload_box_btn_style}

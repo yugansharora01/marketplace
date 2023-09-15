@@ -7,7 +7,7 @@ import { TbArrowBigLeftLines, TbArrowBigRightLine } from "react-icons/tb";
 
 import Style from "./BigNFTSlider.module.css";
 import images from "../../../img";
-import { Button } from "../componentindex";
+import { MyCustomButton } from "../componentindex";
 
 const BigNFTSlider = () => {
   const [idNumber, setIdNumber] = useState(0);
@@ -159,8 +159,8 @@ const BigNFTSlider = () => {
               </div>
             </div>
             <div className={Style.bigNFTSlider_box_left_button}>
-              <Button btnName="Place" handleClick={() => {}} />
-              <Button btnName="view" handleClick={() => {}} />
+              <MyCustomButton btnName="Place" handleClick={() => {}} />
+              <MyCustomButton btnName="view" handleClick={() => {}} />
             </div>
           </div>
           <div className={Style.bigNFTSlider_box_left_sliderBtn}>

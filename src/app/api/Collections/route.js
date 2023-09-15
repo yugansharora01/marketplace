@@ -62,7 +62,6 @@ export async function POST(request) {
 export async function GET(request) {
   const owner = request.nextUrl.searchParams.get("Owner");
   const collections = await Collections.find({ Owner: owner });
-  console.log(collections);
   return NextResponse.json(
     {
       message: "Collection created successfully",

@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 
-import { Button } from "../componentindex";
+import { MyCustomButton } from "../componentindex";
 import Style from "./HeroSection.module.css";
 import images from "../../../img";
 
@@ -16,7 +16,7 @@ const HeroSection = () => {
             Discover the most outstanding NFTs on all topics of life. Create
             your NFTs and sell them.
           </p>
-          <Button btnName="Start Your Search" handleClick={() => {}} />
+          <MyCustomButton btnName="Start Your Search" handleClick={() => {}} />
         </div>
         <div className={Style.heroSection_box_right}>
           <Image

@@ -3,7 +3,7 @@ import React from "react";
 
 import Style from "./Button.module.css";
 
-const Button = ({ btnName, handleClick }) => {
+const MyCustomButton = ({ btnName, handleClick }) => {
   return (
     <div className={Style.box}>
       <button className={Style.button} onClick={() => handleClick()}>
@@ -13,4 +13,4 @@ const Button = ({ btnName, handleClick }) => {
   );
 };
 
-export default Button;
+export default MyCustomButton;

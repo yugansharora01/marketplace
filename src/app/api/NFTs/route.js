@@ -4,13 +4,37 @@ import NFTsModel from "@/models/NFTModel";
 import { NextRequest, NextResponse } from "next/server";
 import Collections from "@/models/collectionModel";
 
+const { v4: uuidv4 } = require("uuid");
+
 connect();
+
+const addNFT = async (data) => {
+  data.ContractAddress = uuidv4();
+  data.TokenID = uuidv4();
+};
 
 export async function POST(request) {
   try {
     const reqBody = await request.json();
+    console.log("reqBody");
+    console.log(reqBody);
+
+    //check if user exists
+    const nft = await NFTsModel.findOne({ Name: reqBody.Name });
+
+    if (nft) {
+      return NextResponse.json({ error: "nft exists" }, { status: 400 });
+    } else {
+      console.log("Good to go");
+    }
+
+    //Add NFT to smart contract
+    reqBody = await addNFT(reqBody);
+
     const {
       Name,
+      Owner,
+      Price,
       MediaLink,
       ContractAddress,
       TokenID,
@@ -26,20 +50,10 @@ export async function POST(request) {
       CollectionID,
     } = reqBody;
 
-    console.log("reqBody");
-    console.log(reqBody);
-
-    //check if user exists
-    const nft = await NFTsModel.findOne({ Name });
-
-    if (nft) {
-      return NextResponse.json({ error: "nft exists" }, { status: 400 });
-    } else {
-      console.log("Good to go");
-    }
-
     const newNFT = new NFTsModel({
       Name,
+      Owner,
+      Price,
       MediaLink,
       ContractAddress,
       TokenID,
@@ -55,6 +69,7 @@ export async function POST(request) {
       CollectionID,
     });
 
+    //Get id to add this to collections NFT array
     const id = newNFT._id;
 
     const NFT = await newNFT.save();
