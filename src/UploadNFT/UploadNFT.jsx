@@ -21,7 +21,7 @@ const UploadNFT = ({ collectionArray }) => {
   const [active, setActive] = useState(0);
   const [traitArray, setTraitArray] = useState([]);
   const [statArray, setStatArray] = useState([]);
-  const [selectedKeys, setSelectedKeys] = useState(new Set(["chain"]));
+  const [selectedKeys, setSelectedKeys] = useState(new Set(["Chain"]));
   const [chainsArray, setChainsArray] = useState([
     {
       data: "mainnet",
@@ -75,10 +75,20 @@ const UploadNFT = ({ collectionArray }) => {
         CollectionID: "",
       });
     } catch (error) {
-      console.log("NFT upload failed " + error.data);
+      console.log("NFT upload failed " + error.response);
+      console.log(error.response);
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (selectedKeys.currentKey != "Chain") {
+      setNftData({
+        ...nftData,
+        Chain: selectedKeys.currentKey,
+      });
+    }
+  }, [selectedKeys]);
 
   useEffect(() => {
     setNftData({
@@ -92,9 +102,10 @@ const UploadNFT = ({ collectionArray }) => {
     <div className={Style.upload}>
       <div className={Style.upload_box}>
         <div className={formStyle.Form_box_input}>
-          <label htmlFor="nft">NFT media IPFS link</label>
+          <label htmlFor="IPFS link">NFT media IPFS link</label>
           <input
             type="text"
+            id="IPFS link"
             placeholder="Profile Image"
             value={nftData.MediaLink}
             className={formStyle.Form_box_input_userName}
@@ -104,17 +115,19 @@ const UploadNFT = ({ collectionArray }) => {
           />
         </div>
         <div className={formStyle.Form_box_input}>
-          <label htmlFor="nft">Item Name</label>
+          <label htmlFor="Name">Item Name</label>
           <input
             type="text"
+            id="Name"
             placeholder="Item Name"
             className={formStyle.Form_box_input_userName}
             onChange={(e) => setNftData({ ...nftData, Name: e.target.value })}
           />
         </div>
         <div className={formStyle.Form_box_input}>
-          <label htmlFor="nft">Metadata</label>
+          <label htmlFor="Metadata">Metadata</label>
           <input
+            id="Metadata"
             type="text"
             placeholder="Metadata"
             className={formStyle.Form_box_input_userName}
@@ -122,6 +135,34 @@ const UploadNFT = ({ collectionArray }) => {
               setNftData({ ...nftData, Metadata: e.target.value })
             }
           />
+        </div>
+
+        <div className={Style.upload_box_dropdown}>
+          <h1> Chain : </h1>
+          <div className={Style.upload_box_dropdown_dropdown}>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="bordered">{selectedKeys}</Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Static Actions"
+                disallowEmptySelection
+                selectionMode="single"
+                selectedKeys={selectedKeys}
+                onSelectionChange={setSelectedKeys}
+              >
+                {chainsArray.map((el, i) => (
+                  <DropdownItem
+                    key={el.key ? el.key : el.data}
+                    className={el.class}
+                    color={el.color}
+                  >
+                    {el.data}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         </div>
 
         <DynamicList
@@ -135,34 +176,11 @@ const UploadNFT = ({ collectionArray }) => {
           setArray={setStatArray}
         />
 
-        <Dropdown>
-          <DropdownTrigger>
-            <Button variant="bordered">{selectedKeys}</Button>
-          </DropdownTrigger>
-          <DropdownMenu
-            aria-label="Static Actions"
-            disallowEmptySelection
-            selectionMode="single"
-            selectedKeys={selectedKeys}
-            onSelectionChange={setSelectedKeys}
-          >
-            {chainsArray.map((el, i) => (
-              <DropdownItem
-                key={el.key ? el.key : el.data}
-                className={el.class}
-                color={el.color}
-              >
-                {el.data}
-              </DropdownItem>
-            ))}
-          </DropdownMenu>
-        </Dropdown>
-
         <div className={formStyle.Form_box_input}>
           <label htmlFor="description">Description</label>
           <textarea
             name=""
-            id=""
+            id="description"
             cols="30"
             rows="6"
             placeholder="something about yourself in few words"
@@ -178,7 +196,7 @@ const UploadNFT = ({ collectionArray }) => {
         </div>
 
         <div className={formStyle.Form_box_input}>
-          <label htmlFor="name">Choose collection</label>
+          <label>Choose collection</label>
           <p className={Style.upload_box_input_para}>
             Choose an exiting collection or create a new one
           </p>

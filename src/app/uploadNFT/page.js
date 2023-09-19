@@ -21,7 +21,6 @@ const uploadNFT = () => {
         console.log(res.data.data);
 
         res.data.data.forEach((ele) => {
-          console.log(ele);
           const newData = {
             Name: ele.Name,
             image: ele.BannerImage,
@@ -31,12 +30,11 @@ const uploadNFT = () => {
           setCollectionArray((oldArray) => [...oldArray, newData]);
         });
 
-        console.log("Success retrieval " + res.data);
+        console.log("Success retrieval");
+        console.log(res.data);
       } catch (error) {
-        console.log("Collection retrieval failed " + error);
+        console.log("Collection retrieval failed ");
         console.log(error.response);
-      } finally {
-        console.log(collectionArray);
       }
     };
     GetCollections();

@@ -11,16 +11,19 @@ connect();
 const addNFT = async (data) => {
   data.ContractAddress = uuidv4();
   data.TokenID = uuidv4();
+  return data;
 };
 
 export async function POST(request) {
   try {
-    const reqBody = await request.json();
+    let reqBody = await request.json();
     console.log("reqBody");
     console.log(reqBody);
 
+    const { Name } = reqBody;
+
     //check if user exists
-    const nft = await NFTsModel.findOne({ Name: reqBody.Name });
+    const nft = await NFTsModel.findOne({ Name });
 
     if (nft) {
       return NextResponse.json({ error: "nft exists" }, { status: 400 });
@@ -31,8 +34,10 @@ export async function POST(request) {
     //Add NFT to smart contract
     reqBody = await addNFT(reqBody);
 
+    console.log("reqBody 2");
+    console.log(reqBody);
+
     const {
-      Name,
       Owner,
       Price,
       MediaLink,

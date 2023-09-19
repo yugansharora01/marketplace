@@ -13,8 +13,6 @@ const Banner = ({ bannerImage }) => {
           src={bannerImage}
           objectFit="cover"
           alt="background"
-          width={1600}
-          height={300}
           className={Style.img}
         />
       </div>

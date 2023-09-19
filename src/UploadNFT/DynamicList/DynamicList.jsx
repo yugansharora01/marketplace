@@ -23,7 +23,7 @@ const DynamicList = ({ heading, array, setArray }) => {
   return (
     <div className={formStyle.Form_box_input}>
       <div className={Style.upload_addTrait}>
-        <label htmlFor={heading}>{heading}</label>
+        <label>{heading}</label>
         <span className={Style.upload_addTraitBtn} onClick={addField}>
           <AiOutlinePlusCircle />
         </span>

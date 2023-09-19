@@ -60,11 +60,17 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
-  const owner = request.nextUrl.searchParams.get("Owner");
-  const collections = await Collections.find({ Owner: owner });
+  const Owner = request.nextUrl.searchParams.get("Owner");
+  const id = request.nextUrl.searchParams.get("id");
+  let collections;
+  if (id) {
+    collections = await Collections.findById(id);
+  } else {
+    collections = await Collections.find({ Owner });
+  }
   return NextResponse.json(
     {
-      message: "Collection created successfully",
+      message: "Collection fetched successfully",
       data: collections,
       success: true,
     },
