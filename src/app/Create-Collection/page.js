@@ -2,10 +2,10 @@
 import React from "react";
 
 //INTERNAL IMPORT
-import Style from "../../styles/upload-nft.module.css";
+import Style from "../uploadNFT/upload-nft.module.css";
 import { CreateCollection } from "../../CreateCollection/CreateCollectionIndex";
 
-const uploadNFT = () => {
+const CreateCollectionPage = () => {
   return (
     <div className={Style.uploadNFT}>
       <div className={Style.uploadNFT_box}>
@@ -24,4 +24,4 @@ const uploadNFT = () => {
   );
 };
 
-export default uploadNFT;
+export default CreateCollectionPage;

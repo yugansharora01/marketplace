@@ -21,10 +21,10 @@ import { BiTransferAlt, BiDollar } from "react-icons/bi";
 //INTERNAL IMPORT
 import Style from "./NFTDescription.module.css";
 import images from "../../../img";
-import { Button } from "../../component/componentindex.js";
+import { MyCustomButton } from "../../component/componentindex.js";
 import { NFTTabs } from "../NFTDetailsIndex";
 
-const NFTDescription = () => {
+const NFTDescription = ({ NFTData }) => {
   const [social, setSocial] = useState(false);
   const [NFTMenu, setNFTMenu] = useState(false);
   const [history, setHistory] = useState(true);
@@ -153,7 +153,7 @@ const NFTDescription = () => {
         </div>
         {/* //Part TWO */}
         <div className={Style.NFTDescription_box_profile}>
-          <h1>BearX #23453</h1>
+          <h1>{NFTData.name}</h1>
           <div className={Style.NFTDescription_box_profile_box}>
             <div className={Style.NFTDescription_box_profile_box_left}>
               <Image
@@ -166,7 +166,7 @@ const NFTDescription = () => {
               <div className={Style.NFTDescription_box_profile_box_left_info}>
                 <small>Creator</small> <br />
                 <span>
-                  Karli Costa <MdVerified />
+                  {NFTData.creator} <MdVerified />
                 </span>
               </div>
             </div>
@@ -181,9 +181,9 @@ const NFTDescription = () => {
               />
 
               <div className={Style.NFTDescription_box_profile_box_right_info}>
-                <small>Creator</small> <br />
+                <small>Owner</small> <br />
                 <span>
-                  Karli Costa <MdVerified />
+                  {NFTData.owner} <MdVerified />
                 </span>
               </div>
             </div>
@@ -235,24 +235,25 @@ const NFTDescription = () => {
                   Style.NFTDescription_box_profile_biding_box_price_bid
                 }
               >
-                <small>Current Bid</small>
+                <small>Current Price</small>
                 <p>
-                  1.000 ETH <span>( ≈ $3,221.22)</span>
+                  {NFTData.price}
+                  <span>( ≈ $3,221.22)</span>
                 </p>
               </div>
 
-              <span>[96 in stock]</span>
+              <span>[{NFTData.count} in stock]</span>
             </div>
 
             <div className={Style.NFTDescription_box_profile_biding_box_button}>
-              <Button
-                icon=<FaWallet />
+              <MyCustomButton
+                icon={<FaWallet />}
                 btnName="Place a bid"
                 handleClick={() => {}}
                 classStyle={Style.button}
               />
-              <Button
-                icon=<FaPercentage />
+              <MyCustomButton
+                icon={<FaPercentage />}
                 btnName="Make offer"
                 handleClick={() => {}}
                 classStyle={Style.button}
@@ -278,7 +279,7 @@ const NFTDescription = () => {
 
             {owner && (
               <div className={Style.NFTDescription_box_profile_biding_box_card}>
-                <NFTTabs dataTab={ownerArray} icon=<MdVerified /> />
+                <NFTTabs dataTab={ownerArray} icon={<MdVerified />} />
               </div>
             )}
           </div>

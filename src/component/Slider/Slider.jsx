@@ -6,35 +6,8 @@ import { TiArrowLeftThick, TiArrowRightThick } from "react-icons/ti";
 //INTERNAL IMPORT
 import Style from "./Slider.module.css";
 import SliderCard from "./SliderCard/SliderCard";
-import images from "../../../img";
 
-const Slider = () => {
-  const FollowingArray = [
-    {
-      background: images.creatorbackground3,
-      user: images.user3,
-    },
-    {
-      background: images.creatorbackground4,
-      user: images.user4,
-    },
-    {
-      background: images.creatorbackground5,
-      user: images.user5,
-    },
-    {
-      background: images.creatorbackground6,
-      user: images.user6,
-    },
-    {
-      background: images.creatorbackground1,
-      user: images.user1,
-    },
-    {
-      background: images.creatorbackground2,
-      user: images.user2,
-    },
-  ];
+const Slider = ({ Heading, Subheading, dataArray }) => {
   const [width, setWidth] = useState(0);
   const dragSlider = useRef();
 
@@ -56,9 +29,15 @@ const Slider = () => {
   return (
     <div className={Style.slider}>
       <div className={Style.slider_box}>
-        <h2>Explore NFTs Video</h2>
         <div className={Style.slider_box_button}>
-          <p>Click on play icon & enjoy Nfts Video</p>
+          <div className={Style.slider_box_button_headings}>
+            <h2>{Heading}</h2>
+            {Subheading != "" ? (
+              <p className={Style.slider_box_subheading}>{Subheading}</p>
+            ) : (
+              ""
+            )}
+          </div>
           <div className={Style.slider_box_button_btn}>
             <div
               className={Style.slider_box_button_btn_icon}
@@ -82,8 +61,8 @@ const Slider = () => {
             drag="x"
             dragConstraints={{ right: 0, left: -width }}
           >
-            {FollowingArray.map((el, i) => (
-              <SliderCard key={i + 1} el={el} i={i} />
+            {dataArray.map((el, i) => (
+              <SliderCard key={i + 1} data={el} />
             ))}
           </motion.div>
         </motion.div>

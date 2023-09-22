@@ -1,0 +1,129 @@
+.CollectionCard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
+}
+
+.CollectionCard_wrapper {
+  width: 80%;
+  margin: 5rem auto;
+}
+
+.CollectionCard_wrapper h1 {
+  margin: 1rem auto;
+  font-size: 3rem;
+}
+
+.CollectionCard_box {
+  display: grid;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+  border-radius: 1rem;
+}
+
+.CollectionCard_box:hover {
+  box-shadow: var(--box-shadow);
+}
+
+.CollectionCard_box_like {
+  padding: 1rem;
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  z-index: 111111;
+}
+
+.CollectionCard_box_like_box_box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.CollectionCard_box_like_box_box_icon {
+  color: var(--icons-color);
+  font-size: 2rem;
+}
+
+.CollectionCard_box_like_box_box p {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+  background-color: var(--icons-color);
+  color: var(--main-bg-color);
+  border-radius: 2rem;
+  padding: 0 0.5rem;
+}
+
+.CollectionCard_box_img {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+}
+
+.CollectionCard_box_img_img {
+  border-radius: 1rem;
+  width: 250px;
+  height: 250px;
+}
+
+.CollectionCard_box_info {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+}
+
+.CollectionCard_box_info_left {
+  line-height: 1;
+}
+
+.CollectionCard_box_info small {
+  font-size: 1rem;
+}
+
+.CollectionCard_box_info_left p {
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.CollectionCard_box_price_time {
+  align-items: flex-end;
+  display: grid;
+}
+
+.CollectionCard_box_price_time small {
+  font-size: 0.8rem;
+}
+
+.CollectionCard_box_price_time p {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+@media screen and (max-width: 35em) {
+  .CollectionCard {
+    width: 90%;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .CollectionCard {
+    width: 90%;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1280px) {
+  .CollectionCard_box_price_box p {
+    font-size: 0.7rem;
+    padding: 1rem 0.7rem 0.7rem 0.7rem;
+  }
+
+  .CollectionCard_box_price_stock {
+    font-size: 0.9rem;
+  }
+  .CollectionCard {
+    width: 90%;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

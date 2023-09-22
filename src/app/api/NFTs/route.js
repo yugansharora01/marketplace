@@ -102,3 +102,40 @@ export async function POST(request) {
     return NextResponse.json({ error: error.message }, { status: 501 });
   }
 }
+
+export async function GET(request) {
+  try {
+    const owner = request.nextUrl.searchParams.get("owner");
+    const id = request.nextUrl.searchParams.get("id");
+    const sort = request.nextUrl.searchParams.get("sort");
+    let limit = request.nextUrl.searchParams.get("limit");
+    if (limit > 50) limit = 50;
+    if (!limit) limit = 10;
+    let NFT;
+    if (id) {
+      console.log(id);
+      NFT = await NFTsModel.findById(id);
+    } else {
+      if (sort) {
+        NFT = await NFTsModel.find({ owner })
+          .sort({ CreatedAt: sort })
+          .limit(1);
+        console.log(NFT);
+      } else {
+        NFT = await NFTsModel.find({ owner });
+      }
+    }
+    return NextResponse.json(
+      {
+        message: "Collection fetched successfully",
+        data: NFT,
+        success: true,
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

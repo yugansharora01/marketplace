@@ -20,6 +20,10 @@ const NFTSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Creator: {
+    type: String,
+    required: true,
+  },
   Price: {
     type: Number,
   },

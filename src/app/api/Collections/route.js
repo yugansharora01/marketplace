@@ -10,7 +10,7 @@ connect();
 export async function POST(request) {
   try {
     const reqBody = await request.json();
-    const {
+    let {
       CollectionName,
       Owner,
       BannerImage,
@@ -22,6 +22,7 @@ export async function POST(request) {
     } = reqBody;
 
     console.log(reqBody);
+    CreatedAt = Date.now();
 
     //check if user exists
     const collection = await Collections.findOne({ CollectionName });
@@ -55,27 +56,43 @@ export async function POST(request) {
       }
     );
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 501 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 export async function GET(request) {
-  const Owner = request.nextUrl.searchParams.get("Owner");
-  const id = request.nextUrl.searchParams.get("id");
-  let collections;
-  if (id) {
-    collections = await Collections.findById(id);
-  } else {
-    collections = await Collections.find({ Owner });
-  }
-  return NextResponse.json(
-    {
-      message: "Collection fetched successfully",
-      data: collections,
-      success: true,
-    },
-    {
-      status: 200,
+  try {
+    const owner = request.nextUrl.searchParams.get("owner");
+    const id = request.nextUrl.searchParams.get("id");
+    const sort = request.nextUrl.searchParams.get("sort");
+    let limit = request.nextUrl.searchParams.get("limit");
+    if (limit > 50) limit = 50;
+    if (!limit) limit = 10;
+    let collections;
+    if (id) {
+      console.log(id);
+      collections = await Collections.findById(id).populate("NFTs");
+    } else {
+      if (sort) {
+        collections = await Collections.find({ owner })
+          .sort({ CreatedAt: sort })
+          .limit(1);
+        console.log(collections);
+      } else {
+        collections = await Collections.find({ owner });
+      }
     }
-  );
+    return NextResponse.json(
+      {
+        message: "Collection fetched successfully",
+        data: collections,
+        success: true,
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }

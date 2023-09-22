@@ -31,10 +31,10 @@ const Navbar = () => {
     const btnText = e.target.innerText;
     if (btnText == "Discover") {
       Unset();
-      setDiscover(true);
+      setDiscover(!discover);
     } else if (btnText == "Help Center") {
       Unset();
-      setHelp(true);
+      setHelp(!help);
     } else {
       Unset();
     }

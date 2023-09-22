@@ -14,7 +14,7 @@
 .notification > p {
   font-size: 1.3rem;
   font-weight: 600;
-  margin-bottom: 2rem;
+  margin-bottom: 0.2rem;
 }
 
 .notification_box {
@@ -36,8 +36,7 @@
 }
 
 .notification_box_info {
-  line-height: 0;
-  margin-top: -0.8rem;
+  line-height: 1;
 }
 
 .notification_box_info h4 {
@@ -46,7 +45,7 @@
 
 .notification_box_info p {
   font-size: 15px;
-  line-height: 0.3;
+  line-height: 1.5;
   position: relative;
 }
 

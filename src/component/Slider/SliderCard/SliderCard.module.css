@@ -29,6 +29,7 @@
   padding-inline: 2rem;
   justify-content: space-between;
   gap: 1rem;
+  margin-top: 1rem;
 }
 
 .sliderCard_box_title p {
@@ -68,8 +69,8 @@
 .sliderCard_box_price_box p {
   font-size: 1.3rem;
   font-weight: 700;
-  margin-top: 2rem;
-  line-height: 0;
+  margin-top: 1rem;
+  line-height: 1;
 }
 
 .sliderCard_box_price_time {

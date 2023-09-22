@@ -7,16 +7,10 @@ import axios from "axios";
 //INTERNAL IMPORT
 import Style from "./CreateCollection.module.css";
 import formStyle from "../AccountPage/Form/Form.module.css";
-import images from "../../img";
 import { MyCustomButton } from "../component/componentindex";
-import { DropZone } from "./CreateCollectionIndex.js";
 
 const CreateCollection = () => {
   const [loading, setLoading] = useState(false);
-  const [BannerImage, setBannerImage] = useState("");
-  const [ProfileImage, setProfileImage] = useState("");
-  const [BannerImageUrl, setBannerImageUrl] = useState("");
-  const [ProfileImageUrl, setProfileImageUrl] = useState("");
 
   const [collection, setCollection] = useState({
     CollectionName: "",
@@ -32,18 +26,6 @@ const CreateCollection = () => {
     TotalVolume: 0,
     CreatedAt: Date.now(),
   });
-
-  // useEffect(() => {
-  //   setCollection({ ...collection, BannerImage: BannerImage });
-  //   console.log(collection.BannerImage);
-  //   console.log(BannerImage);
-  // }, [BannerImage]);
-
-  // useEffect(() => {
-  //   setCollection({ ...collection, ProfileImage: ProfileImage });
-  //   console.log(collection.ProfileImage);
-  //   console.log(ProfileImage);
-  // }, [ProfileImage]);
 
   const OnCreate = async () => {
     try {
