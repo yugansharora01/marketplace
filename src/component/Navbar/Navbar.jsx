@@ -19,6 +19,7 @@ const Navbar = () => {
   const [notification, setNotification] = useState(false);
   const [profile, setProfile] = useState(false);
   const [openSideMenu, setOpenSideMenu] = useState(false);
+  const [connected, setConnected] = useState(false);
 
   const Unset = () => {
     setDiscover(false);
@@ -28,15 +29,21 @@ const Navbar = () => {
   };
 
   const openMenu = (e) => {
-    const btnText = e.target.innerText;
-    if (btnText == "Discover") {
+    if (e == "Discover") {
       Unset();
       setDiscover(!discover);
-    } else if (btnText == "Help Center") {
+    } else if (e == "Help Center") {
       Unset();
       setHelp(!help);
-    } else {
+    } else if (e == "Notification") {
       Unset();
+      setNotification(!notification);
+    } else if (e == "Profile") {
+      Unset();
+      setProfile(!profile);
+    } else if (e == "Sidebar") {
+      Unset();
+      setOpenSideMenu(!openSideMenu);
     }
   };
 
@@ -87,7 +94,7 @@ const Navbar = () => {
         <div className={Style.navbar_container_right}>
           {/* Discover */}
           <div className={Style.navbar_container_right_discover}>
-            <p onClick={(e) => openMenu(e)}>Discover</p>
+            <p onClick={(e) => openMenu("Discover")}>Discover</p>
             {discover && (
               <div className={Style.navbar_container_right_discover_box}>
                 <Discover />
@@ -96,7 +103,7 @@ const Navbar = () => {
           </div>
           {/* Help Center */}
           <div className={Style.navbar_container_right_help}>
-            <p onClick={(e) => openMenu(e)}>Help Center</p>
+            <p onClick={(e) => openMenu("Help")}>Help Center</p>
             {help && (
               <div className={Style.navbar_container_right_help_box}>
                 <HelpCenter />
@@ -107,7 +114,7 @@ const Navbar = () => {
           <div className={Style.navbar_container_right_notify}>
             <MdNotifications
               className={Style.notify}
-              onClick={() => openNotification()}
+              onClick={() => openMenu("Notification")}
             />
             {notification && <Notification />}
           </div>
@@ -124,7 +131,7 @@ const Navbar = () => {
                 alt="Profile"
                 width={40}
                 height={40}
-                onClick={() => openProfile()}
+                onClick={() => openMenu("Profile")}
                 className={Style.navbar_container_right_profile}
               />
               {profile && <Profile />}
@@ -134,7 +141,7 @@ const Navbar = () => {
           <div className={Style.navbar_container_right_menuBtn}>
             <CgMenuRight
               className={Style.menuIcon}
-              onClick={() => openSideBar()}
+              onClick={() => openMenu("Sidebar")}
             />
           </div>
         </div>

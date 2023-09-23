@@ -124,18 +124,6 @@ const UploadNFT = ({ collectionArray }) => {
             onChange={(e) => setNftData({ ...nftData, Name: e.target.value })}
           />
         </div>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="Metadata">Metadata</label>
-          <input
-            id="Metadata"
-            type="text"
-            placeholder="Metadata"
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) =>
-              setNftData({ ...nftData, Metadata: e.target.value })
-            }
-          />
-        </div>
 
         <div className={Style.upload_box_dropdown}>
           <h1> Chain : </h1>

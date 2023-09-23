@@ -11,21 +11,29 @@ import images from "../../../img";
 const NFTDetailsImg = ({ NFTData }) => {
   const [description, setDescription] = useState(true);
   const [details, setDetails] = useState(true);
+  const [traits, setTraits] = useState(true);
+  const [stats, setStats] = useState(true);
+
   const [like, setLike] = useState(false);
 
-  const openDescription = () => {
-    if (!description) {
-      setDescription(true);
-    } else {
-      setDescription(false);
-    }
-  };
+  console.log("NFTData");
+  console.log(NFTData);
 
-  const openDetails = () => {
-    if (!details) {
-      setDetails(true);
+  const open = (val) => {
+    if (val == "stats") {
+      setStats(!stats);
     } else {
-      setDetails(false);
+      if (val == "traits") {
+        setTraits(!traits);
+      } else {
+        if (val == "details") {
+          setDetails(!details);
+        } else {
+          if (val == "description") {
+            setDescription(!description);
+          }
+        }
+      }
     }
   };
 
@@ -68,9 +76,10 @@ const NFTDetailsImg = ({ NFTData }) => {
           </div>
         </div>
 
+        {/*description*/}
         <div
           className={Style.NFTDetailsImg_box_description}
-          onClick={() => openDescription()}
+          onClick={() => open("description")}
         >
           <p>Description</p>
           {description ? <TiArrowSortedUp /> : <TiArrowSortedDown />}
@@ -78,18 +87,88 @@ const NFTDetailsImg = ({ NFTData }) => {
 
         {description && (
           <div className={Style.NFTDetailsImg_box_description_box}>
-            <p>
-              Tattooed Kitty Gang (“TKG”) is a collection of 666 badass kitty
-              gangsters, with symbol of tattoos, living in the Proud Kitty Gang
-              (“PKG”) metaverse. Each TKG is an 1/1 ID as gangster member & all
-              the joint rights.
-            </p>
+            <p>{NFTData.description}</p>
           </div>
         )}
 
+        {/*Traits*/}
+        {NFTData.traits.length > 0 ? (
+          <div>
+            <div
+              className={Style.NFTDetailsImg_box_details}
+              onClick={() => open("traits")}
+            >
+              <p>Traits</p>
+              {traits ? <TiArrowSortedUp /> : <TiArrowSortedDown />}
+            </div>
+
+            {traits && (
+              <div className={Style.NFTDetailsImg_box_details_box}>
+                {NFTData.traits.map((el, i) => (
+                  <div
+                    className={Style.NFTDetailsImg_box_details_box_box}
+                    key={i + 1}
+                  >
+                    <span
+                      className={Style.NFTDetailsImg_box_details_box_box_key}
+                    >
+                      {el.key} -&nbsp;
+                    </span>
+                    <span
+                      className={Style.NFTDetailsImg_box_details_box_box_value}
+                    >
+                      {el.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          ""
+        )}
+
+        {/*Stats*/}
+        {NFTData.stats.length > 0 ? (
+          <div>
+            <div
+              className={Style.NFTDetailsImg_box_details}
+              onClick={() => open("stats")}
+            >
+              <p>stats</p>
+              {stats ? <TiArrowSortedUp /> : <TiArrowSortedDown />}
+            </div>
+
+            {stats && (
+              <div className={Style.NFTDetailsImg_box_details_box}>
+                {NFTData.stats.map((el, i) => (
+                  <div
+                    className={Style.NFTDetailsImg_box_details_box_box}
+                    key={i + 1}
+                  >
+                    <span
+                      className={Style.NFTDetailsImg_box_details_box_box_key}
+                    >
+                      {el.key} -&nbsp;
+                    </span>
+                    <span
+                      className={Style.NFTDetailsImg_box_details_box_box_value}
+                    >
+                      {el.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          ""
+        )}
+
+        {/*details*/}
         <div
           className={Style.NFTDetailsImg_box_details}
-          onClick={() => openDetails()}
+          onClick={() => open("details")}
         >
           <p>Details</p>
           {details ? <TiArrowSortedUp /> : <TiArrowSortedDown />}
@@ -97,16 +176,58 @@ const NFTDetailsImg = ({ NFTData }) => {
 
         {details && (
           <div className={Style.NFTDetailsImg_box_details_box}>
-            <small>2000 x 2000 px.IMAGE(685KB)</small>
-            <p>
-              <small>Contract Address</small>
-              <br></br>
-              0x50f5474724e0ee42d9a4e711ccfb275809fd6d4a
-            </p>
-            <p>
-              <small>Token ID</small>
-              100300372864
-            </p>
+            <div className={Style.NFTDetailsImg_box_details_box_box}>
+              <span className={Style.NFTDetailsImg_box_details_box_box_key}>
+                Contract Address -&nbsp;
+              </span>
+              <span className={Style.NFTDetailsImg_box_details_box_box_value}>
+                {NFTData.contractAddress}
+              </span>
+            </div>
+            <div className={Style.NFTDetailsImg_box_details_box_box}>
+              <span className={Style.NFTDetailsImg_box_details_box_box_key}>
+                Token ID -&nbsp;
+              </span>
+              <span className={Style.NFTDetailsImg_box_details_box_box_value}>
+                {NFTData.tokenId}
+              </span>
+            </div>
+            <div className={Style.NFTDetailsImg_box_details_box_box}>
+              <span className={Style.NFTDetailsImg_box_details_box_box_key}>
+                Token Standard -&nbsp;
+              </span>
+              <span className={Style.NFTDetailsImg_box_details_box_box_value}>
+                {NFTData.tokenStandard}
+              </span>
+            </div>
+            <div className={Style.NFTDetailsImg_box_details_box_box}>
+              <span className={Style.NFTDetailsImg_box_details_box_box_key}>
+                Chain -&nbsp;
+              </span>
+              <span className={Style.NFTDetailsImg_box_details_box_box_value}>
+                {NFTData.chain}
+              </span>
+            </div>
+            <div className={Style.NFTDetailsImg_box_details_box_box}>
+              <div className={Style.NFTDetailsImg_box_details_box_box_key}>
+                Last updated -&nbsp;
+              </div>
+              <div className={Style.NFTDetailsImg_box_details_box_box_value}>
+                {NFTData.lastUpdated}
+              </div>
+            </div>
+            {NFTData.creatorEarning ? (
+              <div className={Style.NFTDetailsImg_box_details_box_box}>
+                <div className={Style.NFTDetailsImg_box_details_box_box_key}>
+                  Creator Earning -&nbsp;
+                </div>
+                <div className={Style.NFTDetailsImg_box_details_box_box_value}>
+                  {NFTData.creatorEarning}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         )}
       </div>

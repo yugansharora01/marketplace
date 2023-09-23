@@ -47,10 +47,6 @@ const NFTSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Metadata: {
-    type: String,
-    required: true,
-  },
   LastUpdated: {
     type: Date,
     required: true,

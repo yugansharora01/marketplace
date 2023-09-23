@@ -58,11 +58,17 @@
 
 .NFTDetailsImg_box_details_box,
 .NFTDetailsImg_box_description_box {
-  padding: 0.1rem 1rem;
+  padding: 1rem;
   font-size: 1rem;
 }
 
-.NFTDetailsImg_box_details_box p {
+.NFTDetailsImg_box_details_box_box {
   line-height: 1;
   font-size: 1rem;
+  display: flex;
+  padding: 0.8rem;
+}
+
+.NFTDetailsImg_box_details_box_box_value {
+  align-self: flex-end;
 }
