@@ -45,10 +45,17 @@
 /* ----------Right------*/
 .navbar_container_right {
   display: grid;
-  grid-template-columns: 1fr 1fr 0.5fr 1fr 0.3fr;
-  gap: 1rem;
+  grid-template-columns: 1fr 1fr 1.8fr;
+
   align-items: center;
   margin-right: -4rem;
+}
+
+.navbar_container_right_right_box {
+  display: grid;
+  grid-template-columns: 0.3fr 1fr 0.5fr;
+  gap: 3rem;
+  align-items: center;
 }
 
 .navbar_container_right_discover {

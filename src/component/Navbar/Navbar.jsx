@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 import { MdNotifications } from "react-icons/md";
 import { BsSearch } from "react-icons/bs";
 import { CgMenuLeft, CgMenuRight } from "react-icons/cg";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
 
 import Style from "./NavBar.module.css";
 import { Discover, HelpCenter, Profile, Notification, SideBar } from "./index";
@@ -19,7 +20,7 @@ const Navbar = () => {
   const [notification, setNotification] = useState(false);
   const [profile, setProfile] = useState(false);
   const [openSideMenu, setOpenSideMenu] = useState(false);
-  const [connected, setConnected] = useState(false);
+  const { address, isConnected, isConnecting, isDisconnected } = useAccount();
 
   const Unset = () => {
     setDiscover(false);
@@ -32,7 +33,7 @@ const Navbar = () => {
     if (e == "Discover") {
       Unset();
       setDiscover(!discover);
-    } else if (e == "Help Center") {
+    } else if (e == "Help") {
       Unset();
       setHelp(!help);
     } else if (e == "Notification") {
@@ -44,31 +45,6 @@ const Navbar = () => {
     } else if (e == "Sidebar") {
       Unset();
       setOpenSideMenu(!openSideMenu);
-    }
-  };
-
-  const openNotification = () => {
-    if (!notification) {
-      Unset();
-      setNotification(true);
-    } else {
-      setNotification(false);
-    }
-  };
-
-  const openProfile = () => {
-    if (!profile) {
-      Unset();
-      setProfile(true);
-    } else {
-      setProfile(false);
-    }
-  };
-  const openSideBar = () => {
-    if (!openSideMenu) {
-      setOpenSideMenu(true);
-    } else {
-      setOpenSideMenu(false);
     }
   };
 
@@ -110,33 +86,40 @@ const Navbar = () => {
               </div>
             )}
           </div>
-          {/* Notification */}
-          <div className={Style.navbar_container_right_notify}>
-            <MdNotifications
-              className={Style.notify}
-              onClick={() => openMenu("Notification")}
-            />
-            {notification && <Notification />}
-          </div>
-          {/*CREATE BUTTON SECTIONS*/}
-          <div className={Style.navbar_container_right_button}>
-            <MyCustomButton btnName="Create" handleClick={() => {}} />
-          </div>
+          {isConnected ? (
+            <div className={Style.navbar_container_right_right_box}>
+              {/* Notification */}
+              <div className={Style.navbar_container_right_notify}>
+                <MdNotifications
+                  className={Style.notify}
+                  onClick={() => openMenu("Notification")}
+                />
+                {notification && <Notification />}
+              </div>
+              {/*CREATE BUTTON SECTIONS*/}
+              <div className={Style.navbar_container_right_button}>
+                <MyCustomButton btnName="Create" handleClick={() => {}} />
+              </div>
 
-          {/*USER PROFILE*/}
-          <div className={Style.navbar_container_right_profile_box}>
-            <div className={Style.navbar_container_right_profile}>
-              <Image
-                src={images.user1}
-                alt="Profile"
-                width={40}
-                height={40}
-                onClick={() => openMenu("Profile")}
-                className={Style.navbar_container_right_profile}
-              />
-              {profile && <Profile />}
+              {/*USER PROFILE*/}
+              <div className={Style.navbar_container_right_profile_box}>
+                <div className={Style.navbar_container_right_profile}>
+                  <Image
+                    src={images.user1}
+                    alt="Profile"
+                    width={40}
+                    height={40}
+                    onClick={() => openMenu("Profile")}
+                    className={Style.navbar_container_right_profile}
+                  />
+                  {profile && <Profile />}
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <ConnectButton />
+          )}
+
           {/*Menu Button*/}
           <div className={Style.navbar_container_right_menuBtn}>
             <CgMenuRight

@@ -26,7 +26,10 @@ const CollectionCard = ({ CollectionData }) => {
       <h1>Latest Collections</h1>
       <div className={Style.CollectionCard}>
         {CollectionData.map((el, i) => (
-          <Link href={{ pathname: "collection", query: { id: `${el.id}` } }}>
+          <Link
+            href={{ pathname: "collection", query: { id: `${el.id}` } }}
+            key={i + 1}
+          >
             <div className={Style.CollectionCard_box} key={i + 1}>
               <div className={Style.CollectionCard_box_like}>
                 <div className={Style.CollectionCard_box_like_box}>

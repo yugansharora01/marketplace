@@ -44,14 +44,16 @@
   .Brand_box_left h1 {
     line-height: 1.1;
   }
+  .Brand_box_right img {
+    width: 400px;
+    height: 300px;
+  }
 }
+
 @media screen and (max-width: 900px) {
   .Brand_box_right {
     width: 45vw;
   }
-}
-
-@media screen and (max-width: 768px) {
   .Brand_box {
     grid-template-columns: 1fr;
   }

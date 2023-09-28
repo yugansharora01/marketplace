@@ -1,0 +1,1 @@
+CreatedAT and updatedAt dates are defaulted to initial value of app start

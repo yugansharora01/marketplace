@@ -27,13 +27,13 @@
   height: 100%;
 }
 
-@media screen and (max-width: 35em) {
+@media screen and (max-width: 560px) {
   .heroSection {
     width: 90%;
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 900px) {
   .heroSection_box {
     grid-template-columns: 1fr;
     gap: 4rem;
@@ -46,5 +46,14 @@
   .heroSection_box_left h1 {
     font-size: 3rem;
     line-height: 1;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .heroSection_box {
+    gap: 2rem;
+  }
+
+  .heroSection_box_left {
+    padding-right: 1rem;
   }
 }

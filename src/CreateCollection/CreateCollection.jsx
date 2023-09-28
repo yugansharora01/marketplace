@@ -25,6 +25,7 @@ const CreateCollection = () => {
     Website: "",
     TotalVolume: 0,
     CreatedAt: Date.now(),
+    CE7I,
   });
 
   const OnCreate = async () => {

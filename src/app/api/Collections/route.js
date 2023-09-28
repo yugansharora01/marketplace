@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 import { connect } from "@/dbConfig/dbConfig";
 import Collections from "@/models/collectionModel";
-import { Router, useRouter } from "next/navigation";
-import NFTsModel from "@/models/NFTModel";
 import { NextRequest, NextResponse } from "next/server";
 
 connect();
