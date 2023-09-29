@@ -16,7 +16,7 @@ const reducer = (state, action) => {
           authenticated: true,
           ...state.userState,
         },
-        userData: action.payload.data,
+        userData: action.payload,
       };
     }
     case AuthConstants.LOGIN_FAILURE: {

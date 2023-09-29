@@ -14,7 +14,7 @@
 .profile_account {
   display: flex;
   align-items: flex-start;
-  gap: 2rem;
+  gap: 1.5rem;
   padding: 1.5rem;
 }
 
@@ -25,12 +25,16 @@
 }
 
 .profile_account_info {
-  padding-top: 5%;
   line-height: 1;
+  font-size: small;
   overflow: hidden;
 }
 
 .profile_account_info p {
+  padding: 2px;
+}
+
+.profile_account_info_name {
   font-weight: 600;
 }
 

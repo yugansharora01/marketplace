@@ -19,10 +19,6 @@ const Discover = () => {
       link: "author-profile",
     },
     {
-      name: "NFT Details",
-      link: "NFTdetails",
-    },
-    {
       name: "Create Collection",
       link: "Create-Collection",
     },

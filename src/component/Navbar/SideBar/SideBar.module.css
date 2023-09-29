@@ -12,6 +12,11 @@
   padding: 0rem 2rem;
 }
 
+.sideBar_box img {
+  width: 150px;
+  height: 150px;
+}
+
 .sideBar_box p {
   margin-top: -2rem;
 }
@@ -21,10 +26,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-right: 1rem;
-  padding-bottom: 0.5rem;
+  padding: 1rem 1rem 0.5rem 0rem;
   margin-top: -0.5rem;
 }
+
 .sideBar_social a {
   border-radius: 50%;
   padding: 0.4rem;
@@ -50,7 +55,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0rem 1.5rem;
+  padding: 1rem 1.5rem;
   cursor: pointer;
 }
 

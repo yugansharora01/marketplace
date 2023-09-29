@@ -40,10 +40,6 @@ const SideBar = ({ setOpenSideMenu }) => {
       link: "Create-Collection",
     },
     {
-      name: "NFT Details",
-      link: "NFTdetails",
-    },
-    {
       name: "Upload NFT",
       link: "uploadNFT",
     },
@@ -133,7 +129,7 @@ const SideBar = ({ setOpenSideMenu }) => {
             onClick={() => openDiscoverMenu()}
           >
             <p>Discover</p>
-            <TiArrowSortedDown />
+            {openDiscover ? <TiArrowSortedUp /> : <TiArrowSortedDown />}
           </div>
           {openDiscover && (
             <div className={Style.sideBar_discover}>
@@ -151,7 +147,7 @@ const SideBar = ({ setOpenSideMenu }) => {
             onClick={() => openHelpMenu()}
           >
             <p>Help Center</p>
-            <TiArrowSortedDown />
+            {openHelp ? <TiArrowSortedUp /> : <TiArrowSortedDown />}
           </div>
           {openHelp && (
             <div className={Style.sideBar_discover}>

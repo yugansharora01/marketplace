@@ -7,7 +7,8 @@ import { MdNotifications } from "react-icons/md";
 import { BsSearch } from "react-icons/bs";
 import { CgMenuLeft, CgMenuRight } from "react-icons/cg";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
+import { fetchBalance } from "@wagmi/core";
 
 import Style from "./NavBar.module.css";
 import { Discover, HelpCenter, Profile, Notification, SideBar } from "./index";
@@ -16,6 +17,8 @@ import { MyCustomButton } from "../componentindex";
 import images from "../../../img";
 import { useUser } from "@/Context/UserProvider";
 import { AuthConstants } from "@/Constants/Constants";
+
+const getBalance = (address) => {};
 
 const Navbar = () => {
   const [discover, setDiscover] = useState(false);
@@ -42,15 +45,20 @@ const Navbar = () => {
       });
       console.log("Success user submission ");
       console.log(response.data);
+      const balance = await fetchBalance({
+        address: WalletAddress,
+      });
       dispatch({
         type: AuthConstants.LOGIN_SUCCESS,
-        payload: response.data,
+        payload: { ...response.data.data, balance },
       });
     } catch (error) {
       console.log("Users submit failed ");
+      console.log(error);
+      console.log(error.response);
       console.log(error.response.data);
       dispatch({
-        type: AuthConstants.LOGIN_SUCESS,
+        type: AuthConstants.LOGIN_FAILURE,
         payload: error.response.data,
       });
     }

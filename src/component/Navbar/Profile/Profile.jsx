@@ -12,6 +12,7 @@ import { useUser } from "@/Context/UserProvider";
 
 const Profile = () => {
   const [state, dispatch] = useUser();
+  console.log(state);
   return (
     <div className={Style.profile}>
       <div className={Style.profile_account}>
@@ -23,15 +24,21 @@ const Profile = () => {
           className={Style.profile_account_img}
         />
         <div className={Style.profile_account_info}>
-          <p>{state.userData.UserName}</p>
-          <small>
+          <p className={Style.profile_account_info_name}>
+            {state.userData.UserName}
+          </p>
+          <p>
             <a
               href={`https://etherscan.io/address/${state.userData.WalletAddress}`}
               target="_blank"
             >
               {state.userData.WalletAddress}
             </a>
-          </small>
+          </p>
+          <p>
+            {state.userData.balance.formatted}&nbsp;
+            {state.userData.balance.symbol}
+          </p>
         </div>
       </div>
       <div className={Style.profile_menu}>
