@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import {
   RainbowKitProvider,
@@ -26,19 +25,13 @@ import {
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
+import { UserProvider } from "@/Context/UserProvider";
+
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
-    zora,
-    ...(process.env.PUBLIC_ENABLE_TESTNETS === "true" ? [goerli, sepolia] : []),
-  ],
+  [mainnet, polygon, optimism, arbitrum, base, zora, sepolia],
   [
     alchemyProvider({
-      apiKey: process.env.ALCHEMY_TESTNET_API_KEY,
+      apiKey: "5XnurvtEOmmKWf2Aattemfs8MWQBDkCU",
       stallTimeout: 1_000,
     }),
     publicProvider(),
@@ -83,7 +76,7 @@ export function Providers({ children }) {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains} appInfo={demoAppInfo}>
-        {mounted && children}
+        <UserProvider>{mounted && children}</UserProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );

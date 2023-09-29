@@ -13,13 +13,22 @@ export async function POST(request) {
     console.log(reqBody);
 
     //check if user exists
-    const collection = await Users.findOne({ WalletAddress });
+    const user = await Users.findOne({ WalletAddress });
 
-    if (collection) {
-      return NextResponse.json({ error: "User exists" }, { status: 400 });
+    if (user) {
+      return NextResponse.json(
+        {
+          message: "User exists",
+          data: user,
+          success: true,
+        },
+        {
+          status: 201,
+        }
+      );
     }
 
-    const newCollection = new Users({
+    const newUser = new Users({
       UserName,
       WalletAddress,
     });
@@ -31,6 +40,7 @@ export async function POST(request) {
     return NextResponse.json(
       {
         message: "User created successfully",
+        data: user,
         success: true,
       },
       {

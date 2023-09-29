@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import Image from "next/image";
+import axios from "axios";
 
 import { MdNotifications } from "react-icons/md";
 import { BsSearch } from "react-icons/bs";
@@ -13,6 +14,8 @@ import { Discover, HelpCenter, Profile, Notification, SideBar } from "./index";
 import { MyCustomButton } from "../componentindex";
 
 import images from "../../../img";
+import { useUser } from "@/Context/UserProvider";
+import { AuthConstants } from "@/Constants/Constants";
 
 const Navbar = () => {
   const [discover, setDiscover] = useState(false);
@@ -21,6 +24,37 @@ const Navbar = () => {
   const [profile, setProfile] = useState(false);
   const [openSideMenu, setOpenSideMenu] = useState(false);
   const { address, isConnected, isConnecting, isDisconnected } = useAccount();
+  const account = useAccount({
+    onConnect({ address, connector, isReconnected }) {
+      postUser(address);
+    },
+  });
+
+  const [state, dispatch] = useUser();
+
+  const postUser = async (WalletAddress) => {
+    try {
+      console.log(WalletAddress);
+      const UserName = "user";
+      const response = await axios.post("/api/Users", {
+        UserName,
+        WalletAddress,
+      });
+      console.log("Success user submission ");
+      console.log(response.data);
+      dispatch({
+        type: AuthConstants.LOGIN_SUCCESS,
+        payload: response.data,
+      });
+    } catch (error) {
+      console.log("Users submit failed ");
+      console.log(error.response.data);
+      dispatch({
+        type: AuthConstants.LOGIN_SUCESS,
+        payload: error.response.data,
+      });
+    }
+  };
 
   const Unset = () => {
     setDiscover(false);

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useReducer } from "react";
 import Image from "next/image";
 import { FaUserAlt, FaRegImage, FaUserEdit } from "react-icons/fa";
 import { MdHelpCenter } from "react-icons/md";
@@ -8,8 +8,10 @@ import Link from "next/link";
 
 import Style from "./Profile.module.css";
 import images from "../../../../img";
+import { useUser } from "@/Context/UserProvider";
 
 const Profile = () => {
+  const [state, dispatch] = useUser();
   return (
     <div className={Style.profile}>
       <div className={Style.profile_account}>
@@ -21,8 +23,15 @@ const Profile = () => {
           className={Style.profile_account_img}
         />
         <div className={Style.profile_account_info}>
-          <p>Shoib Bhai</p>
-          <small>X034234723647234...</small>
+          <p>{state.userData.UserName}</p>
+          <small>
+            <a
+              href={`https://etherscan.io/address/${state.userData.WalletAddress}`}
+              target="_blank"
+            >
+              {state.userData.WalletAddress}
+            </a>
+          </small>
         </div>
       </div>
       <div className={Style.profile_menu}>
@@ -30,19 +39,19 @@ const Profile = () => {
           <div className={Style.profile_menu_one_item}>
             <FaUserAlt />
             <p>
-              <Link href={{ pathName: "/myprofile" }}>My Profile</Link>
+              <Link href={{ pathname: "/myprofile" }}>My Profile</Link>
             </p>
           </div>
           <div className={Style.profile_menu_one_item}>
             <FaRegImage />
             <p>
-              <Link href={{ pathName: "/my-items" }}>My Items</Link>
+              <Link href={{ pathname: "/my-items" }}>My Items</Link>
             </p>
           </div>
           <div className={Style.profile_menu_one_item}>
             <FaUserEdit />
             <p>
-              <Link href={{ pathName: "/editprofile" }}>Edit Profile</Link>
+              <Link href={{ pathname: "/editprofile" }}>Edit Profile</Link>
             </p>
           </div>
         </div>

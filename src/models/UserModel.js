@@ -7,6 +7,7 @@ const usersSchema = new mongoose.Schema({
   },
   WalletAddress: {
     type: String,
+    unique: true,
     required: [true, "Wallet address is required"],
   },
   ProfileImage: {
