@@ -13,6 +13,13 @@ import {
 import CollectionCard from "@/component/CollectionCard/CollectionCard";
 import images from "../../img";
 
+import { useWeb3Contract, useMoralis } from "react-moralis";
+import addresses from "../../constants/networkMapping.json";
+import nftAbi from "../../constants/Nft.json";
+import nftMarketplaceAbi from "../../constants/NftMarketplace.json";
+
+import { ConnectButton } from "web3uikit";
+
 const Home = () => {
   const [collectionArray, setCollectionArray] = useState([
     {
@@ -72,7 +79,15 @@ const Home = () => {
       id: "",
     },
   ]);
-
+  const { chainId, account, isWeb3Enabled } = useMoralis();
+  const chainString = chainId ? parseInt(chainId).toString() : "31337";
+  //const nftAddress = addresses[chainString].NftMarketplace[0];
+  const { runContractFunction: getOwner } = useWeb3Contract({
+    abi: nftMarketplaceAbi,
+    contractAddress: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    functionName: "getOwner",
+    params: {},
+  });
   useEffect(() => {
     const GetCollectionData = async () => {
       try {
@@ -107,8 +122,24 @@ const Home = () => {
     GetCollectionData();
   }, []);
 
+  const [content, setContent] = useState("Hello");
+
+  const onClickButton = async () => {
+    const owner = await getOwner({
+      onSuccess: (tx) => {
+        console.log("tx :-");
+        console.log(tx);
+      },
+    });
+    console.log("owner");
+    console.log(owner);
+    setContent(owner);
+  };
+
   return (
     <div className={Style.homePage}>
+      <button onClick={onClickButton}>{content}</button>
+      <ConnectButton />
       <HeroSection />
       <BigNFTSlider />
       <CollectionCard CollectionData={collectionArray} />

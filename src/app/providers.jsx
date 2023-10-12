@@ -26,6 +26,7 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
 import { UserProvider } from "@/Context/UserProvider";
+import { MoralisProvider } from "react-moralis";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, polygon, optimism, arbitrum, base, zora, sepolia],
@@ -74,10 +75,12 @@ export function Providers({ children }) {
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider chains={chains} appInfo={demoAppInfo}>
-        <UserProvider>{mounted && children}</UserProvider>
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <MoralisProvider initializeOnMount={false}>
+      <WagmiConfig config={wagmiConfig}>
+        <RainbowKitProvider chains={chains} appInfo={demoAppInfo}>
+          <UserProvider>{mounted && children}</UserProvider>
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </MoralisProvider>
   );
 }
