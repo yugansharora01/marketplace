@@ -16,7 +16,9 @@ const collection = () => {
   const searchParams = useSearchParams();
   const passedId = searchParams.get("id");
 
-  const [bannerImage, setBannerImage] = useState(images.creatorbackground1);
+  const [bannerImage, setBannerImage] = useState(
+    "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
+  );
   const [collectionData, setCollectionData] = useState({
     image: images.nft_image_1,
     socials: [
@@ -160,8 +162,8 @@ const collection = () => {
             timeLeft: e.TimeLeft,
           };
           setNFTArray((oldArray) => [...oldArray, newData]);
-          setBannerImage(ele.BannerImage);
         });
+        setBannerImage(ele.BannerImage);
         console.log("Success retrieval");
         console.log(res.data);
       } catch (error) {

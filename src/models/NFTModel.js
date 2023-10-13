@@ -17,8 +17,8 @@ const NFTSchema = new mongoose.Schema({
     required: true,
   },
   Owner: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
   },
   Creator: {
     type: String,

@@ -74,10 +74,11 @@ export async function GET(request) {
       if (sort) {
         collections = await Collections.find({ owner })
           .sort({ CreatedAt: sort })
-          .limit(1);
+          .limit(1)
+          .populate("NFTs");
         console.log(collections);
       } else {
-        collections = await Collections.find({ owner });
+        collections = await Collections.find({ owner }).populate("NFTs");
       }
     }
     return NextResponse.json(

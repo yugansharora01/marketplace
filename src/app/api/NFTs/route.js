@@ -8,12 +8,6 @@ const { v4: uuidv4 } = require("uuid");
 
 connect();
 
-const addNFT = async (data) => {
-  data.ContractAddress = uuidv4();
-  data.TokenID = uuidv4();
-  return data;
-};
-
 export async function POST(request) {
   try {
     let reqBody = await request.json();
@@ -31,20 +25,15 @@ export async function POST(request) {
       console.log("Good to go");
     }
 
-    //Add NFT to smart contract
-    reqBody = await addNFT(reqBody);
-
-    console.log("reqBody 2");
-    console.log(reqBody);
-
     const {
       Owner,
       Price,
       MediaLink,
       ContractAddress,
-      TokenID,
+      TokenId,
       TokenStandard,
       Chain,
+      Creator,
       Metadata,
       LastUpdated,
       Stats,
@@ -61,9 +50,10 @@ export async function POST(request) {
       Price,
       MediaLink,
       ContractAddress,
-      TokenID,
+      TokenID: TokenId,
       TokenStandard,
       Chain,
+      Creator,
       Metadata,
       LastUpdated,
       Stats,

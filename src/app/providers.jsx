@@ -21,6 +21,7 @@ import {
   zora,
   goerli,
   sepolia,
+  hardhat,
 } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
@@ -29,7 +30,7 @@ import { UserProvider } from "@/Context/UserProvider";
 import { MoralisProvider } from "react-moralis";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, polygon, optimism, arbitrum, base, zora, sepolia],
+  [mainnet, polygon, optimism, arbitrum, base, zora, sepolia, hardhat],
   [
     alchemyProvider({
       apiKey: "5XnurvtEOmmKWf2Aattemfs8MWQBDkCU",

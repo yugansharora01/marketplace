@@ -7,8 +7,9 @@ const collectionsSchema = new mongoose.Schema({
     required: [true, "Please provide a Collection Name"],
   },
   Owner: {
-    type: String,
-    required: [true, "No Owner Found"],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+    required: [true, "Please provide a owner"],
   },
   BannerImage: {
     type: String,

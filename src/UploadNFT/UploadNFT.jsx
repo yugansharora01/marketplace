@@ -17,11 +17,30 @@ import { MyCustomButton } from "../component/componentindex";
 import axios from "axios";
 import DynamicList from "./DynamicList/DynamicList";
 
+import { useWeb3Contract, useMoralis } from "react-moralis";
+import addresses from "../../constants/networkMapping.json";
+import nftAbi from "../../constants/Nft.json";
+import nftMarketplaceAbi from "../../constants/NftMarketplace.json";
+
+import { useUser } from "@/Context/UserProvider";
+
 const UploadNFT = ({ collectionArray }) => {
+  const {
+    chainId,
+    account,
+    isWeb3Enabled,
+    enableWeb3,
+    isAuthenticated,
+    authenticate,
+  } = useMoralis();
+  const chainString = chainId ? parseInt(chainId).toString() : "31337";
+  const nftAddress = addresses[chainString].Nft[0];
+  const { runContractFunction: safeMint } = useWeb3Contract();
+
   const [active, setActive] = useState(0);
   const [traitArray, setTraitArray] = useState([]);
   const [statArray, setStatArray] = useState([]);
-  const [selectedKeys, setSelectedKeys] = useState(new Set(["Chain"]));
+  const [selectedKeys, setSelectedKeys] = useState(new Set(["sepolia"]));
   const [chainsArray, setChainsArray] = useState([
     {
       data: "mainnet",
@@ -31,40 +50,74 @@ const UploadNFT = ({ collectionArray }) => {
     },
   ]);
 
+  const [state, dispatch] = useUser();
+
   const [nftData, setNftData] = useState({
     Name: "",
-    Owner: "MetaRivals",
+    Owner: "Owner",
     Price: 1,
     MediaLink:
-      "https://ivory-possible-rooster-796.mypinata.cloud/ipfs/QmNrATouMgx9czM2co8YRBNdp5qTpmN8rmUgP4tonKsfuE?pinataGatewayToken=",
-    ContractAddress: "",
-    TokenID: "",
-    TokenStandard: "ERC-20",
-    Chain: "",
+      "https://miro.medium.com/v2/resize:fit:540/0*vUlSsz1sMQ38o5gd.jpg",
+    ContractAddress: nftAddress,
+    TokenStandard: "ERC-721",
+    Chain: "sepolia",
     Metadata: "",
     LastUpdated: Date.now(),
     Stats: [],
     Traits: [],
     Count: 0,
     Description: "",
+    Creator: "",
     CreatedAt: Date.now(),
     CollectionID: "",
   });
 
   const OnUpload = async () => {
     try {
+      if (!isWeb3Enabled) {
+        await enableWeb3();
+      }
+      console.log(account);
+      const mintOptions = {
+        abi: nftAbi,
+        contractAddress: nftAddress,
+        functionName: "safeMint",
+        params: {
+          to: account,
+          uri: JSON.stringify(nftData),
+        },
+      };
+      let TokenId;
+      await safeMint({
+        params: mintOptions,
+        onSuccess: (tx) => {
+          console.log("tx");
+          console.log(tx);
+          TokenId = tx.value.toString();
+          setNftData({
+            ...nftData,
+            TokenID: tx.value.toString(),
+          });
+        },
+        onError: (error) => {
+          console.log("error in safemint");
+          console.log(error);
+          return;
+        },
+      });
       console.log("nftData:");
       console.log(nftData);
-      const response = await axios.post("/api/NFTs", nftData);
+      const response = await axios.post("/api/NFTs", { ...nftData, TokenId });
       console.log("Success upload " + response.data);
       setNftData({
+        ...nftData,
         Name: "",
+        Price: 1,
         MediaLink:
-          "https://ivory-possible-rooster-796.mypinata.cloud/ipfs/QmNrATouMgx9czM2co8YRBNdp5qTpmN8rmUgP4tonKsfuE?pinataGatewayToken=",
-        ContractAddress: "",
-        TokenID: "",
-        TokenStandard: "ERC-20",
-        Chain: "",
+          "https://miro.medium.com/v2/resize:fit:540/0*vUlSsz1sMQ38o5gd.jpg",
+        ContractAddress: nftAddress,
+        TokenStandard: "ERC-721",
+        Chain: "sepolia",
         Metadata: "",
         LastUpdated: Date.now(),
         Stats: [],
@@ -72,13 +125,16 @@ const UploadNFT = ({ collectionArray }) => {
         Count: 0,
         Description: "",
         CreatedAt: Date.now(),
-        CollectionID: "",
       });
     } catch (error) {
       console.log("NFT upload failed " + error.response);
       console.log(error.response);
       console.log(error);
     }
+  };
+
+  const onPreview = () => {
+    console.log(state.userData);
   };
 
   useEffect(() => {
@@ -97,6 +153,43 @@ const UploadNFT = ({ collectionArray }) => {
       Traits: traitArray,
     });
   }, [statArray, traitArray]);
+
+  useEffect(() => {
+    if (!isWeb3Enabled) {
+      enableWeb3();
+    }
+    if (!isAuthenticated) {
+      console.log("authenticating");
+      authenticate({
+        onComplete: () => {
+          console.log("authenticated");
+        },
+      });
+    }
+    console.log(state.userData._id);
+    setNftData({
+      ...nftData,
+      Owner: state.userData._id,
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(state.userData);
+    console.log(state.userData._id);
+    setNftData({
+      ...nftData,
+      Owner: state.userData._id,
+    });
+  }, [state.userData._id]);
+
+  useEffect(() => {
+    console.log("account");
+    console.log(account);
+    setNftData({
+      ...nftData,
+      Creator: account,
+    });
+  }, [account]);
 
   return (
     <div className={Style.upload}>
@@ -234,7 +327,7 @@ const UploadNFT = ({ collectionArray }) => {
           />
           <MyCustomButton
             btnName="Preview"
-            handleClick={() => {}}
+            handleClick={onPreview}
             classStyle={Style.upload_box_btn_style}
           />
         </div>

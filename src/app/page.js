@@ -141,7 +141,7 @@ const Home = () => {
       <button onClick={onClickButton}>{content}</button>
       <ConnectButton />
       <HeroSection />
-      <BigNFTSlider />
+      {/**<BigNFTSlider />**/}
       <CollectionCard CollectionData={collectionArray} />
       <Brand />
     </div>
