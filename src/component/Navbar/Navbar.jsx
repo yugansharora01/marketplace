@@ -18,6 +18,9 @@ import images from "../../../img";
 import { useUser } from "@/Context/UserProvider";
 import { AuthConstants } from "@/Constants/Constants";
 
+const Moralis = require("moralis").default;
+const { EvmChain } = require("@moralisweb3/common-evm-utils");
+
 const getBalance = (address) => {};
 
 const Navbar = () => {
@@ -27,9 +30,18 @@ const Navbar = () => {
   const [profile, setProfile] = useState(false);
   const [openSideMenu, setOpenSideMenu] = useState(false);
   const { address, isConnected, isConnecting, isDisconnected } = useAccount();
+
+  const connectMoralis = async () => {
+    await Moralis.start({
+      apiKey: process.env.MORALIS_API_KEY,
+      // ...and any other configuration
+    });
+  };
+
   const account = useAccount({
     onConnect({ address, connector, isReconnected }) {
       postUser(address);
+      connectMoralis();
     },
   });
 

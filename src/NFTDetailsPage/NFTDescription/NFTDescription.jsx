@@ -23,6 +23,10 @@ import Style from "./NFTDescription.module.css";
 import images from "../../../img";
 import { MyCustomButton } from "../../component/componentindex.js";
 import { NFTTabs } from "../NFTDetailsIndex";
+import shortenString from "@/Utils/ShortenString";
+
+const Moralis = require("moralis").default;
+const { EvmChain } = require("@moralisweb3/common-evm-utils");
 
 const NFTDescription = ({ NFTData }) => {
   const [social, setSocial] = useState(false);
@@ -30,6 +34,7 @@ const NFTDescription = ({ NFTData }) => {
   const [history, setHistory] = useState(true);
   const [provanance, setProvanance] = useState(false);
   const [owner, setOwner] = useState(false);
+  const [priceInUSD, setPriceInUSD] = useState(0);
 
   const historyArray = [
     images.user1,
@@ -52,6 +57,26 @@ const NFTDescription = ({ NFTData }) => {
     images.user6,
     images.user5,
   ];
+
+  const getPrice = async () => {
+    console.log(process.env.NEXT_PUBLIC_MORALIS_API_KEY);
+    console.log(process.env.NEXT_PUBLIC_UPDATE_FRONT_END);
+    if (!Moralis.Core.isStarted) {
+      Moralis.start({
+        apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY,
+      });
+    }
+
+    const address = "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0";
+
+    const chain = EvmChain.ETHEREUM;
+
+    const response = await Moralis.EvmApi.token.getTokenPrice({
+      address,
+      chain,
+    });
+    setPriceInUSD(parseFloat(response.toJSON().usdPrice) * NFTData.price);
+  };
 
   const openSocial = () => {
     if (!social) {
@@ -155,22 +180,6 @@ const NFTDescription = ({ NFTData }) => {
         <div className={Style.NFTDescription_box_profile}>
           <h1>{NFTData.name}</h1>
           <div className={Style.NFTDescription_box_profile_box}>
-            <div className={Style.NFTDescription_box_profile_box_left}>
-              <Image
-                src={images.user1}
-                alt="profile"
-                width={40}
-                height={40}
-                className={Style.NFTDescription_box_profile_box_left_img}
-              />
-              <div className={Style.NFTDescription_box_profile_box_left_info}>
-                <small>Creator</small> <br />
-                <span>
-                  {NFTData.creator} <MdVerified />
-                </span>
-              </div>
-            </div>
-
             <div className={Style.NFTDescription_box_profile_box_right}>
               <Image
                 src={images.user2}
@@ -183,52 +192,13 @@ const NFTDescription = ({ NFTData }) => {
               <div className={Style.NFTDescription_box_profile_box_right_info}>
                 <small>Owner</small> <br />
                 <span>
-                  {NFTData.owner} <MdVerified />
+                  {shortenString(NFTData.creator, 40)} <MdVerified />
                 </span>
               </div>
             </div>
           </div>
 
           <div className={Style.NFTDescription_box_profile_biding}>
-            <p>
-              <MdTimer /> <span>Auction ending in:</span>
-            </p>
-
-            <div className={Style.NFTDescription_box_profile_biding_box_timer}>
-              <div
-                className={
-                  Style.NFTDescription_box_profile_biding_box_timer_item
-                }
-              >
-                <p>2</p>
-                <span>Days</span>
-              </div>
-              <div
-                className={
-                  Style.NFTDescription_box_profile_biding_box_timer_item
-                }
-              >
-                <p>22</p>
-                <span>hours</span>
-              </div>
-              <div
-                className={
-                  Style.NFTDescription_box_profile_biding_box_timer_item
-                }
-              >
-                <p>45</p>
-                <span>mins</span>
-              </div>
-              <div
-                className={
-                  Style.NFTDescription_box_profile_biding_box_timer_item
-                }
-              >
-                <p>12</p>
-                <span>secs</span>
-              </div>
-            </div>
-
             <div className={Style.NFTDescription_box_profile_biding_box_price}>
               <div
                 className={
@@ -238,7 +208,7 @@ const NFTDescription = ({ NFTData }) => {
                 <small>Current Price</small>
                 <p>
                   {NFTData.price}
-                  <span>( ≈ $3,221.22)</span>
+                  <span>( ≈ $){priceInUSD}</span>
                 </p>
               </div>
 
@@ -249,7 +219,7 @@ const NFTDescription = ({ NFTData }) => {
               <MyCustomButton
                 icon={<FaWallet />}
                 btnName="Place a bid"
-                handleClick={() => {}}
+                handleClick={getPrice}
                 classStyle={Style.button}
               />
               <MyCustomButton

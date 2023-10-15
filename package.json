@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@moralisweb3/common-evm-utils": "^2.23.1",
+    "@moralisweb3/next": "^2.23.1",
     "@nextui-org/react": "^2.1.12",
     "@pinata/sdk": "^2.1.0",
     "@rainbow-me/rainbowkit": "^1.0.11",
@@ -26,8 +28,10 @@
     "lokijs": "^1.5.12",
     "magic-sdk": "^20.1.1",
     "mongoose": "^7.5.0",
+    "moralis": "^2.23.1",
     "moralis-v1": "^1.13.0",
     "next": "13.4.19",
+    "next-auth": "^4.23.2",
     "nodemailer": "^6.9.4",
     "pino-pretty": "^10.2.0",
     "postcss": "8.4.29",
