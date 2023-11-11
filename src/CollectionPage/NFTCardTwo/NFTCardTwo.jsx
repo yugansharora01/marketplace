@@ -11,6 +11,7 @@ import Style from "./NFTCardTwo.module.css";
 const NFTCardTwo = ({ NFTData }) => {
   const [like, setLike] = useState(false);
   const [likeInc, setLikeInc] = useState(0);
+  console.log(NFTData);
 
   const likeNFT = () => {
     if (!like) {
@@ -25,8 +26,11 @@ const NFTCardTwo = ({ NFTData }) => {
   return (
     <div className={Style.NFTCardTwo}>
       {NFTData.map((el, i) => (
-        <Link href={{ pathname: "NFTdetails", query: { id: el.id } }}>
-          <div className={Style.NFTCardTwo_box} key={i + 1}>
+        <Link
+          href={{ pathname: "NFTdetails", query: { id: el.id } }}
+          key={i + 1}
+        >
+          <div className={Style.NFTCardTwo_box}>
             <div className={Style.NFTCardTwo_box_like}>
               <div className={Style.NFTCardTwo_box_like_box}>
                 <div className={Style.NFTCardTwo_box_like_box_box}>
@@ -58,7 +62,9 @@ const NFTCardTwo = ({ NFTData }) => {
             <div className={Style.NFTCardTwo_box_price}>
               <div className={Style.NFTCardTwo_box_price_box}>
                 <small>Current Bid</small>
-                <p>{el.price} ETH</p>
+                <p>
+                  {el.price.amount} {el.price.coinName}
+                </p>
               </div>
               <div className={Style.NFTCardTwo_box_price_stock}>
                 {el.timeLeft ? (
@@ -69,7 +75,7 @@ const NFTCardTwo = ({ NFTData }) => {
                 ) : (
                   <div className={Style.NFTCardTwo_box_price_stock_owner}>
                     <p>Creator</p>
-                    <span>{el.owner}</span>
+                    <span>{el.owner.UserName}</span>
                   </div>
                 )}
               </div>

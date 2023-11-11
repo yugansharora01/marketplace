@@ -11,6 +11,21 @@ const MapSchema = new mongoose.Schema({
   },
 });
 
+const PriceSchema = new mongoose.Schema({
+  amount: {
+    type: Number,
+    default: 0,
+  },
+  coinName: {
+    type: String,
+    default: "weth",
+  },
+  coinAddress: {
+    type: String,
+    default: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+  },
+});
+
 const NFTSchema = new mongoose.Schema({
   Name: {
     type: String,
@@ -25,7 +40,7 @@ const NFTSchema = new mongoose.Schema({
     required: true,
   },
   Price: {
-    type: Number,
+    type: PriceSchema,
   },
   MediaLink: {
     type: String,

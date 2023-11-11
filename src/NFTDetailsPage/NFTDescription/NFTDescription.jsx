@@ -24,6 +24,8 @@ import images from "../../../img";
 import { MyCustomButton } from "../../component/componentindex.js";
 import { NFTTabs } from "../NFTDetailsIndex";
 import shortenString from "@/Utils/ShortenString";
+import clipString from "@/Utils/ClipString";
+import { useWeb3Contract, useMoralis } from "react-moralis";
 
 const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
@@ -178,7 +180,7 @@ const NFTDescription = ({ NFTData }) => {
         </div>
         {/* //Part TWO */}
         <div className={Style.NFTDescription_box_profile}>
-          <h1>{NFTData.name}</h1>
+          <h1>{clipString(NFTData.Name, 20)}</h1>
           <div className={Style.NFTDescription_box_profile_box}>
             <div className={Style.NFTDescription_box_profile_box_right}>
               <Image
@@ -207,8 +209,8 @@ const NFTDescription = ({ NFTData }) => {
               >
                 <small>Current Price</small>
                 <p>
-                  {NFTData.price}
-                  <span>( ≈ $){priceInUSD}</span>
+                  {NFTData.price.amount} {NFTData.price.coinName}
+                  <span>( ≈ ${priceInUSD})</span>
                 </p>
               </div>
 
@@ -216,18 +218,31 @@ const NFTDescription = ({ NFTData }) => {
             </div>
 
             <div className={Style.NFTDescription_box_profile_biding_box_button}>
-              <MyCustomButton
-                icon={<FaWallet />}
-                btnName="Place a bid"
-                handleClick={getPrice}
-                classStyle={Style.button}
-              />
-              <MyCustomButton
-                icon={<FaPercentage />}
-                btnName="Make offer"
-                handleClick={() => {}}
-                classStyle={Style.button}
-              />
+              {NFTData.price == 0 ? (
+                <div>
+                  <MyCustomButton
+                    icon={<FaWallet />}
+                    btnName="Place a bid"
+                    handleClick={getPrice}
+                    classStyle={Style.button}
+                  />
+                  <MyCustomButton
+                    icon={<FaPercentage />}
+                    btnName="Make offer"
+                    handleClick={() => {}}
+                    classStyle={Style.button}
+                  />
+                </div>
+              ) : (
+                <div>
+                  <MyCustomButton
+                    icon={<FaWallet />}
+                    btnName="List"
+                    handleClick={getPrice}
+                    classStyle={Style.button}
+                  />
+                </div>
+              )}
             </div>
 
             <div className={Style.NFTDescription_box_profile_biding_box_tabs}>

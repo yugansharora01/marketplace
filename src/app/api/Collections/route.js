@@ -69,16 +69,34 @@ export async function GET(request) {
     let collections;
     if (id) {
       console.log(id);
-      collections = await Collections.findById(id).populate("NFTs");
+      collections = await Collections.findById(id).populate({
+        path: "NFTs",
+        populate: {
+          path: "Owner",
+          model: "users",
+        },
+      });
     } else {
       if (sort) {
         collections = await Collections.find({ owner })
           .sort({ CreatedAt: sort })
           .limit(1)
-          .populate("NFTs");
+          .populate({
+            path: "NFTs",
+            populate: {
+              path: "Owner",
+              model: "users",
+            },
+          });
         console.log(collections);
       } else {
-        collections = await Collections.find({ owner }).populate("NFTs");
+        collections = await Collections.find({ owner }).populate({
+          path: "NFTs",
+          populate: {
+            path: "Owner",
+            model: "users",
+          },
+        });
       }
     }
     return NextResponse.json(

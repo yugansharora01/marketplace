@@ -177,6 +177,7 @@ const collection = () => {
   return (
     <div className={Style.collection}>
       <Banner bannerImage={bannerImage} />
+      {/**/}
       <CollectionProfile CollectionData={collectionData} />
       <NFTCardTwo NFTData={NFTArray} />
       <Brand />

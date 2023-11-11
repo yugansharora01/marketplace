@@ -8,24 +8,25 @@ import axios from "axios";
 import Style from "./CreateCollection.module.css";
 import formStyle from "../AccountPage/Form/Form.module.css";
 import { MyCustomButton } from "../component/componentindex";
+import { useUser } from "@/Context/UserProvider";
 
 const CreateCollection = () => {
   const [loading, setLoading] = useState(false);
+  const [state, dispatch] = useUser();
 
   const [collection, setCollection] = useState({
     CollectionName: "",
     Owner: "MetaRivals",
     BannerImage:
-      "https://ivory-possible-rooster-796.mypinata.cloud/ipfs/QmUwck5p9khT4iYXiWmNZzvb3TAQU46Lyt69aaUwFPiNnm?_gl=1*ka6i6f*_ga*MTEzMjkxNjA4NS4xNjk0NDQ4OTkz*_ga_5RMPXG14TE*MTY5NDYyMTc4NS42LjEuMTY5NDYyMTc4OC41Ny4wLjA.",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrCCUOb7jgI-J7qrlrDj2jlmoOsa4PvCyUg0bj9tCusE56o0liRmgwTEFwScxEgt5pugM&usqp=CAU",
     ProfileImage:
-      "https://ivory-possible-rooster-796.mypinata.cloud/ipfs/Qmab7dNcGwkvYN2rasWd2v5MSiFajb5YcLwLyxTgCQWx1k?_gl=1*ka6i6f*_ga*MTEzMjkxNjA4NS4xNjk0NDQ4OTkz*_ga_5RMPXG14TE*MTY5NDYyMTc4NS42LjEuMTY5NDYyMTc4OC41Ny4wLjA.",
+      "https://styles.redditmedia.com/t5_2stnc/styles/communityIcon_uyjx15y39lm91.jpg",
     Category: "",
     Description: "",
     Chain: "Ethereum",
     Website: "",
     TotalVolume: 0,
     CreatedAt: Date.now(),
-    CE7I,
   });
 
   const OnCreate = async () => {
@@ -33,14 +34,25 @@ const CreateCollection = () => {
       setLoading(true);
       console.log(collection);
       const response = await axios.post("/api/Collections", collection);
-      console.log("Success submission " + response.data);
+      console.log("Success submission ");
+      console.log(response.data);
     } catch (error) {
-      console.log("Collection submit failed " + error.response.data);
+      console.log("Collection submit failed ");
       console.log(error.response);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log(state.userData);
+    console.log(state.userData._id);
+    setCollection({
+      ...collection,
+      Owner: state.userData._id,
+    });
+  }, [state.userData._id]);
+
   return (
     <div className={Style.upload}>
       <div className={Style.upload_banner}>

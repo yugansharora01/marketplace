@@ -104,15 +104,16 @@ export async function GET(request) {
     let NFT;
     if (id) {
       console.log(id);
-      NFT = await NFTsModel.findById(id);
+      NFT = await NFTsModel.findById(id).populate("Owner");
     } else {
       if (sort) {
         NFT = await NFTsModel.find({ owner })
           .sort({ CreatedAt: sort })
-          .limit(1);
+          .limit(1)
+          .populate("Owner");
         console.log(NFT);
       } else {
-        NFT = await NFTsModel.find({ owner });
+        NFT = await NFTsModel.find({ owner }).populate("Owner");
       }
     }
     return NextResponse.json(

@@ -48,10 +48,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  line-height: 0;
+  line-height: 1;
   background-color: var(--icons-bg-color);
   border-radius: 0.5rem;
-  padding-inline: 1rem;
+  padding: 0.5rem;
   cursor: pointer;
   margin-top: 1rem;
 }

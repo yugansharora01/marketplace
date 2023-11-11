@@ -73,12 +73,14 @@
 @media screen and (max-width: 768px) {
   .footer {
     grid-template-columns: 1fr 1fr;
+    height: 45rem;
   }
 }
 
-@media screen and (max-width: 35rem) {
+@media screen and (max-width: 500px) {
   .footer {
     grid-template-columns: 1fr;
     gap: 1rem;
+    height: 65rem;
   }
 }

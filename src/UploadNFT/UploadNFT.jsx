@@ -54,8 +54,12 @@ const UploadNFT = ({ collectionArray }) => {
 
   const [nftData, setNftData] = useState({
     Name: "",
-    Owner: "Owner",
-    Price: 1,
+    Owner: state.userData._id,
+    Price: {
+      amount: 0,
+      coinName: "weth",
+      coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    },
     MediaLink:
       "https://miro.medium.com/v2/resize:fit:540/0*vUlSsz1sMQ38o5gd.jpg",
     ContractAddress: nftAddress,
@@ -112,9 +116,11 @@ const UploadNFT = ({ collectionArray }) => {
       setNftData({
         ...nftData,
         Name: "",
-        Price: 1,
-        MediaLink:
-          "https://miro.medium.com/v2/resize:fit:540/0*vUlSsz1sMQ38o5gd.jpg",
+        Price: {
+          amount: 0,
+          coinName: "weth",
+          coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        },
         ContractAddress: nftAddress,
         TokenStandard: "ERC-721",
         Chain: "sepolia",

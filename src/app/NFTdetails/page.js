@@ -33,6 +33,7 @@ const NFTDetails = () => {
   });
 
   useEffect(() => {
+    console.log("hehehe");
     const GetNFTData = async () => {
       try {
         const res = await axios.get("/api/NFTs", {
@@ -73,6 +74,7 @@ const NFTDetails = () => {
 
   return (
     <div>
+      {/** */}
       <NFTDetailsPage NFTData={NFTData} />
       <Brand />
     </div>
