@@ -25,7 +25,10 @@ import { MyCustomButton } from "../../component/componentindex.js";
 import { NFTTabs } from "../NFTDetailsIndex";
 import shortenString from "@/Utils/ShortenString";
 import clipString from "@/Utils/ClipString";
-import { useWeb3Contract, useMoralis } from "react-moralis";
+import nftMarketplaceAbi from "../../../constants/NftMarketplace.json";
+import addresses from "../../../constants/networkMapping.json";
+
+const { ethers } = require("ethers");
 
 const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
@@ -78,6 +81,36 @@ const NFTDescription = ({ NFTData }) => {
       chain,
     });
     setPriceInUSD(parseFloat(response.toJSON().usdPrice) * NFTData.price);
+  };
+
+  const ListItem = async () => {
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const { chainId } = await provider.getNetwork();
+      console.log("chainid " + chainId.toString());
+      const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
+      const contract = new ethers.Contract(
+        nftMarketplaceAddress,
+        nftMarketplaceAbi,
+        provider
+      );
+
+      const result = await contract.createListing();
+    }
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const { chainId } = await provider.getNetwork();
+      console.log("chainid " + chainId.toString());
+      const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
+      const signer = provider.getSigner(account);
+      const contract = new ethers.Contract(nftAddress, nftAbi, signer);
+
+      const result = await contract.safeMint(account, JSON.stringify(nftData));
+      console.log(result);
+      const reciept = await result.wait(1);
+      console.log(reciept);
+      TokenId = reciept.events[0].args.tokenId.toString();
+    }
   };
 
   const openSocial = () => {
@@ -238,7 +271,7 @@ const NFTDescription = ({ NFTData }) => {
                   <MyCustomButton
                     icon={<FaWallet />}
                     btnName="List"
-                    handleClick={getPrice}
+                    handleClick={() => {}}
                     classStyle={Style.button}
                   />
                 </div>

@@ -17,26 +17,15 @@ import { MyCustomButton } from "../component/componentindex";
 import axios from "axios";
 import DynamicList from "./DynamicList/DynamicList";
 
-import { useWeb3Contract, useMoralis } from "react-moralis";
 import addresses from "../../constants/networkMapping.json";
 import nftAbi from "../../constants/Nft.json";
-import nftMarketplaceAbi from "../../constants/NftMarketplace.json";
 
 import { useUser } from "@/Context/UserProvider";
 
-const UploadNFT = ({ collectionArray }) => {
-  const {
-    chainId,
-    account,
-    isWeb3Enabled,
-    enableWeb3,
-    isAuthenticated,
-    authenticate,
-  } = useMoralis();
-  const chainString = chainId ? parseInt(chainId).toString() : "31337";
-  const nftAddress = addresses[chainString].Nft[0];
-  const { runContractFunction: safeMint } = useWeb3Contract();
+const { ethers } = require("ethers");
 
+const UploadNFT = ({ collectionArray }) => {
+  const [account, setAccount] = useState("");
   const [active, setActive] = useState(0);
   const [traitArray, setTraitArray] = useState([]);
   const [statArray, setStatArray] = useState([]);
@@ -62,7 +51,6 @@ const UploadNFT = ({ collectionArray }) => {
     },
     MediaLink:
       "https://miro.medium.com/v2/resize:fit:540/0*vUlSsz1sMQ38o5gd.jpg",
-    ContractAddress: nftAddress,
     TokenStandard: "ERC-721",
     Chain: "sepolia",
     Metadata: "",
@@ -78,40 +66,36 @@ const UploadNFT = ({ collectionArray }) => {
 
   const OnUpload = async () => {
     try {
-      if (!isWeb3Enabled) {
-        await enableWeb3();
+      let tokenId, nftAddress;
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const { chainId } = await provider.getNetwork();
+        console.log("chainid " + chainId.toString());
+        nftAddress = addresses[chainId].Nft[0];
+
+        const signer = provider.getSigner(account);
+        const contract = new ethers.Contract(nftAddress, nftAbi, signer);
+
+        const result = await contract.safeMint(
+          account,
+          JSON.stringify(nftData)
+        );
+
+        console.log(result);
+        const reciept = await result.wait(1);
+        console.log(reciept);
+        tokenId = reciept.events[0].args.tokenId.toString();
       }
-      console.log(account);
-      const mintOptions = {
-        abi: nftAbi,
-        contractAddress: nftAddress,
-        functionName: "safeMint",
-        params: {
-          to: account,
-          uri: JSON.stringify(nftData),
-        },
-      };
-      let TokenId;
-      await safeMint({
-        params: mintOptions,
-        onSuccess: (tx) => {
-          console.log("tx");
-          console.log(tx);
-          TokenId = tx.value.toString();
-          setNftData({
-            ...nftData,
-            TokenID: tx.value.toString(),
-          });
-        },
-        onError: (error) => {
-          console.log("error in safemint");
-          console.log(error);
-          return;
-        },
-      });
+
       console.log("nftData:");
       console.log(nftData);
-      const response = await axios.post("/api/NFTs", { ...nftData, TokenId });
+      console.log(tokenId);
+
+      const response = await axios.post("/api/NFTs", {
+        ...nftData,
+        tokenId,
+        nftAddress,
+      });
       console.log("Success upload " + response.data);
       setNftData({
         ...nftData,
@@ -161,17 +145,13 @@ const UploadNFT = ({ collectionArray }) => {
   }, [statArray, traitArray]);
 
   useEffect(() => {
-    if (!isWeb3Enabled) {
-      enableWeb3();
-    }
-    if (!isAuthenticated) {
-      console.log("authenticating");
-      authenticate({
-        onComplete: () => {
-          console.log("authenticated");
-        },
+    const getAccount = async () => {
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
       });
-    }
+      setAccount(accounts[0]);
+    };
+    getAccount();
     console.log(state.userData._id);
     setNftData({
       ...nftData,
