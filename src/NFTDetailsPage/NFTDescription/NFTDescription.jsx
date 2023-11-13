@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   MdVerified,
@@ -17,9 +17,20 @@ import {
   TiSocialInstagram,
 } from "react-icons/ti";
 import { BiTransferAlt, BiDollar } from "react-icons/bi";
+import {
+  useDisclosure,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from "@nextui-org/react";
+import axios from "axios";
 
 //INTERNAL IMPORT
 import Style from "./NFTDescription.module.css";
+import { useSearchParams } from "next/navigation";
 import images from "../../../img";
 import { MyCustomButton } from "../../component/componentindex.js";
 import { NFTTabs } from "../NFTDetailsIndex";
@@ -34,12 +45,17 @@ const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
 
 const NFTDescription = ({ NFTData }) => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [account, setAccount] = useState("");
   const [social, setSocial] = useState(false);
   const [NFTMenu, setNFTMenu] = useState(false);
   const [history, setHistory] = useState(true);
   const [provanance, setProvanance] = useState(false);
   const [owner, setOwner] = useState(false);
   const [priceInUSD, setPriceInUSD] = useState(0);
+
+  const searchParams = useSearchParams();
+  const passedId = searchParams.get("id");
 
   const historyArray = [
     images.user1,
@@ -89,27 +105,37 @@ const NFTDescription = ({ NFTData }) => {
       const { chainId } = await provider.getNetwork();
       console.log("chainid " + chainId.toString());
       const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
+      const signer = provider.getSigner(account);
       const contract = new ethers.Contract(
         nftMarketplaceAddress,
         nftMarketplaceAbi,
-        provider
+        signer
       );
 
-      const result = await contract.createListing();
-    }
-    if (window.ethereum) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const { chainId } = await provider.getNetwork();
-      console.log("chainid " + chainId.toString());
-      const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
-      const signer = provider.getSigner(account);
-      const contract = new ethers.Contract(nftAddress, nftAbi, signer);
-
-      const result = await contract.safeMint(account, JSON.stringify(nftData));
+      const result = await contract.createListing(
+        NFTData.contractAddress,
+        NFTData.tokenId,
+        1
+      );
       console.log(result);
       const reciept = await result.wait(1);
       console.log(reciept);
-      TokenId = reciept.events[0].args.tokenId.toString();
+
+      try {
+        console.log("id:" + passedId.toString());
+        const response = await axios.post("/api/UpdateNFT", {
+          amount: 1,
+          coinName: "weth",
+          coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+          id: passedId,
+        });
+        console.log("Success upload ");
+        console.log(response.data);
+      } catch (error) {
+        console.log("NFT upload failed ");
+        console.log(error);
+        console.log(error.response.data);
+      }
     }
   };
 
@@ -155,6 +181,16 @@ const NFTDescription = ({ NFTData }) => {
       setHistory(true);
     }
   };
+
+  useEffect(() => {
+    const getAccount = async () => {
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      setAccount(accounts[0]);
+    };
+    getAccount();
+  }, []);
 
   return (
     <div className={Style.NFTDescription}>
@@ -270,10 +306,60 @@ const NFTDescription = ({ NFTData }) => {
                 <div>
                   <MyCustomButton
                     icon={<FaWallet />}
-                    btnName="List"
-                    handleClick={() => {}}
+                    btnName="List NFT"
+                    handleClick={onOpen}
                     classStyle={Style.button}
                   />
+                  {/**/}
+                  <>
+                    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                      <ModalContent>
+                        {(onClose) => (
+                          <>
+                            <ModalHeader className="flex flex-col gap-1">
+                              Modal Title
+                            </ModalHeader>
+                            <ModalBody>
+                              <p>
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit. Nullam pulvinar risus non risus
+                                hendrerit venenatis. Pellentesque sit amet
+                                hendrerit risus, sed porttitor quam.
+                              </p>
+                              <p>
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit. Nullam pulvinar risus non risus
+                                hendrerit venenatis. Pellentesque sit amet
+                                hendrerit risus, sed porttitor quam.
+                              </p>
+                              <p>
+                                Magna exercitation reprehenderit magna aute
+                                tempor cupidatat consequat elit dolor
+                                adipisicing. Mollit dolor eiusmod sunt ex
+                                incididunt cillum quis. Velit duis sit officia
+                                eiusmod Lorem aliqua enim laboris do dolor
+                                eiusmod. Et mollit incididunt nisi consectetur
+                                esse laborum eiusmod pariatur proident Lorem
+                                eiusmod et. Culpa deserunt nostrud ad veniam.
+                              </p>
+                            </ModalBody>
+                            <ModalFooter>
+                              <Button
+                                color="danger"
+                                variant="light"
+                                onPress={onClose}
+                              >
+                                Close
+                              </Button>
+                              <Button color="primary" onPress={onClose}>
+                                Action
+                              </Button>
+                            </ModalFooter>
+                          </>
+                        )}
+                      </ModalContent>
+                    </Modal>
+                  </>
                 </div>
               )}
             </div>

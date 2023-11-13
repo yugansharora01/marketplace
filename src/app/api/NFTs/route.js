@@ -4,8 +4,6 @@ import NFTsModel from "@/models/NFTModel";
 import { NextRequest, NextResponse } from "next/server";
 import Collections from "@/models/collectionModel";
 
-const { v4: uuidv4 } = require("uuid");
-
 connect();
 
 export async function POST(request) {

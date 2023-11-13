@@ -76,15 +76,16 @@ const UploadNFT = ({ collectionArray }) => {
         const signer = provider.getSigner(account);
         const contract = new ethers.Contract(nftAddress, nftAbi, signer);
 
-        const result = await contract.safeMint(
-          account,
-          JSON.stringify(nftData)
-        );
+        let result = await contract.safeMint(account, JSON.stringify(nftData));
 
         console.log(result);
         const reciept = await result.wait(1);
         console.log(reciept);
         tokenId = reciept.events[0].args.tokenId.toString();
+
+        const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
+        result = await contract.approve(nftMarketplaceAddress, tokenId);
+        console.log(result);
       }
 
       console.log("nftData:");
