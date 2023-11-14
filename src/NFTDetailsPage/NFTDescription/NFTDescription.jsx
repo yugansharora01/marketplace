@@ -17,15 +17,18 @@ import {
   TiSocialInstagram,
 } from "react-icons/ti";
 import { BiTransferAlt, BiDollar } from "react-icons/bi";
+
 import {
-  useDisclosure,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
+  Autocomplete,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Button,
-} from "@nextui-org/react";
+  TextField,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+
 import axios from "axios";
 
 //INTERNAL IMPORT
@@ -38,14 +41,79 @@ import shortenString from "@/Utils/ShortenString";
 import clipString from "@/Utils/ClipString";
 import nftMarketplaceAbi from "../../../constants/NftMarketplace.json";
 import addresses from "../../../constants/networkMapping.json";
+import TokenSymbol from "../../../constants/SymbolToToken.json";
 
 const { ethers } = require("ethers");
 
 const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
 
+const CustomDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiAutocomplete-root": {
+    padding: theme.spacing(2),
+    paddingLeft: theme.spacing(4),
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    borderRadius: theme.spacing(2),
+  },
+}));
+
+const ListNFTDialog = ({ open, setOpenDialog, tokens }) => {
+  const [amountError, setAmountError] = useState(false);
+  const [amount, setAmount] = useState("");
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+  const onChange = (e) => {
+    setAmount(e.target.value);
+  };
+  const handleSubmit = () => {
+    console.log(amount);
+  };
+  return (
+    <>
+      <CustomDialog
+        onClose={handleClose}
+        open={open}
+        fullWidth={true}
+        maxWidth="xs"
+        sx={{ margin: 4 }}
+      >
+        <DialogTitle>Set Price for Listing NFT</DialogTitle>
+        <DialogContent>You can set</DialogContent>
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={tokens}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="Token" />}
+        />
+        <TextField
+          value={amount}
+          onChange={onChange}
+          error={amountError}
+          id="standard-basic"
+          label="Amount"
+          sx={{
+            padding: 2,
+            paddingLeft: 4,
+            width: 300,
+            "& .MuiFormLabel-root": { padding: 2, paddingLeft: 4 },
+          }}
+        />
+        <DialogActions>
+          <Button onClick={handleSubmit}>List</Button>
+          <Button onClick={handleClose} color="error">
+            Close
+          </Button>
+        </DialogActions>
+      </CustomDialog>
+    </>
+  );
+};
+
 const NFTDescription = ({ NFTData }) => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [openDialog, setOpenDialog] = useState(false);
   const [account, setAccount] = useState("");
   const [social, setSocial] = useState(false);
   const [NFTMenu, setNFTMenu] = useState(false);
@@ -53,6 +121,7 @@ const NFTDescription = ({ NFTData }) => {
   const [provanance, setProvanance] = useState(false);
   const [owner, setOwner] = useState(false);
   const [priceInUSD, setPriceInUSD] = useState(0);
+  const [tokens, setTokens] = useState([]);
 
   const searchParams = useSearchParams();
   const passedId = searchParams.get("id");
@@ -192,6 +261,10 @@ const NFTDescription = ({ NFTData }) => {
     getAccount();
   }, []);
 
+  const check = () => {
+    console.log(tokens instanceof Array);
+  };
+
   return (
     <div className={Style.NFTDescription}>
       <div className={Style.NFTDescription_box}>
@@ -307,59 +380,18 @@ const NFTDescription = ({ NFTData }) => {
                   <MyCustomButton
                     icon={<FaWallet />}
                     btnName="List NFT"
-                    handleClick={onOpen}
+                    handleClick={() => {
+                      //check();
+                      setOpenDialog(true);
+                    }}
                     classStyle={Style.button}
                   />
                   {/**/}
-                  <>
-                    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-                      <ModalContent>
-                        {(onClose) => (
-                          <>
-                            <ModalHeader className="flex flex-col gap-1">
-                              Modal Title
-                            </ModalHeader>
-                            <ModalBody>
-                              <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Nullam pulvinar risus non risus
-                                hendrerit venenatis. Pellentesque sit amet
-                                hendrerit risus, sed porttitor quam.
-                              </p>
-                              <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Nullam pulvinar risus non risus
-                                hendrerit venenatis. Pellentesque sit amet
-                                hendrerit risus, sed porttitor quam.
-                              </p>
-                              <p>
-                                Magna exercitation reprehenderit magna aute
-                                tempor cupidatat consequat elit dolor
-                                adipisicing. Mollit dolor eiusmod sunt ex
-                                incididunt cillum quis. Velit duis sit officia
-                                eiusmod Lorem aliqua enim laboris do dolor
-                                eiusmod. Et mollit incididunt nisi consectetur
-                                esse laborum eiusmod pariatur proident Lorem
-                                eiusmod et. Culpa deserunt nostrud ad veniam.
-                              </p>
-                            </ModalBody>
-                            <ModalFooter>
-                              <Button
-                                color="danger"
-                                variant="light"
-                                onPress={onClose}
-                              >
-                                Close
-                              </Button>
-                              <Button color="primary" onPress={onClose}>
-                                Action
-                              </Button>
-                            </ModalFooter>
-                          </>
-                        )}
-                      </ModalContent>
-                    </Modal>
-                  </>
+                  <ListNFTDialog
+                    open={openDialog}
+                    setOpenDialog={setOpenDialog}
+                    tokens={Object.keys(TokenSymbol)}
+                  ></ListNFTDialog>
                 </div>
               )}
             </div>

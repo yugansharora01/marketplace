@@ -73,7 +73,6 @@ export async function GET(request) {
         path: "NFTs",
         populate: {
           path: "Owner",
-          model: "users",
         },
       });
     } else {
@@ -85,7 +84,6 @@ export async function GET(request) {
             path: "NFTs",
             populate: {
               path: "Owner",
-              model: "users",
             },
           });
         console.log(collections);
@@ -94,7 +92,6 @@ export async function GET(request) {
           path: "NFTs",
           populate: {
             path: "Owner",
-            model: "users",
           },
         });
       }

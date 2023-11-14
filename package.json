@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@moralisweb3/common-evm-utils": "^2.23.1",
     "@moralisweb3/next": "^2.23.1",
+    "@mui/material": "^5.14.18",
     "@nextui-org/react": "^2.1.12",
     "@pinata/sdk": "^2.1.0",
     "@rainbow-me/rainbowkit": "^1.0.11",
