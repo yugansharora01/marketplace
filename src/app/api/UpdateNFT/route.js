@@ -12,12 +12,13 @@ export async function POST(request) {
     console.log(reqBody);
     const id = reqBody.id;
     const nft = await NFTsModel.findById(id);
-    console.log(request);
-    console.log(id);
-    console.log(nft);
-    nft.Price.amount = reqBody.amount;
-    nft.Price.coinName = reqBody.coinName;
-    nft.Price.coinAddress = reqBody.coinAddress;
+    if (reqBody.user) {
+      nft.Owner = reqBody.user;
+    } else {
+      nft.Price.amount = reqBody.amount;
+      nft.Price.coinName = reqBody.coinName;
+      nft.Price.coinAddress = reqBody.coinAddress;
+    }
 
     const nftSaved = await nft.save();
 

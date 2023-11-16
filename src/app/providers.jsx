@@ -76,12 +76,10 @@ export function Providers({ children }) {
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
   return (
-    <MoralisProvider initializeOnMount={false}>
-      <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider chains={chains} appInfo={demoAppInfo}>
-          <UserProvider>{mounted && children}</UserProvider>
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </MoralisProvider>
+    <WagmiConfig config={wagmiConfig}>
+      <RainbowKitProvider chains={chains} appInfo={demoAppInfo}>
+        <UserProvider>{mounted && children}</UserProvider>
+      </RainbowKitProvider>
+    </WagmiConfig>
   );
 }

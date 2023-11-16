@@ -18,17 +18,6 @@ import {
 } from "react-icons/ti";
 import { BiTransferAlt, BiDollar } from "react-icons/bi";
 
-import {
-  Autocomplete,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
-
 import axios from "axios";
 
 //INTERNAL IMPORT
@@ -42,75 +31,14 @@ import clipString from "@/Utils/ClipString";
 import nftMarketplaceAbi from "../../../constants/NftMarketplace.json";
 import addresses from "../../../constants/networkMapping.json";
 import TokenSymbol from "../../../constants/SymbolToToken.json";
+import ListNFTDialog from "../ListNFTDialog/ListNFTDialog";
+import { useUser } from "@/Context/UserProvider";
+import { NFT, NftCard } from "web3uikit";
 
 const { ethers } = require("ethers");
 
 const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
-
-const CustomDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiAutocomplete-root": {
-    padding: theme.spacing(2),
-    paddingLeft: theme.spacing(4),
-  },
-  "& .MuiOutlinedInput-notchedOutline": {
-    borderRadius: theme.spacing(2),
-  },
-}));
-
-const ListNFTDialog = ({ open, setOpenDialog, tokens }) => {
-  const [amountError, setAmountError] = useState(false);
-  const [amount, setAmount] = useState("");
-  const handleClose = () => {
-    setOpenDialog(false);
-  };
-  const onChange = (e) => {
-    setAmount(e.target.value);
-  };
-  const handleSubmit = () => {
-    console.log(amount);
-  };
-  return (
-    <>
-      <CustomDialog
-        onClose={handleClose}
-        open={open}
-        fullWidth={true}
-        maxWidth="xs"
-        sx={{ margin: 4 }}
-      >
-        <DialogTitle>Set Price for Listing NFT</DialogTitle>
-        <DialogContent>You can set</DialogContent>
-        <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          options={tokens}
-          sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Token" />}
-        />
-        <TextField
-          value={amount}
-          onChange={onChange}
-          error={amountError}
-          id="standard-basic"
-          label="Amount"
-          sx={{
-            padding: 2,
-            paddingLeft: 4,
-            width: 300,
-            "& .MuiFormLabel-root": { padding: 2, paddingLeft: 4 },
-          }}
-        />
-        <DialogActions>
-          <Button onClick={handleSubmit}>List</Button>
-          <Button onClick={handleClose} color="error">
-            Close
-          </Button>
-        </DialogActions>
-      </CustomDialog>
-    </>
-  );
-};
 
 const NFTDescription = ({ NFTData }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -121,7 +49,7 @@ const NFTDescription = ({ NFTData }) => {
   const [provanance, setProvanance] = useState(false);
   const [owner, setOwner] = useState(false);
   const [priceInUSD, setPriceInUSD] = useState(0);
-  const [tokens, setTokens] = useState([]);
+  const [state, dispatch] = useUser();
 
   const searchParams = useSearchParams();
   const passedId = searchParams.get("id");
@@ -150,9 +78,9 @@ const NFTDescription = ({ NFTData }) => {
 
   const getPrice = async () => {
     console.log(process.env.NEXT_PUBLIC_MORALIS_API_KEY);
-    console.log(process.env.NEXT_PUBLIC_UPDATE_FRONT_END);
     if (!Moralis.Core.isStarted) {
-      Moralis.start({
+      console.log("start");
+      await Moralis.start({
         apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY,
       });
     }
@@ -168,42 +96,84 @@ const NFTDescription = ({ NFTData }) => {
     setPriceInUSD(parseFloat(response.toJSON().usdPrice) * NFTData.price);
   };
 
-  const ListItem = async () => {
+  const getNFTContract = async () => {
     if (window.ethereum) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const { chainId } = await provider.getNetwork();
       console.log("chainid " + chainId.toString());
       const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
+      console.log(account);
       const signer = provider.getSigner(account);
       const contract = new ethers.Contract(
         nftMarketplaceAddress,
         nftMarketplaceAbi,
         signer
       );
+      return contract;
+    }
+  };
 
-      const result = await contract.createListing(
-        NFTData.contractAddress,
-        NFTData.tokenId,
-        1
-      );
-      console.log(result);
-      const reciept = await result.wait(1);
-      console.log(reciept);
-
+  const ListItem = async (token, amount) => {
+    if (window.ethereum) {
       try {
-        console.log("id:" + passedId.toString());
-        const response = await axios.post("/api/UpdateNFT", {
-          amount: 1,
-          coinName: "weth",
-          coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-          id: passedId,
-        });
-        console.log("Success upload ");
-        console.log(response.data);
+        const contract = await getNFTContract();
+
+        const result = await contract.createListing(
+          NFTData.contractAddress,
+          NFTData.tokenId,
+          amount
+        );
+        console.log(result);
+        const reciept = await result.wait(1);
+        console.log(reciept);
+        try {
+          console.log("id:" + passedId.toString());
+          const response = await axios.post("/api/UpdateNFT", {
+            amount: amount,
+            coinName: token,
+            coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+            id: passedId,
+          });
+          console.log("Success upload ");
+          console.log(response.data);
+        } catch (error) {
+          console.log("NFT Listing data update failed ");
+          console.log(error);
+          console.log(error.response.data);
+        }
       } catch (error) {
-        console.log("NFT upload failed ");
+        console.log("NFT Listing failed ");
         console.log(error);
-        console.log(error.response.data);
+      }
+    }
+  };
+
+  const BuyItem = async (nftAddress, tokenId, Price) => {
+    if (window.ethereum) {
+      try {
+        const contract = await getNFTContract();
+        const result = await contract.buyListing(nftAddress, tokenId, {
+          value: Price,
+        });
+        console.log(result);
+        const reciept = await result.wait(1);
+        console.log(reciept);
+        try {
+          console.log("id:" + passedId.toString());
+          const response = await axios.post("/api/UpdateNFT", {
+            user: state.userData._id,
+            id: passedId,
+          });
+          console.log("Success upload ");
+          console.log(response.data);
+        } catch (error) {
+          console.log("NFT Listing data update failed ");
+          console.log(error);
+          console.log(error.response.data);
+        }
+      } catch (error) {
+        console.log("NFT Buying failed ");
+        console.log(error);
       }
     }
   };
@@ -261,8 +231,8 @@ const NFTDescription = ({ NFTData }) => {
     getAccount();
   }, []);
 
-  const check = () => {
-    console.log(tokens instanceof Array);
+  const check = (val) => {
+    console.log(val);
   };
 
   return (
@@ -360,18 +330,24 @@ const NFTDescription = ({ NFTData }) => {
             </div>
 
             <div className={Style.NFTDescription_box_profile_biding_box_button}>
-              {NFTData.price == 0 ? (
+              {NFTData.price.amount != 0 ? (
                 <div>
                   <MyCustomButton
                     icon={<FaWallet />}
-                    btnName="Place a bid"
-                    handleClick={getPrice}
+                    btnName="Buy NFT"
+                    handleClick={() => {
+                      BuyItem(
+                        NFTData.contractAddress,
+                        NFTData.tokenId,
+                        NFTData.price.amount
+                      );
+                    }}
                     classStyle={Style.button}
                   />
                   <MyCustomButton
                     icon={<FaPercentage />}
                     btnName="Make offer"
-                    handleClick={() => {}}
+                    handleClick={getPrice}
                     classStyle={Style.button}
                   />
                 </div>
@@ -381,7 +357,7 @@ const NFTDescription = ({ NFTData }) => {
                     icon={<FaWallet />}
                     btnName="List NFT"
                     handleClick={() => {
-                      //check();
+                      //check(NFTData.price.amount);
                       setOpenDialog(true);
                     }}
                     classStyle={Style.button}
@@ -391,6 +367,7 @@ const NFTDescription = ({ NFTData }) => {
                     open={openDialog}
                     setOpenDialog={setOpenDialog}
                     tokens={Object.keys(TokenSymbol)}
+                    ListItem={ListItem}
                   ></ListNFTDialog>
                 </div>
               )}
