@@ -40,7 +40,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   ]
 );
 
-const projectId = "28479ee26cf6e63331047e3525637362";
+const projectId = "7a0d2b34527221c509859a3c9e1f4370";
 
 const { wallets } = getDefaultWallets({
   appName: "NFT Nexus",

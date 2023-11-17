@@ -81,7 +81,8 @@ const NFTDescription = ({ NFTData }) => {
     if (!Moralis.Core.isStarted) {
       console.log("start");
       await Moralis.start({
-        apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY,
+        apiKey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6Ijk4ZjQ4ZGJhLTM3ZWYtNDE4My1hNWNjLTI5YmJiNjJmNzk2NCIsIm9yZ0lkIjoiMzUyMTMyIiwidXNlcklkIjoiMzYxOTMxIiwidHlwZUlkIjoiMWM3YmFkYzctYTA1NC00OTgxLTg3OTctNTVkOTA1ODUwZTMyIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE2OTE1MTA1NjEsImV4cCI6NDg0NzI3MDU2MX0.HIbgf2MjgEPzYp8mQ84EmgKoeUZC3PLVhElcSoQlcyc",
       });
     }
 
@@ -96,20 +97,41 @@ const NFTDescription = ({ NFTData }) => {
     setPriceInUSD(parseFloat(response.toJSON().usdPrice) * NFTData.price);
   };
 
+  const coinMarketPrice = async (symbol) => {
+    let response;
+    try {
+      console.log(symbol);
+      response = await axios.get("/api/CoinMarketCap", {
+        params: {
+          symbol: symbol,
+        },
+      });
+      let TokenPrice = Number(response.data.data[symbol][0].quote["USD"].price);
+      setPriceInUSD((TokenPrice * NFTData.price.amount).toFixed(4));
+    } catch (ex) {
+      response = null;
+      console.log(ex);
+    }
+  };
+
   const getNFTContract = async () => {
-    if (window.ethereum) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const { chainId } = await provider.getNetwork();
-      console.log("chainid " + chainId.toString());
-      const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
-      console.log(account);
-      const signer = provider.getSigner(account);
-      const contract = new ethers.Contract(
-        nftMarketplaceAddress,
-        nftMarketplaceAbi,
-        signer
-      );
-      return contract;
+    try {
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const { chainId } = await provider.getNetwork();
+        console.log("chainid " + chainId.toString());
+        const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
+        console.log(account);
+        const signer = provider.getSigner(account);
+        const contract = new ethers.Contract(
+          nftMarketplaceAddress,
+          nftMarketplaceAbi,
+          signer
+        );
+        return contract;
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -152,8 +174,9 @@ const NFTDescription = ({ NFTData }) => {
     if (window.ethereum) {
       try {
         const contract = await getNFTContract();
+        const p = BigInt(Number(Price)) * BigInt(10000000000);
         const result = await contract.buyListing(nftAddress, tokenId, {
-          value: Price,
+          value: p,
         });
         console.log(result);
         const reciept = await result.wait(1);
@@ -230,6 +253,12 @@ const NFTDescription = ({ NFTData }) => {
     };
     getAccount();
   }, []);
+
+  useEffect(() => {
+    if (NFTData.price.coinName != undefined) {
+      coinMarketPrice(NFTData.price.coinName);
+    }
+  }, [NFTData.price.coinName]);
 
   const check = (val) => {
     console.log(val);
@@ -321,8 +350,8 @@ const NFTDescription = ({ NFTData }) => {
               >
                 <small>Current Price</small>
                 <p>
-                  {NFTData.price.amount} {NFTData.price.coinName}
-                  <span>( ≈ ${priceInUSD})</span>
+                  {NFTData.price.amount} {NFTData.price.coinName} ( ≈ $
+                  {priceInUSD})
                 </p>
               </div>
 
@@ -347,7 +376,7 @@ const NFTDescription = ({ NFTData }) => {
                   <MyCustomButton
                     icon={<FaPercentage />}
                     btnName="Make offer"
-                    handleClick={getPrice}
+                    handleClick={() => {}}
                     classStyle={Style.button}
                   />
                 </div>

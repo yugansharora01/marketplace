@@ -16,9 +16,6 @@ const NFTDetailsImg = ({ NFTData }) => {
 
   const [like, setLike] = useState(false);
 
-  console.log("NFTData");
-  console.log(NFTData);
-
   const open = (val) => {
     if (val == "stats") {
       setStats(!stats);

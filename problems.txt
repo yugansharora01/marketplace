@@ -1,1 +1,5 @@
 CreatedAT and updatedAt dates are defaulted to initial value of app start
+
+
+TO DO:
+change the price amount from number to string
