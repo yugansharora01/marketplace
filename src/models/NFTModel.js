@@ -13,8 +13,8 @@ const MapSchema = new mongoose.Schema({
 
 const PriceSchema = new mongoose.Schema({
   amount: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: "0",
   },
   coinName: {
     type: String,

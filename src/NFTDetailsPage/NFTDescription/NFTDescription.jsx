@@ -100,12 +100,14 @@ const NFTDescription = ({ NFTData }) => {
   const coinMarketPrice = async (symbol) => {
     let response;
     try {
+      symbol = symbol.toUpperCase();
       console.log(symbol);
       response = await axios.get("/api/CoinMarketCap", {
         params: {
           symbol: symbol,
         },
       });
+      console.log(response);
       let TokenPrice = Number(response.data.data[symbol][0].quote["USD"].price);
       setPriceInUSD((TokenPrice * NFTData.price.amount).toFixed(4));
     } catch (ex) {
@@ -174,7 +176,7 @@ const NFTDescription = ({ NFTData }) => {
     if (window.ethereum) {
       try {
         const contract = await getNFTContract();
-        const p = BigInt(Number(Price)) * BigInt(10000000000);
+        const p = BigInt(Number(Price));
         const result = await contract.buyListing(nftAddress, tokenId, {
           value: p,
         });
