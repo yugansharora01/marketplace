@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
   MdVerified,
@@ -29,18 +30,19 @@ import { NFTTabs } from "../NFTDetailsIndex";
 import shortenString from "@/Utils/ShortenString";
 import clipString from "@/Utils/ClipString";
 import nftMarketplaceAbi from "../../../constants/NftMarketplace.json";
+import nftAbi from "../../../constants/Nft.json";
 import addresses from "../../../constants/networkMapping.json";
 import TokenSymbol from "../../../constants/SymbolToToken.json";
 import ListNFTDialog from "../ListNFTDialog/ListNFTDialog";
 import { useUser } from "@/Context/UserProvider";
-import { NFT, NftCard } from "web3uikit";
+import StringToBig from "@/Utils/StringToBig";
 
 const { ethers } = require("ethers");
 
 const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
 
-const NFTDescription = ({ NFTData }) => {
+const NFTDescription = ({ NFTData, setNFTData }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [account, setAccount] = useState("");
   const [social, setSocial] = useState(false);
@@ -53,6 +55,7 @@ const NFTDescription = ({ NFTData }) => {
 
   const searchParams = useSearchParams();
   const passedId = searchParams.get("id");
+  let nftMarketplaceAddress;
 
   const historyArray = [
     images.user1,
@@ -76,27 +79,6 @@ const NFTDescription = ({ NFTData }) => {
     images.user5,
   ];
 
-  const getPrice = async () => {
-    console.log(process.env.NEXT_PUBLIC_MORALIS_API_KEY);
-    if (!Moralis.Core.isStarted) {
-      console.log("start");
-      await Moralis.start({
-        apiKey:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6Ijk4ZjQ4ZGJhLTM3ZWYtNDE4My1hNWNjLTI5YmJiNjJmNzk2NCIsIm9yZ0lkIjoiMzUyMTMyIiwidXNlcklkIjoiMzYxOTMxIiwidHlwZUlkIjoiMWM3YmFkYzctYTA1NC00OTgxLTg3OTctNTVkOTA1ODUwZTMyIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE2OTE1MTA1NjEsImV4cCI6NDg0NzI3MDU2MX0.HIbgf2MjgEPzYp8mQ84EmgKoeUZC3PLVhElcSoQlcyc",
-      });
-    }
-
-    const address = "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0";
-
-    const chain = EvmChain.ETHEREUM;
-
-    const response = await Moralis.EvmApi.token.getTokenPrice({
-      address,
-      chain,
-    });
-    setPriceInUSD(parseFloat(response.toJSON().usdPrice) * NFTData.price);
-  };
-
   const coinMarketPrice = async (symbol) => {
     let response;
     try {
@@ -116,13 +98,13 @@ const NFTDescription = ({ NFTData }) => {
     }
   };
 
-  const getNFTContract = async () => {
+  const getNFTMarketplaceContract = async () => {
     try {
       if (window.ethereum) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const { chainId } = await provider.getNetwork();
         console.log("chainid " + chainId.toString());
-        const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
+        nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
         console.log(account);
         const signer = provider.getSigner(account);
         const contract = new ethers.Contract(
@@ -137,15 +119,44 @@ const NFTDescription = ({ NFTData }) => {
     }
   };
 
+  const getNFTContract = async () => {
+    try {
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const { chainId } = await provider.getNetwork();
+        console.log("chainid " + chainId.toString());
+        const nftAddress = addresses[chainId].Nft[0];
+        console.log(account);
+        const signer = provider.getSigner(account);
+        const contract = new ethers.Contract(nftAddress, nftAbi, signer);
+        return contract;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const ListItem = async (token, amount) => {
     if (window.ethereum) {
       try {
-        const contract = await getNFTContract();
+        const price = StringToBig(amount);
+        console.log(price);
+        const contract = await getNFTMarketplaceContract();
 
-        const result = await contract.createListing(
+        const nftContract = await getNFTContract();
+        let result = await nftContract.getApproved(NFTData.tokenId);
+        console.log(result);
+        if (result != nftMarketplaceAddress) {
+          console.log("Getting Approval");
+          result = await nftContract.approve(
+            nftMarketplaceAddress,
+            NFTData.tokenId
+          );
+        }
+        result = await contract.createListing(
           NFTData.contractAddress,
           NFTData.tokenId,
-          amount
+          price
         );
         console.log(result);
         const reciept = await result.wait(1);
@@ -160,6 +171,16 @@ const NFTDescription = ({ NFTData }) => {
           });
           console.log("Success upload ");
           console.log(response.data);
+          console.log(`Setting data ${token}`);
+          setNFTData({
+            ...NFTData,
+            price: {
+              amount,
+              coinName: token,
+              coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+            },
+          });
+          //location.reload();
         } catch (error) {
           console.log("NFT Listing data update failed ");
           console.log(error);
@@ -175,8 +196,8 @@ const NFTDescription = ({ NFTData }) => {
   const BuyItem = async (nftAddress, tokenId, Price) => {
     if (window.ethereum) {
       try {
-        const contract = await getNFTContract();
-        const p = BigInt(Number(Price));
+        const contract = await getNFTMarketplaceContract();
+        const p = StringToBig(Price);
         const result = await contract.buyListing(nftAddress, tokenId, {
           value: p,
         });
@@ -187,10 +208,24 @@ const NFTDescription = ({ NFTData }) => {
           console.log("id:" + passedId.toString());
           const response = await axios.post("/api/UpdateNFT", {
             user: state.userData._id,
+            creator: account,
             id: passedId,
           });
           console.log("Success upload ");
           console.log(response.data);
+
+          console.log(`Setting data ${NFTData.price}`);
+          console.log(NFTData.price);
+          setNFTData({
+            ...NFTData,
+            creator: account,
+            price: {
+              amount: 0,
+              coinName: NFTData.price.coinName,
+              coinAddress: NFTData.price.coinAddress,
+            },
+          });
+          //location.reload();
         } catch (error) {
           console.log("NFT Listing data update failed ");
           console.log(error);
@@ -257,10 +292,12 @@ const NFTDescription = ({ NFTData }) => {
   }, []);
 
   useEffect(() => {
+    console.log("Updating Coin Market Price");
+    console.log(NFTData.price);
     if (NFTData.price.coinName != undefined) {
       coinMarketPrice(NFTData.price.coinName);
     }
-  }, [NFTData.price.coinName]);
+  }, [NFTData]);
 
   const check = (val) => {
     console.log(val);

@@ -75,7 +75,7 @@ const NFTDetails = () => {
   return (
     <div>
       {/** */}
-      <NFTDetailsPage NFTData={NFTData} />
+      <NFTDetailsPage NFTData={NFTData} setNFTData={setNFTData} />
       <Brand />
     </div>
   );

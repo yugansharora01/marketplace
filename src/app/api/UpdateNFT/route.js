@@ -14,6 +14,8 @@ export async function POST(request) {
     const nft = await NFTsModel.findById(id);
     if (reqBody.user) {
       nft.Owner = reqBody.user;
+      nft.Creator = reqBody.creator;
+      nft.Price.amount = 0;
     } else {
       nft.Price.amount = reqBody.amount;
       nft.Price.coinName = reqBody.coinName;
@@ -27,7 +29,7 @@ export async function POST(request) {
 
     return NextResponse.json(
       {
-        message: "NFT created successfully",
+        message: "NFT Updated successfully",
         success: true,
       },
       {

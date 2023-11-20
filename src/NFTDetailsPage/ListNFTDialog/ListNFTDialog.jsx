@@ -30,8 +30,7 @@ const ListNFTDialog = ({ open, setOpenDialog, tokens, ListItem }) => {
   const onChange = (e) => {
     const num = Number(e.target.value);
     if (!Number.isNaN(num)) {
-      setAmount(num);
-      console.log(num);
+      setAmount(e.target.value);
       if (token != "" && token != null) {
         setDisable(false);
       }
