@@ -4,7 +4,8 @@ const StringToBig = (str) => {
   }
   const index = str.indexOf(".");
   if (index == -1) {
-    return BigInt(str);
+    let num = 10 ** 18;
+    return BigInt(str) * BigInt(num);
   }
   str = str.replace(".", "");
   let existingDecimals = str.length - index;
