@@ -134,17 +134,18 @@ const collection = () => {
           cardArray: [
             {
               Title: "Total Volume",
-              data: ele.TotalVolume + " ETH",
+              //data: ele.TotalVolume + " ETH",
+              data: "5.21 ETH",
               subData: "-",
             },
             {
               Title: "Floor Price",
-              data: "$195,4683",
+              data: "5 ETH",
               subData: "-",
             },
             {
               Title: "Best Offer",
-              data: "$195,4683",
+              data: "4.6 ETH",
               subData: "-",
             },
           ],
