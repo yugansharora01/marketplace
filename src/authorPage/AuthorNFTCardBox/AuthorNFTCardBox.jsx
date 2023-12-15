@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import Style from "./AuthorNFTCardBox.module.css";
 import images from "../../../img";
 import { NFTCardTwo } from "../../CollectionPage/collectionIndex";
+import CollectionCard from "@/component/CollectionCard/CollectionCard";
 import FollowerTabCard from "../../component/FollowerTab/FollowerTabCard/FollowerTabCard";
 import { useUser } from "@/Context/UserProvider";
 
@@ -106,10 +107,16 @@ const AuthorNFTCardBox = ({
 
   return (
     <div className={Style.AuthorNFTCardBox}>
-      {/* {collectiables && <NFTCardTwo NFTData={collectiablesArray} />} */}
-      {created && <NFTCardTwo NFTData={createdArray} />}
-      {/* {like && <NFTCardTwo NFTData={likeArray} />} */}
-      {/* {follower && (
+      {collectiables && state.userData.Collections != undefined && (
+        <CollectionCard CollectionData={state.userData.Collections} />
+      )}
+      {created && state.userData.NFTs != undefined && (
+        <NFTCardTwo NFTData={state.userData.NFTs} />
+      )}
+      {like && state.userData.LikedNFTs != undefined && (
+        <NFTCardTwo NFTData={state.userData.LikedNFTs} />
+      )}
+      {follower && (
         <div className={Style.AuthorNFTCardBox_box}>
           {followerArray.map((el, i) => (
             <FollowerTabCard i={i} el={el} />
@@ -122,7 +129,7 @@ const AuthorNFTCardBox = ({
             <FollowerTabCard i={i} el={el} />
           ))}
         </div>
-      )} */}
+      )}
     </div>
   );
 };

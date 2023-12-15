@@ -87,12 +87,7 @@ const Home = () => {
 
         res.data.data.forEach((ele) => {
           const newData = {
-            name: ele.CollectionName,
-            image: ele.BannerImage,
-            owner: ele.Owner,
-            totalVolume: ele.TotalVolume,
-            category: "category",
-            id: ele._id,
+            ...ele,
           };
           setCollectionArray((oldArray) => [...oldArray, newData]);
         });

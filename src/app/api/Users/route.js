@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { connect } from "@/dbConfig/dbConfig";
 import Users from "@/models/UserModel";
+import NFTsModel from "@/models/NFTModel";
+import Collections from "@/models/collectionModel";
 import { NextRequest, NextResponse } from "next/server";
 
 connect();
@@ -15,7 +17,12 @@ export async function POST(request) {
     //check if user exists
     const user = await Users.findOne({ WalletAddress }).populate([
       "NFTs",
-      "Collections",
+      {
+        path: "Collections",
+        populate: {
+          path: "Owner",
+        },
+      },
       "LikedNFTs",
       "LikedCollections",
     ]);

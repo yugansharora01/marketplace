@@ -16,13 +16,15 @@ export async function GET(request) {
     if (owner) {
       if (sort) {
         collections = await Collections.find({ owner })
+          .populate("Owner")
           .sort({ CreatedAt: sort })
           .limit(limit);
       } else {
-        collections = await Collections.find({ owner });
+        collections = await Collections.find({ owner }).populate("Owner");
       }
     } else {
       collections = await Collections.find()
+        .populate("Owner")
         .sort({ CreatedAt: sort })
         .limit(limit);
     }

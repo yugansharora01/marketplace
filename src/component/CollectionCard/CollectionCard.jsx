@@ -10,6 +10,7 @@ import Style from "./CollectionCard.module.css";
 const CollectionCard = ({ CollectionData }) => {
   const [like, setLike] = useState(false);
   const [likeInc, setLikeInc] = useState(0);
+  console.log(CollectionData);
 
   const likeNFT = () => {
     if (!like) {
@@ -48,7 +49,7 @@ const CollectionCard = ({ CollectionData }) => {
 
               <div className={Style.CollectionCard_box_img}>
                 <img
-                  src={el.image}
+                  src={el.BannerImage}
                   alt="NFT"
                   className={Style.CollectionCard_box_img_img}
                 />
@@ -56,7 +57,7 @@ const CollectionCard = ({ CollectionData }) => {
 
               <div className={Style.CollectionCard_box_info}>
                 <div className={Style.CollectionCard_box_info_left}>
-                  <p>{el.name}</p>
+                  <p>{el.CollectionName}</p>
                 </div>
                 <small>{i + 1}</small>
               </div>
@@ -64,7 +65,7 @@ const CollectionCard = ({ CollectionData }) => {
               <div className={Style.CollectionCard_box_info}>
                 <div className={Style.CollectionCard_box_price_time}>
                   <small>Creator</small>
-                  <p>{el.owner}</p>
+                  <p>{el.Owner.UserName}</p>
                 </div>
                 <div className={Style.CollectionCard_box_price_time}>
                   <small>Total Volume</small>
