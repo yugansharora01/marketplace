@@ -3,45 +3,12 @@ import React from "react";
 import Link from "next/link";
 
 import Style from "./Discover.module.css";
+import { discoverMenu } from "../dropdownsContent";
 
 const Discover = () => {
-  const discover = [
-    {
-      name: "Collection",
-      link: "collection",
-    },
-    {
-      name: "Search",
-      link: "search",
-    },
-    {
-      name: "Author Profile",
-      link: "author-profile",
-    },
-    {
-      name: "Create Collection",
-      link: "Create-Collection",
-    },
-    {
-      name: "Upload NFT",
-      link: "uploadNFT",
-    },
-    {
-      name: "Account Setting",
-      link: "account setting",
-    },
-    {
-      name: "Connect Wallet",
-      link: "connect-wallet",
-    },
-    {
-      name: "Blog",
-      link: "blog",
-    },
-  ];
   return (
     <div>
-      {discover.map((el, i) => (
+      {discoverMenu.map((el, i) => (
         <div key={i + 1} className={Style.discover}>
           <Link href={{ pathname: `${el.link}` }}>{el.name}</Link>
         </div>

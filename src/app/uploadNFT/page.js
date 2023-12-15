@@ -22,9 +22,10 @@ const uploadNFT = () => {
 
         res.data.data.forEach((ele) => {
           const newData = {
-            Name: ele.Name,
+            Name: ele.CollectionName,
             image: ele.BannerImage,
             category: "LOL",
+            chain: ele.Chain,
             id: ele._id,
           };
           setCollectionArray((oldArray) => [...oldArray, newData]);

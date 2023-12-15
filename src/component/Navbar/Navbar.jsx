@@ -29,21 +29,41 @@ const Navbar = () => {
   const [notification, setNotification] = useState(false);
   const [profile, setProfile] = useState(false);
   const [openSideMenu, setOpenSideMenu] = useState(false);
-  const { address, isConnected, isConnecting, isDisconnected } = useAccount();
 
-  const connectMoralis = async () => {
-    await Moralis.start({
-      apiKey: process.env.MORALIS_API_KEY,
-      // ...and any other configuration
-    });
-  };
+  // const connectMoralis = async () => {
+  //   await Moralis.start({
+  //     apiKey: process.env.MORALIS_API_KEY,
+  //     // ...and any other configuration
+  //   });
+  // };
 
-  const account = useAccount({
+  const { isConnected, connector: activeConnector } = useAccount({
     onConnect({ address, connector, isReconnected }) {
       postUser(address);
-      connectMoralis();
+      //connectMoralis();
     },
   });
+
+  useEffect(() => {
+    const handleConnectorUpdate = ({ account, chain }) => {
+      if (account) {
+        console.log("new account", account);
+        postUser(account);
+      } else if (chain) {
+        console.log("new chain", chain);
+      }
+    };
+
+    if (activeConnector) {
+      activeConnector.on("change", handleConnectorUpdate);
+    }
+
+    return () => {
+      if (activeConnector) {
+        activeConnector.off("change", handleConnectorUpdate);
+      }
+    };
+  }, [activeConnector]);
 
   const [state, dispatch] = useUser();
 

@@ -3,6 +3,7 @@ import { connect } from "@/dbConfig/dbConfig";
 import NFTsModel from "@/models/NFTModel";
 import { NextRequest, NextResponse } from "next/server";
 import Collections from "@/models/collectionModel";
+import Users from "@/models/UserModel";
 
 connect();
 
@@ -76,6 +77,14 @@ export async function POST(request) {
 
     console.log("collectionSaved");
     console.log(collectionSaved);
+
+    const user = await Users.findById(Owner);
+    user.NFTs.push(id);
+
+    const userSaved = await user.save();
+
+    console.log("userSaved");
+    console.log(userSaved);
 
     return NextResponse.json(
       {

@@ -20,6 +20,7 @@ export async function POST(request) {
       CreatedAt /*, NFTs*/,
     } = reqBody;
 
+    console.log("reqBody");
     console.log(reqBody);
     CreatedAt = Date.now();
 
@@ -41,9 +42,24 @@ export async function POST(request) {
       CreatedAt,
     });
 
+    const id = newCollection._id;
+
     const Collection = await newCollection.save();
 
+    console.log("Collection saved : ");
     console.log(Collection);
+
+    const user = await Users.findById(Owner);
+
+    console.log("user found");
+    console.log(user);
+
+    user.Collections.push(id);
+
+    const userSaved = await user.save();
+
+    console.log("userSaved");
+    console.log(userSaved);
 
     return NextResponse.json(
       {

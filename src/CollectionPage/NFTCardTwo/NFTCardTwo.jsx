@@ -46,7 +46,7 @@ const NFTCardTwo = ({ NFTData }) => {
 
             <div className={Style.NFTCardTwo_box_img}>
               <img
-                src={el.image}
+                src={el.MediaLink}
                 alt="NFT"
                 className={Style.NFTCardTwo_box_img_img}
               />
@@ -54,7 +54,7 @@ const NFTCardTwo = ({ NFTData }) => {
 
             <div className={Style.NFTCardTwo_box_info}>
               <div className={Style.NFTCardTwo_box_info_left}>
-                <p>{el.name}</p>
+                <p>{el.Name}</p>
               </div>
               <small>4{i + 2}</small>
             </div>
@@ -63,19 +63,19 @@ const NFTCardTwo = ({ NFTData }) => {
               <div className={Style.NFTCardTwo_box_price_box}>
                 <small>Current Bid</small>
                 <p>
-                  {el.price.amount} {el.price.coinName}
+                  {el.Price.amount} {el.Price.coinName}
                 </p>
               </div>
               <div className={Style.NFTCardTwo_box_price_stock}>
                 {el.timeLeft ? (
                   <div>
                     <MdTimer />
-                    <span>{el.timeLeft}</span>
+                    <span>{el.TimeLeft}</span>
                   </div>
                 ) : (
                   <div className={Style.NFTCardTwo_box_price_stock_owner}>
                     <p>Creator</p>
-                    <span>{el.owner.UserName}</span>
+                    <span>{el.Owner.UserName}</span>
                   </div>
                 )}
               </div>

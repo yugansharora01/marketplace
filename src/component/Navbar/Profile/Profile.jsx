@@ -12,7 +12,6 @@ import { useUser } from "@/Context/UserProvider";
 
 const Profile = () => {
   const [state, dispatch] = useUser();
-  console.log(state);
   return (
     <div className={Style.profile}>
       <div className={Style.profile_account}>

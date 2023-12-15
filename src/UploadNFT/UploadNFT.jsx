@@ -299,7 +299,7 @@ const UploadNFT = ({ collectionArray }) => {
                   </div>
                 </div>
                 <p>
-                  {el.Name} - {el.category}{" "}
+                  {el.Name} - {el.chain}{" "}
                 </p>
               </div>
             ))}

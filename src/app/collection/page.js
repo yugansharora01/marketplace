@@ -154,13 +154,13 @@ const collection = () => {
         setNFTArray([]);
         ele.NFTs.forEach((e, i) => {
           const newData = {
-            name: e.Name,
-            image: e.MediaLink,
-            category: "LOL",
-            id: e._id,
-            price: e.Price,
-            owner: e.Owner,
-            timeLeft: e.TimeLeft,
+            Name: e.Name,
+            MediaLink: e.MediaLink,
+            Category: "LOL",
+            _id: e._id,
+            Price: e.Price,
+            Owner: e.Owner,
+            TimeLeft: e.TimeLeft,
           };
           setNFTArray((oldArray) => [...oldArray, newData]);
         });

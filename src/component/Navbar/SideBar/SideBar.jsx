@@ -17,69 +17,11 @@ import Style from "./SideBar.module.css";
 import images from "../../../../img";
 import Button from "../../Button/MyCustomButton";
 
+import { helpCenterMenu, discoverMenu } from "../dropdownsContent";
+
 const SideBar = ({ setOpenSideMenu }) => {
   const [openDiscover, setOpenDiscover] = useState(false);
   const [openHelp, setOpenHelp] = useState(false);
-
-  //--------Discover Menu----------//
-  const discover = [
-    {
-      name: "Collection",
-      link: "collection",
-    },
-    {
-      name: "Search",
-      link: "search",
-    },
-    {
-      name: "Author Profile",
-      link: "author-profile",
-    },
-    {
-      name: "Create Collection",
-      link: "Create-Collection",
-    },
-    {
-      name: "Upload NFT",
-      link: "uploadNFT",
-    },
-    {
-      name: "Account Setting",
-      link: "account setting",
-    },
-    {
-      name: "Connect Wallet",
-      link: "connect-wallet",
-    },
-    {
-      name: "Blog",
-      link: "blog",
-    },
-  ];
-
-  //----------Help Center--------------//
-  const helpCenter = [
-    {
-      name: "About",
-      link: "about",
-    },
-    {
-      name: "Contact Us",
-      link: "contact-us",
-    },
-    {
-      name: "Sign Up",
-      link: "sign-up",
-    },
-    {
-      name: "Sign In",
-      link: "sign-in",
-    },
-    {
-      name: "Subscription",
-      link: "subscription",
-    },
-  ];
 
   const openDiscoverMenu = () => {
     if (!openDiscover) setOpenDiscover(true);
@@ -133,7 +75,7 @@ const SideBar = ({ setOpenSideMenu }) => {
           </div>
           {openDiscover && (
             <div className={Style.sideBar_discover}>
-              {discover.map((el, i) => (
+              {discoverMenu.map((el, i) => (
                 <p key={(i = 1)}>
                   <Link href={{ pathname: `${el.link}` }}>{el.name}</Link>
                 </p>
@@ -151,7 +93,7 @@ const SideBar = ({ setOpenSideMenu }) => {
           </div>
           {openHelp && (
             <div className={Style.sideBar_discover}>
-              {helpCenter.map((el, i) => (
+              {helpCenterMenu.map((el, i) => (
                 <p key={(i = 1)}>
                   <Link href={{ pathname: `${el.link}` }}>{el.name}</Link>
                 </p>
