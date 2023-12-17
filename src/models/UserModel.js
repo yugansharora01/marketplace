@@ -13,6 +13,9 @@ const usersSchema = new mongoose.Schema({
   ProfileImage: {
     type: String,
   },
+  BannerImage: {
+    type: String,
+  },
   Collections: [
     {
       type: mongoose.Schema.Types.ObjectId,
