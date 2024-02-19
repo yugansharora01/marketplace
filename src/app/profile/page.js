@@ -49,7 +49,7 @@ const author = () => {
 
   return (
     <div className={Style.author}>
-      <Banner bannerImage={images.creatorbackground2} />
+      <Banner bannerImage={images.defaultBanner} />
       <AuthorProfileCard />
       <AuthorTaps
         setCollectiables={setCollectiables}
@@ -66,7 +66,7 @@ const author = () => {
         follower={follower}
         following={following}
       />
-      <Title
+      {/* <Title
         heading="Popular Creators"
         paragraph="Click on music icon and enjoy NTF music or audio
 "
@@ -75,7 +75,7 @@ const author = () => {
         {followerArray.map((el, i) => (
           <FollowerTabCard i={i} el={el} key={i + 1} />
         ))}
-      </div>
+      </div> */}
 
       <Brand />
     </div>

@@ -5,6 +5,7 @@ import React from "react";
 import Style from "./Banner.module.css";
 
 const Banner = ({ bannerImage }) => {
+  if (bannerImage.src) bannerImage = bannerImage.src;
   return (
     <div className={Style.banner}>
       <div className={Style.banner_img}>

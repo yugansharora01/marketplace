@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { connect } from "@/dbConfig/dbConfig";
+import Users from "@/models/UserModel";
 import Collections from "@/models/collectionModel";
 import { NextRequest, NextResponse } from "next/server";
 
