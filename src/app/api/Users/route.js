@@ -4,7 +4,7 @@ import Users from "@/models/UserModel";
 import NFTsModel from "@/models/NFTModel";
 import Collections from "@/models/collectionModel";
 import { NextRequest, NextResponse } from "next/server";
-import url from "URL";
+import url from "url";
 
 connect();
 

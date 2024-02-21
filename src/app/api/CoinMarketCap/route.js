@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import url from "URL";
+import url from "url";
 
 const axios = require("axios");
 

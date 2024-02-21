@@ -3,7 +3,7 @@ import { connect } from "@/dbConfig/dbConfig";
 import Users from "@/models/UserModel";
 import Collections from "@/models/collectionModel";
 import { NextRequest, NextResponse } from "next/server";
-import url from "URL";
+import url from "url";
 
 connect();
 
@@ -88,8 +88,6 @@ export async function GET(request) {
     if (limit > 50) limit = 50;
     if (!limit) limit = 10;
     let collections;
-    console.log("id");
-    console.log(id);
     if (id) {
       console.log(id);
       collections = await Collections.findById(id).populate({
