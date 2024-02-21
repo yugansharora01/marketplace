@@ -3,14 +3,17 @@ import { connect } from "@/dbConfig/dbConfig";
 import Users from "@/models/UserModel";
 import Collections from "@/models/collectionModel";
 import { NextRequest, NextResponse } from "next/server";
+import url from "URL";
 
 connect();
 
 export async function GET(request) {
   try {
-    const owner = request.nextUrl.searchParams.get("owner");
-    const sort = request.nextUrl.searchParams.get("sort");
-    let limit = request.nextUrl.searchParams.get("limit");
+    // const owner = request.nextUrl.searchParams.get("owner");
+    // const sort = request.nextUrl.searchParams.get("sort");
+    // let limit = request.nextUrl.searchParams.get("limit");
+    const queryParams = url.parse(request.url, true).query; // To read query params
+    let { owner, sort, limit } = queryParams;
     if (limit > 50) limit = 50;
     if (!limit) limit = 10;
     let collections;

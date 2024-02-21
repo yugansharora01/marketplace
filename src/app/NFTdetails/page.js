@@ -38,7 +38,10 @@ const NFTDetails = () => {
       try {
         const res = await axios.get("/api/NFTs", {
           params: {
+            owner: null,
             id: passedId,
+            sort: null,
+            limit: null,
           },
         });
         console.log(res.data.data);

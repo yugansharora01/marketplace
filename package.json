@@ -41,6 +41,7 @@
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
     "react-icons": "^4.10.1",
+    "url": "^0.11.3",
     "viem": "^1.13.1",
     "wagmi": "^1.4.2",
     "web3uikit": "^1.0.4"

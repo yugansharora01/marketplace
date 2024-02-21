@@ -15,7 +15,10 @@ const UploadNFTPage = () => {
       try {
         const res = await axios.get("/api/Collections", {
           params: {
-            Owner: "MetaRivals",
+            owner: "MetaRivals",
+            id: null,
+            sort: null,
+            limit: null,
           },
         });
         console.log(res.data.data);

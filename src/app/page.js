@@ -77,7 +77,10 @@ const Home = () => {
       try {
         const res = await axios.get("/api/LatestCollection", {
           params: {
+            owner: null,
+            id: null,
             sort: 1,
+            limit: null,
           },
         });
         console.log(res);

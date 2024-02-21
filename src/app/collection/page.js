@@ -79,7 +79,10 @@ const Collection = () => {
       try {
         const res = await axios.get("/api/Collections", {
           params: {
+            owner: null,
             id: passedId,
+            sort: null,
+            limit: null,
           },
         });
         console.log(res.data.data);
@@ -121,6 +124,7 @@ const Collection = () => {
             TimeLeft: e.TimeLeft,
           };
           setNFTArray((oldArray) => [...oldArray, newData]);
+          console.log(i);
         });
         setBannerImage(ele.BannerImage);
         console.log("Success retrieval");

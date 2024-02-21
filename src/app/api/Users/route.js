@@ -4,6 +4,7 @@ import Users from "@/models/UserModel";
 import NFTsModel from "@/models/NFTModel";
 import Collections from "@/models/collectionModel";
 import { NextRequest, NextResponse } from "next/server";
+import url from "URL";
 
 connect();
 
@@ -66,7 +67,9 @@ export async function POST(request) {
 
 export async function GET(request) {
   try {
-    const id = request.nextUrl.searchParams.get("id");
+    //const id = request.nextUrl.searchParams.get("id");
+    const queryParams = url.parse(request.url, true).query; // To read query params
+    let { id } = queryParams;
     const user = await Users.findById(id).populate([
       "NFTs",
       "Collections",
