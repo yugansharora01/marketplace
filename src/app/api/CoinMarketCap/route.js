@@ -15,10 +15,10 @@ export async function GET(request) {
     }
     console.log(symbol);
     //console.log(Symbol);
-    const url =
+    const ApiUrl =
       "https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?CMC_PRO_API_KEY=3795c294-fac9-4f04-815c-0e15ab526073&symbol=" +
       symbol.toString();
-    const response = await axios.get(url);
+    const response = await axios.get(ApiUrl);
     if (response) {
       const json = response.data;
       console.log(json);
