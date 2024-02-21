@@ -66,8 +66,9 @@ const Footer = () => {
         </div>
         <div className={Style.footer_subscribe_msg}>
           <p>
-            Subscribe to get the update on What's new in one of the best NFT
-            marketplace.
+            {
+              "Subscribe to get the update on What's new in one of the best NFT marketplace."
+            }
           </p>
         </div>
       </div>

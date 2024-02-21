@@ -39,9 +39,6 @@ import StringToBig from "@/Utils/StringToBig";
 
 const { ethers } = require("ethers");
 
-const Moralis = require("moralis").default;
-const { EvmChain } = require("@moralisweb3/common-evm-utils");
-
 const NFTDescription = ({ NFTData, setNFTData }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [account, setAccount] = useState("");

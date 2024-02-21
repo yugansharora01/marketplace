@@ -51,7 +51,7 @@ const CreateCollection = () => {
       ...collection,
       Owner: state.userData._id,
     });
-  }, [state.userData._id]);
+  }, [state.userData]);
 
   return (
     <div className={Style.upload}>
@@ -127,9 +127,9 @@ const CreateCollection = () => {
           </div>
 
           <p className={Style.upload_box_input_para}>
-            Ciscrypt will include a link to this URL on this item's detail page,
-            so that users can click to learn more about it. You are welcome to
-            link to your own webpage with more details.
+            {
+              "Ciscrypt will include a link to this URL on this item's detail \npage, so that users can click to learn more about it. You are \nwelcome to link to your own webpage with more details."
+            }
           </p>
         </div>
 
@@ -146,8 +146,9 @@ const CreateCollection = () => {
             }
           ></textarea>
           <p>
-            The description will be included on the item's detail page
-            underneath its image. Markdown syntax is supported.
+            {
+              "The description will be included on the item's detail page \nunderneath its image. Markdown syntax is supported."
+            }
           </p>
         </div>
 

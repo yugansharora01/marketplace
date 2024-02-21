@@ -12,7 +12,7 @@ import {
 import { Slider, Brand } from "../../component/componentindex";
 import images from "../../../img";
 
-const collection = () => {
+const Collection = () => {
   const searchParams = useSearchParams();
   const passedId = searchParams.get("id");
 
@@ -144,4 +144,4 @@ const collection = () => {
   );
 };
 
-export default collection;
+export default Collection;

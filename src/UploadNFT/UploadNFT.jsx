@@ -258,8 +258,9 @@ const UploadNFT = ({ collectionArray }) => {
             }
           ></textarea>
           <p>
-            The description will be included on the item's detail page
-            underneath its image. Markdown syntax is supported.
+            {
+              "The description will be included on the item's detail page \nunderneath its image. Markdown syntax is supported."
+            }
           </p>
         </div>
 

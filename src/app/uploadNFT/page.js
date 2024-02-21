@@ -7,7 +7,7 @@ import Style from "./upload-nft.module.css";
 import { UploadNFT } from "../../UploadNFT/uploadNFTIndex";
 import axios from "axios";
 
-const uploadNFT = () => {
+const UploadNFTPage = () => {
   const [collectionArray, setCollectionArray] = useState([]);
 
   useEffect(() => {
@@ -68,4 +68,4 @@ const uploadNFT = () => {
   );
 };
 
-export default uploadNFT;
+export default UploadNFTPage;

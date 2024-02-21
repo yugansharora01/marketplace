@@ -13,7 +13,7 @@ import {
   AuthorNFTCardBox,
 } from "../../authorPage/componentIndex";
 
-const author = () => {
+const Author = () => {
   const followerArray = [
     {
       background: images.creatorbackground1,
@@ -82,4 +82,4 @@ const author = () => {
   );
 };
 
-export default author;
+export default Author;
