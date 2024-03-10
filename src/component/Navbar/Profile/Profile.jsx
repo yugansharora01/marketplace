@@ -57,7 +57,7 @@ const Profile = () => {
           <div className={Style.profile_menu_one_item}>
             <FaUserEdit />
             <p>
-              <Link href={{ pathname: "/editprofile" }}>Edit Profile</Link>
+              <Link href={{ pathname: "/editProfile" }}>Edit Profile</Link>
             </p>
           </div>
         </div>

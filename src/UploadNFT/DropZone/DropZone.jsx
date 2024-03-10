@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 
@@ -7,21 +7,12 @@ import Image from "next/image";
 import Style from "./DropZone.module.css";
 import images from "../../../img";
 
-const DropZone = ({
-  title,
-  heading,
-  subHeading,
-  itemName,
-  website,
-  description,
-  image,
-  fileUrl,
-  setFileUrl,
-  setFile,
-}) => {
+const DropZone = ({ title, setFileUrl, setFile }) => {
+  const [image, setImage] = useState(images.upload);
   const onDrop = useCallback(async (acceptedFile) => {
     setFileUrl(URL.createObjectURL(acceptedFile[0]));
     setFile(acceptedFile[0]);
+    setImage(URL.createObjectURL(acceptedFile[0]));
     console.log(URL.createObjectURL(acceptedFile[0]));
   });
 
@@ -29,6 +20,7 @@ const DropZone = ({
     onDrop,
     accept: "image/*",
     maxSize: 5000000,
+    multiple: false,
   });
   return (
     <div className={Style.DropZone}>
@@ -46,38 +38,10 @@ const DropZone = ({
               className={Style.DropZone_box_input_img_img}
             />
           </div>
-          <p>{heading}</p>
-          <p>{subHeading}</p>
+          <p>{"Drag & drop file"}</p>
+          <p>{"or Browse media on your device"}</p>
         </div>
       </div>
-
-      {fileUrl && (
-        <aside className={Style.DropZone_box_aside}>
-          <div className={Style.DropZone_box_aside_box}>
-            <Image src={fileUrl} alt="nft image" width={200} height={200} />
-
-            <div className={Style.DropZone_box_aside_box_preview}>
-              <div className={Style.DropZone_box_aside_box_preview_one}>
-                <p>
-                  <samp>NFT Name:</samp>
-                  {itemName || ""}
-                </p>
-                <p>
-                  <samp>Website:</samp>
-                  {website || ""}
-                </p>
-              </div>
-
-              <div className={Style.DropZone_box_aside_box_preview_two}>
-                <p>
-                  <span>Description</span>
-                  {description || ""}
-                </p>
-              </div>
-            </div>
-          </div>
-        </aside>
-      )}
     </div>
   );
 };

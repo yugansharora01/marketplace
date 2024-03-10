@@ -19,7 +19,6 @@ import {
   arbitrum,
   base,
   zora,
-  goerli,
   sepolia,
   hardhat,
 } from "wagmi/chains";
@@ -39,7 +38,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   ]
 );
 
-const projectId = "7a0d2b34527221c509859a3c9e1f4370";
+const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
 
 const { wallets } = getDefaultWallets({
   appName: "NFT Nexus",
