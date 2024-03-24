@@ -18,13 +18,19 @@ export async function POST(request) {
     console.log(reqBody);
 
     //check if user exists
-    const user = await Users.findByIdAndUpdate(_id, {
-      UserName,
-      Description,
-      ProfileImage,
-      BannerImage,
-      Socials,
-    });
+    const user = await Users.findByIdAndUpdate(
+      _id,
+      {
+        UserName,
+        Description,
+        ProfileImage,
+        BannerImage,
+        Socials,
+      },
+      {
+        new: true,
+      }
+    );
 
     if (!user) {
       return NextResponse.json(
