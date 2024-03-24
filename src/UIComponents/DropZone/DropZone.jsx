@@ -7,13 +7,12 @@ import Image from "next/image";
 import Style from "./DropZone.module.css";
 import images from "../../../img";
 
-const DropZone = ({ title, setFileUrl, setFile }) => {
+const DropZone = ({ title, setFile, setSuccess }) => {
   const [image, setImage] = useState(images.upload);
   const onDrop = useCallback(async (acceptedFile) => {
-    setFileUrl(URL.createObjectURL(acceptedFile[0]));
     setFile(acceptedFile[0]);
     setImage(URL.createObjectURL(acceptedFile[0]));
-    console.log(URL.createObjectURL(acceptedFile[0]));
+    setSuccess(true);
   });
 
   const { getRootProps, getInputProps } = useDropzone({

@@ -1,0 +1,24 @@
+.Form_box_input {
+  margin-top: 2rem;
+}
+
+.Form_box_input_textarea {
+  border: 1px solid var(--icons-color);
+}
+
+.Form_box_input label {
+  display: block;
+  width: 100%;
+  margin-left: 1rem;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+.Form_box_input_userName {
+  width: 100%;
+  border: 1px solid var(--icons-color);
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: transparent;
+  margin-top: 0.5rem;
+  outline: none;
+}

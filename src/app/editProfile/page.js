@@ -3,7 +3,7 @@ import React from "react";
 
 //INTERNAL IMPORT
 import Style from "../uploadNFT/upload-nft.module.css";
-import { EditProfile } from "../../EditProfile/EditProfileIndex";
+import EditProfile from "../../EditProfile/EditProfile";
 
 const EditProfilePage = () => {
   return (

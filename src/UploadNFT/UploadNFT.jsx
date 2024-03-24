@@ -9,18 +9,20 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
+import axios from "axios";
 
 //INTERNAL IMPORT
 import Style from "./Upload.module.css";
 import formStyle from "../AccountPage/Form/Form.module.css";
 import { MyCustomButton } from "../component/componentindex";
-import axios from "axios";
-import DynamicList from "./DynamicList/DynamicList";
 
 import addresses from "../../constants/networkMapping.json";
 import nftAbi from "../../constants/Nft.json";
 
 import { useUser } from "@/Context/UserProvider";
+import TextArea from "@/UIComponents/TextArea/TextArea";
+import InputField from "@/UIComponents/InputField/InputField";
+import DynamicList from "@/UIComponents/DynamicList/DynamicList";
 
 const { ethers } = require("ethers");
 
@@ -181,29 +183,19 @@ const UploadNFT = ({ collectionArray }) => {
   return (
     <div className={Style.upload}>
       <div className={Style.upload_box}>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="IPFS link">NFT media IPFS link</label>
-          <input
-            type="text"
-            id="IPFS link"
-            placeholder="Profile Image"
-            value={nftData.MediaLink}
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) =>
-              setNftData({ ...nftData, MediaLink: e.target.value })
-            }
-          />
-        </div>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="Name">Item Name</label>
-          <input
-            type="text"
-            id="Name"
-            placeholder="Item Name"
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) => setNftData({ ...nftData, Name: e.target.value })}
-          />
-        </div>
+        <InputField
+          label="NFT media IPFS link"
+          placeholder="Profile Image"
+          value={nftData.MediaLink}
+          onChange={(e) =>
+            setNftData({ ...nftData, MediaLink: e.target.value })
+          }
+        />
+        <InputField
+          label="Item Name"
+          placeholder="Item Name"
+          onChange={(e) => setNftData({ ...nftData, Name: e.target.value })}
+        />
 
         <div className={Style.upload_box_dropdown}>
           <h1> Chain : </h1>
@@ -244,68 +236,61 @@ const UploadNFT = ({ collectionArray }) => {
           setArray={setStatArray}
         />
 
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="description">Description</label>
-          <textarea
-            name=""
-            id="description"
-            cols="30"
-            rows="6"
-            placeholder="something about yourself in few words"
-            className={formStyle.Form_box_input_textarea}
-            onChange={(e) =>
-              setNftData({ ...nftData, Description: e.target.value })
-            }
-          ></textarea>
-          <p>
-            {
-              "The description will be included on the item's detail page \nunderneath its image. Markdown syntax is supported."
-            }
-          </p>
-        </div>
+        <TextArea
+          placeholder="something about yourself in few words"
+          label="Description"
+          note="The description will be included on the item's detail page underneath its image. Markdown syntax is supported."
+          onChange={(e) =>
+            setNftData({ ...nftData, Description: e.target.value })
+          }
+        />
 
-        <div className={formStyle.Form_box_input}>
-          <label>Choose collection</label>
-          <p className={Style.upload_box_input_para}>
-            Choose an exiting collection or create a new one
-          </p>
+        {collectionArray.length !== 0 ? (
+          <div className={formStyle.Form_box_input}>
+            <label>Choose collection</label>
+            <p className={Style.upload_box_input_para}>
+              Choose an exiting collection or create a new one
+            </p>
 
-          <div className={Style.upload_box_slider_div}>
-            {collectionArray.map((el, i) => (
-              <div
-                className={`${Style.upload_box_slider} ${
-                  active == i + 1 ? Style.active : ""
-                }`}
-                key={i + 1}
-                onClick={() => (
-                  setActive(i + 1),
-                  setNftData({ ...nftData, CollectionID: el.id })
-                )}
-              >
-                <div className={Style.upload_box_slider_box}>
-                  <div className={Style.upload_box_slider_box_img}>
-                    <img
-                      src={el.image}
-                      alt="background image"
-                      width={70}
-                      height={70}
-                      onClick={() =>
-                        setNftData({ ...nftData, CollectionID: el.id })
-                      }
-                      className={Style.upload_box_slider_box_img_img}
-                    />
+            <div className={Style.upload_box_slider_div}>
+              {collectionArray.map((el, i) => (
+                <div
+                  className={`${Style.upload_box_slider} ${
+                    active == i + 1 ? Style.active : ""
+                  }`}
+                  key={i + 1}
+                  onClick={() => (
+                    setActive(i + 1),
+                    setNftData({ ...nftData, CollectionID: el.id })
+                  )}
+                >
+                  <div className={Style.upload_box_slider_box}>
+                    <div className={Style.upload_box_slider_box_img}>
+                      <img
+                        src={el.image}
+                        alt="background image"
+                        width={70}
+                        height={70}
+                        onClick={() =>
+                          setNftData({ ...nftData, CollectionID: el.id })
+                        }
+                        className={Style.upload_box_slider_box_img_img}
+                      />
+                    </div>
+                    <div className={Style.upload_box_slider_box_img_icon}>
+                      <TiTick />
+                    </div>
                   </div>
-                  <div className={Style.upload_box_slider_box_img_icon}>
-                    <TiTick />
-                  </div>
+                  <p>
+                    {el.Name} - {el.chain}{" "}
+                  </p>
                 </div>
-                <p>
-                  {el.Name} - {el.chain}{" "}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
 
         <div className={Style.upload_box_btn}>
           <MyCustomButton

@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MdOutlineHttp, MdOutlineAttachFile } from "react-icons/md";
-import { DropZone } from "./EditProfileIndex";
+import DropZone from "@/UIComponents/DropZone/DropZone";
 import axios from "axios";
-import images from "../../img/index";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 
@@ -13,6 +11,12 @@ import formStyle from "../AccountPage/Form/Form.module.css";
 import { MyCustomButton } from "../component/componentindex";
 import { useUser } from "@/Context/UserProvider";
 import { storage } from "@/Config/firebase.config";
+import DynamicList from "@/UIComponents/DynamicList/DynamicList";
+import TextArea from "@/UIComponents/TextArea/TextArea";
+import DropDown from "@/UIComponents/DropDown/DropDown";
+import { Socials } from "@/Constants/Constants";
+import InputField from "@/UIComponents/InputField/InputField";
+import storeFileFirebase from "@/Utils/storeFileFirebase";
 
 const EditProfile = () => {
   const [loading, setLoading] = useState(false);
@@ -22,8 +26,9 @@ const EditProfile = () => {
   const [profileFile, setProfileFile] = useState("");
   const [state, dispatch] = useUser();
 
-  let isBannerUploaded = false,
-    isProfileUploaded = false;
+  const [socialsArray, setSocialsArray] = useState([]);
+  const [isBannerUploaded, setIsBannerUploaded] = useState(false);
+  const [isProfileUploaded, setIsProfileUploaded] = useState(false);
 
   const [user, setUser] = useState({
     UserName: "",
@@ -38,49 +43,60 @@ const EditProfile = () => {
 
   const OnCreate = async () => {
     try {
+      console.log("HI");
+      console.log(user);
       setLoading(true);
-      console.log(collection);
-      const response = await axios.post("/api/Collections", collection);
-      console.log("Success submission ");
+      const response = await axios.post("/api/UpdateUser", user);
+      console.log("Success Update ");
       console.log(response.data);
     } catch (error) {
-      console.log("Collection submit failed ");
-      console.log(error.response);
+      console.log("User Update failed ");
+      console.log(error);
     } finally {
       setLoading(false);
     }
   };
 
   const OnSave = async () => {
-    if (bannerFile == null || profileFile == null) return;
-    const bannerImage = ref(
-      storage,
-      `images/${state.userData._id}/${bannerFile.name + v4()}`
-    );
-    const profileImage = ref(
-      storage,
-      `images/${state.userData._id}/${profileFile.name + v4()}`
-    );
-    uploadBytes(bannerImage, bannerFile).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setBannerFileUrl(url);
-        isBannerUploaded = true;
-        console.log("banner " + url);
-      });
-    });
-    uploadBytes(profileImage, profileFile).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setProfileFileUrl(url);
-        isProfileUploaded = true;
-        console.log("profile " + url);
-      });
-    });
+    console.log(user);
+    if (isBannerUploaded && bannerFile !== "") {
+      await storeFileFirebase(
+        `images/${state.userData._id}/${bannerFile.name + v4()}`,
+        bannerFile,
+        (url) => {
+          setUser({ ...user, BannerImage: url });
+          setBannerFileUrl(url);
+          console.log("banner " + url);
+        }
+      );
+    }
+    if (isProfileUploaded && profileFile !== "") {
+      await storeFileFirebase(
+        `images/${state.userData._id}/${profileFile.name + v4()}`,
+        profileFile,
+        (url) => {
+          setUser({ ...user, ProfileImage: url });
+          setProfileFileUrl(url);
+          console.log("profile " + url);
+        }
+      );
+    }
+    await OnCreate();
   };
 
   useEffect(() => {
-    if (isBannerUploaded && isProfileUploaded) {
-    }
-  }, [isBannerUploaded, isProfileUploaded]);
+    const temp = [];
+    socialsArray.forEach((ele) => {
+      const item = { platform: ele.key, link: ele.value };
+      temp.push(item);
+    });
+    setUser({ ...user, Socials: temp });
+  }, [socialsArray]);
+
+  useEffect(() => {
+    setUser(state.userData);
+    console.log(state.userData);
+  }, [state.userData]);
 
   return (
     <div className={Style.upload}>
@@ -91,7 +107,7 @@ const EditProfile = () => {
             title="JPG, PNG, WEBM , MAX 100MB"
             setFile={setBannerFile}
             setFileUrl={setBannerFileUrl}
-            image={images.upload}
+            setSuccess={setIsBannerUploaded}
           />
         </div>
       </div>
@@ -103,69 +119,32 @@ const EditProfile = () => {
             title="JPG, PNG, WEBM , MAX 100MB"
             setFile={setProfileFile}
             setFileUrl={setProfileFileUrl}
-            image={images.upload}
+            setSuccess={setIsProfileUploaded}
           />
         </div>
       </div>
 
       <div className={Style.upload_box}>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="nft">User Name</label>
-          <input
-            type="text"
-            placeholder="Collection Name"
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) => setUser({ ...user, UserName: e.target.value })}
-          />
-        </div>
+        <InputField
+          label="User Name"
+          placeholder="User Name"
+          value={user.UserName}
+          onChange={(e) => setUser({ ...user, UserName: e.target.value })}
+        />
 
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="nft">Category</label>
-          <input
-            type="text"
-            placeholder="Category"
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) => setUser({ ...user, Category: e.target.value })}
-          />
-        </div>
+        <DynamicList
+          keys={Socials}
+          heading={"Socials"}
+          array={socialsArray}
+          setArray={setSocialsArray}
+        />
 
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="website">website</label>
-          <div className={formStyle.Form_box_input_box}>
-            <div className={formStyle.Form_box_input_box_icon}>
-              <MdOutlineHttp />
-            </div>
-
-            <input
-              type="text"
-              placeholder="website"
-              onChange={(e) => setUser({ ...user, Website: e.target.value })}
-            />
-          </div>
-
-          <p className={Style.upload_box_input_para}>
-            {
-              "Ciscrypt will include a link to this URL on this item's detail \npage, so that users can click to learn more about it. You are \nwelcome to link to your own webpage with more details."
-            }
-          </p>
-        </div>
-
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="description">Description</label>
-          <textarea
-            name=""
-            id=""
-            cols="30"
-            rows="6"
-            placeholder="something about collection in few words"
-            onChange={(e) => setUser({ ...user, Description: e.target.value })}
-          ></textarea>
-          <p>
-            {
-              "The description will be included on the item's detail page \nunderneath its image. Markdown syntax is supported."
-            }
-          </p>
-        </div>
+        <TextArea
+          label="Description"
+          placeholder="something about collection in few words"
+          note="The description will be included on the item's detail page underneath its image. Markdown syntax is supported."
+          onChange={(e) => setUser({ ...user, Description: e.target.value })}
+        />
 
         <div className={Style.upload_box_btn}>
           <MyCustomButton

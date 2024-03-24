@@ -9,6 +9,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default function RootLayout({ children }) {
+  BigInt.prototype["toJSON"] = function () {
+    return this.toString();
+  };
   return (
     <html lang="en">
       <body>

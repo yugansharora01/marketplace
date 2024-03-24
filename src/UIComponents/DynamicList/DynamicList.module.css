@@ -1,0 +1,36 @@
+.box {
+  margin-top: 2rem;
+}
+
+.box label {
+  display: block;
+  width: 100%;
+  margin-left: 1rem;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.input_container {
+  display: flex;
+  gap: 10%;
+}
+
+.addTrait {
+  display: flex;
+  margin-right: 5rem;
+  font-size: 2rem;
+}
+
+.addTrait_Btn {
+  margin-right: 1rem;
+}
+
+.input {
+  width: 40%;
+  border: 1px solid var(--icons-color);
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: transparent;
+  margin-top: 0.5rem;
+  outline: none;
+}

@@ -3,3 +3,5 @@ export const AuthConstants = {
   LOGIN_FAILURE: "LOGIN_FAILURE",
   LOGOUT: "LOGOUT",
 };
+
+export const Socials = ["Facebook", "Instagram", "Website", "Others"];

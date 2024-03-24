@@ -1,0 +1,9 @@
+.trigger_btn {
+  width: 40%;
+  border: 1px solid var(--icons-color);
+  padding: 2rem 0;
+  border-radius: 1rem;
+  background-color: transparent;
+  margin-top: 0.5rem;
+  outline: none;
+}

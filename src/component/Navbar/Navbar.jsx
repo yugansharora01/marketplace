@@ -69,6 +69,8 @@ const Navbar = () => {
       const balance = await fetchBalance({
         address: WalletAddress,
       });
+
+      console.log(JSON.stringify(balance));
       dispatch({
         type: AuthConstants.LOGIN_SUCCESS,
         payload: { ...response.data.data, balance },
