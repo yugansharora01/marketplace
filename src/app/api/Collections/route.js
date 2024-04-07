@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { connect } from "@/dbConfig/dbConfig";
 import Users from "@/models/UserModel";
 import Collections from "@/models/collectionModel";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import url from "url";
 
 connect();
@@ -78,11 +78,6 @@ export async function POST(request) {
 
 export async function GET(request) {
   try {
-    // const owner = request.nextUrl.searchParams.get("owner");
-    // const id = request.nextUrl.searchParams.get("id");
-    // const sort = request.nextUrl.searchParams.get("sort");
-    // let limit = request.nextUrl.searchParams.get("limit");
-
     const queryParams = url.parse(request.url, true).query; // To read query params
     let { owner, id, sort, limit } = queryParams;
     if (limit > 50) limit = 50;

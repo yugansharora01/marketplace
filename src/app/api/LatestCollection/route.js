@@ -9,9 +9,6 @@ connect();
 
 export async function GET(request) {
   try {
-    // const owner = request.nextUrl.searchParams.get("owner");
-    // const sort = request.nextUrl.searchParams.get("sort");
-    // let limit = request.nextUrl.searchParams.get("limit");
     const queryParams = url.parse(request.url, true).query; // To read query params
     let { owner, sort, limit } = queryParams;
     if (limit > 50) limit = 50;
