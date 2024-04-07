@@ -59,10 +59,7 @@
 }
 
 .upload_box_btn {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
   margin-block: 4rem;
-  gap: 2rem;
 }
 
 .upload_box_btn_style {

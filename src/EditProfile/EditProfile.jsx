@@ -102,7 +102,7 @@ const EditProfile = () => {
   }, [profileFile]);
 
   return (
-    <div>
+    <>
       <div className={Style.Form_box_input}>
         <label htmlFor="nft">Banner Image</label>
         <DropZone
@@ -149,7 +149,7 @@ const EditProfile = () => {
           classStyle={Style.upload_box_btn_style}
         />
       </div>
-    </div>
+    </>
   );
 };
 

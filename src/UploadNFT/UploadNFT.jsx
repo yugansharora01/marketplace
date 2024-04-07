@@ -298,11 +298,6 @@ const UploadNFT = ({ collectionArray }) => {
             handleClick={OnUpload}
             classStyle={Style.upload_box_btn_style}
           />
-          <MyCustomButton
-            btnName="Preview"
-            handleClick={onPreview}
-            classStyle={Style.upload_box_btn_style}
-          />
         </div>
       </div>
     </div>

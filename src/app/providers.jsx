@@ -28,10 +28,10 @@ import { publicProvider } from "wagmi/providers/public";
 import { UserProvider } from "@/Context/UserProvider";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, polygon, optimism, arbitrum, base, zora, sepolia, hardhat],
+  [sepolia, hardhat], //mainnet, polygon, optimism, arbitrum, base, zora,
   [
     alchemyProvider({
-      apiKey: "5XnurvtEOmmKWf2Aattemfs8MWQBDkCU",
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_API_KEY,
       stallTimeout: 1_000,
     }),
     publicProvider(),

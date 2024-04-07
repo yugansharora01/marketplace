@@ -24,9 +24,6 @@ export async function POST(request) {
 
     console.log(reqBody);
 
-    const existing = await Users.findById(_id);
-    console.log("existing");
-    console.log(existing);
     //check if user exists
     const user = await Users.findByIdAndUpdate(
       _id,
@@ -70,29 +67,3 @@ export async function POST(request) {
   }
 }
 
-export async function GET(request) {
-  try {
-    //const id = request.nextUrl.searchParams.get("id");
-    const queryParams = url.parse(request.url, true).query; // To read query params
-    let { id } = queryParams;
-    const user = await Users.findById(id).populate([
-      "NFTs",
-      "Collections",
-      "LikedNFTs",
-      "LikedCollections",
-    ]);
-
-    return NextResponse.json(
-      {
-        message: "user fetched successfully",
-        data: user,
-        success: true,
-      },
-      {
-        status: 200,
-      }
-    );
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}

@@ -4,7 +4,7 @@ import images from "../../../img";
 
 //INTERNAL IMPORT
 import Style from "./upload-nft.module.css";
-import { UploadNFT } from "../../UploadNFT/uploadNFTIndex";
+import UploadNFT from "../../UploadNFT/UploadNFT";
 import axios from "axios";
 
 const UploadNFTPage = () => {
@@ -55,13 +55,13 @@ const UploadNFTPage = () => {
           </p>
         </div>
 
-        <div className={Style.uploadNFT_box_title}>
+        {/* <div className={Style.uploadNFT_box_title}>
           <h2>Image, Video, Audio, or 3D Model</h2>
           <p>
             File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG,
             GLB, GLTF. Max size: 100 MB
           </p>
-        </div>
+        </div> */}
 
         <div className={Style.uploadNFT_box_form}>
           <UploadNFT collectionArray={collectionArray} />
