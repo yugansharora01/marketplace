@@ -12,11 +12,21 @@ export async function POST(request) {
   try {
     console.log("entered post");
     const reqBody = await request.json();
-    let { _id, UserName, Description, ProfileImage, BannerImage, Socials } =
-      reqBody;
+    let {
+      _id,
+      UserName,
+      Description,
+      ProfileImage,
+      BannerImage,
+      Socials,
+      WalletAddress,
+    } = reqBody;
 
     console.log(reqBody);
 
+    const existing = await Users.findById(_id);
+    console.log("existing");
+    console.log(existing);
     //check if user exists
     const user = await Users.findByIdAndUpdate(
       _id,
@@ -36,7 +46,7 @@ export async function POST(request) {
       return NextResponse.json(
         {
           message: "User not found",
-          data: WalletAddress,
+          data: { WalletAddress, UserName },
           success: false,
         },
         {

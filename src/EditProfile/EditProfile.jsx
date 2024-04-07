@@ -16,19 +16,16 @@ import TextArea from "@/UIComponents/TextArea/TextArea";
 import DropDown from "@/UIComponents/DropDown/DropDown";
 import { Socials } from "@/Constants/Constants";
 import InputField from "@/UIComponents/InputField/InputField";
-import storeFileFirebase from "@/Utils/storeFileFirebase";
+import { storeAndDeleteFileFirebase } from "@/Utils/storeFileFirebase";
 
 const EditProfile = () => {
   const [loading, setLoading] = useState(false);
-  const [bannerFileUrl, setBannerFileUrl] = useState("");
   const [bannerFile, setBannerFile] = useState("");
-  const [profileFileUrl, setProfileFileUrl] = useState("");
   const [profileFile, setProfileFile] = useState("");
-  const [state, dispatch] = useUser();
-
   const [socialsArray, setSocialsArray] = useState([]);
   const [isBannerUploaded, setIsBannerUploaded] = useState(false);
   const [isProfileUploaded, setIsProfileUploaded] = useState(false);
+  const [state, dispatch] = useUser();
 
   const [user, setUser] = useState({
     UserName: "",
@@ -43,9 +40,8 @@ const EditProfile = () => {
 
   const OnCreate = async () => {
     try {
-      console.log("HI");
-      console.log(user);
       setLoading(true);
+      console.log(user);
       const response = await axios.post("/api/UpdateUser", user);
       console.log("Success Update ");
       console.log(response.data);
@@ -57,30 +53,35 @@ const EditProfile = () => {
     }
   };
 
-  const OnSave = async () => {
-    console.log(user);
+  const uploadBanner = async () => {
     if (isBannerUploaded && bannerFile !== "") {
-      await storeFileFirebase(
+      const url = await storeAndDeleteFileFirebase(
         `images/${state.userData._id}/${bannerFile.name + v4()}`,
         bannerFile,
-        (url) => {
-          setUser({ ...user, BannerImage: url });
-          setBannerFileUrl(url);
-          console.log("banner " + url);
-        }
+        user.BannerImage
       );
+      setUser((prev) => {
+        return { ...prev, BannerImage: url };
+      });
+      console.log("banner " + url);
     }
+  };
+  const uploadProfile = async () => {
     if (isProfileUploaded && profileFile !== "") {
-      await storeFileFirebase(
+      const url = await storeAndDeleteFileFirebase(
         `images/${state.userData._id}/${profileFile.name + v4()}`,
         profileFile,
-        (url) => {
-          setUser({ ...user, ProfileImage: url });
-          setProfileFileUrl(url);
-          console.log("profile " + url);
-        }
+        user.ProfileImage
       );
+      setUser((prev) => {
+        return { ...prev, ProfileImage: url };
+      });
+      console.log("profile " + url);
     }
+  };
+
+  const OnSave = async () => {
+    console.log(user);
     await OnCreate();
   };
 
@@ -95,8 +96,21 @@ const EditProfile = () => {
 
   useEffect(() => {
     setUser(state.userData);
+    // TO DO: set socials Array
     console.log(state.userData);
   }, [state.userData]);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  useEffect(() => {
+    uploadBanner();
+  }, [bannerFile]);
+
+  useEffect(() => {
+    uploadProfile();
+  }, [profileFile]);
 
   return (
     <div className={Style.upload}>
@@ -106,7 +120,6 @@ const EditProfile = () => {
           <DropZone
             title="JPG, PNG, WEBM , MAX 100MB"
             setFile={setBannerFile}
-            setFileUrl={setBannerFileUrl}
             setSuccess={setIsBannerUploaded}
           />
         </div>
@@ -118,7 +131,6 @@ const EditProfile = () => {
           <DropZone
             title="JPG, PNG, WEBM , MAX 100MB"
             setFile={setProfileFile}
-            setFileUrl={setProfileFileUrl}
             setSuccess={setIsProfileUploaded}
           />
         </div>

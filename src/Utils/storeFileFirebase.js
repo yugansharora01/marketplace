@@ -1,13 +1,29 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
 import { storage } from "@/Config/firebase.config";
 
-const storeFileFirebase = async (path, data, afterFunc) => {
-  const dataRef = ref(storage, path);
-  await uploadBytes(dataRef, data).then((snapshot) => {
-    getDownloadURL(snapshot.ref).then((url) => {
-      afterFunc(url);
-    });
-  });
+export const storeAndDeleteFileFirebase = async (path, data, filePath) => {
+  const url = await storeFileFirebase(path, data);
+  await DeleteFileFirebase(filePath);
+  return url;
 };
 
-export default storeFileFirebase;
+export const DeleteFileFirebase = async (filePath) => {
+  if (filePath && filePath !== "") {
+    const fileRef = ref(storage, filePath);
+    await deleteObject(fileRef);
+    console.log("Deleting Finished");
+  }
+};
+
+export const storeFileFirebase = async (path, data) => {
+  const dataRef = ref(storage, path);
+  const snapshot = await uploadBytes(dataRef, data);
+  const url = await getDownloadURL(snapshot.ref);
+  console.log("Uploading successfull");
+  return url;
+};

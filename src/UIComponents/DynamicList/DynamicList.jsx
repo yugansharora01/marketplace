@@ -9,7 +9,6 @@ import DropDown from "../DropDown/DropDown";
 const DynamicList = ({ heading, array, setArray, keys }) => {
   const addField = () => {
     let newField = { key: keys ? keys[0] : "", value: "" };
-    console.log("yo");
     setArray([...array, newField]);
   };
 
