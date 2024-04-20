@@ -93,7 +93,7 @@ export async function GET(request) {
       });
     } else {
       if (sort) {
-        collections = await Collections.find({ owner })
+        collections = await Collections.find({ Owner:owner })
           .sort({ CreatedAt: sort })
           .limit(1)
           .populate({
@@ -104,7 +104,7 @@ export async function GET(request) {
           });
         console.log(collections);
       } else {
-        collections = await Collections.find({ owner }).populate({
+        collections = await Collections.find({ Owner:owner }).populate({
           path: "NFTs",
           populate: {
             path: "Owner",

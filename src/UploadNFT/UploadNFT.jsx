@@ -15,14 +15,11 @@ import axios from "axios";
 import Style from "./Upload.module.css";
 import formStyle from "../AccountPage/Form/Form.module.css";
 import { MyCustomButton } from "../component/componentindex";
-
-import addresses from "../../constants/networkMapping.json";
-import nftAbi from "../../constants/Nft.json";
-
 import { useUser } from "@/Context/UserProvider";
 import TextArea from "@/UIComponents/TextArea/TextArea";
 import InputField from "@/UIComponents/InputField/InputField";
 import DynamicList from "@/UIComponents/DynamicList/DynamicList";
+import NFTMinting from "./NFTMinting";
 
 const { ethers } = require("ethers");
 
@@ -40,6 +37,8 @@ const UploadNFT = ({ collectionArray }) => {
       data: "sepolia",
     },
   ]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmited, setIsSubmited] = useState(false);
 
   const [state, dispatch] = useUser();
 
@@ -67,85 +66,49 @@ const UploadNFT = ({ collectionArray }) => {
   });
 
   const OnUpload = async () => {
-    try {
-      let tokenId, nftAddress;
-      if (window.ethereum) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const { chainId } = await provider.getNetwork();
-        console.log("chainid " + chainId.toString());
-        nftAddress = addresses[chainId].Nft[0];
-
-        const signer = provider.getSigner(account);
-        const contract = new ethers.Contract(nftAddress, nftAbi, signer);
-
-        let result = await contract.safeMint(account, JSON.stringify(nftData));
-
-        console.log(result);
-        const reciept = await result.wait(1);
-        console.log(reciept);
-        tokenId = reciept.events[0].args.tokenId.toString();
-
-        const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
-        result = await contract.approve(nftMarketplaceAddress, tokenId);
-        console.log(result);
+    setIsSubmited(true);
+    if (
+      selectedKeys.currentKey &&
+      nftData.MediaLink &&
+      nftData.Name &&
+      nftData.Creator &&
+      nftData.CollectionID
+    ) {
+      try {
+        const { tokenId, nftAddress } = await NFTMinting(
+          nftData,
+          setNftData,
+          account
+        );
+        console.log(selectedKeys.currentKey);
+        setNftData((prev) => {
+          return {
+            ...prev,
+            tokenId,
+            nftAddress,
+            Chain: selectedKeys.currentKey,
+            Stats: statArray,
+            Traits: traitArray,
+            Owner: state.userData._id,
+            Creator: account,
+          };
+        });
+        const response = await axios.post("/api/NFTs", {
+          ...nftData,
+          tokenId,
+          nftAddress,
+          Chain: selectedKeys.currentKey,
+          Stats: statArray,
+          Traits: traitArray,
+          Owner: state.userData._id,
+          Creator: account,
+        });
+        console.log("Success upload " + response.data);
+      } catch (error) {
+        console.log(error);
       }
-
-      console.log("nftData:");
-      console.log(nftData);
-      console.log(tokenId);
-
-      const response = await axios.post("/api/NFTs", {
-        ...nftData,
-        tokenId,
-        nftAddress,
-      });
-      console.log("Success upload " + response.data);
-      setNftData({
-        ...nftData,
-        Name: "",
-        Price: {
-          amount: 0,
-          coinName: "weth",
-          coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-        },
-        ContractAddress: nftAddress,
-        TokenStandard: "ERC-721",
-        Chain: "sepolia",
-        Metadata: "",
-        LastUpdated: Date.now(),
-        Stats: [],
-        Traits: [],
-        Count: 0,
-        Description: "",
-        CreatedAt: Date.now(),
-      });
-    } catch (error) {
-      console.log("NFT upload failed " + error.response);
-      console.log(error.response);
-      console.log(error);
     }
   };
-
-  const onPreview = () => {
-    console.log(state.userData);
-  };
-
-  useEffect(() => {
-    if (selectedKeys.currentKey != "Chain") {
-      setNftData({
-        ...nftData,
-        Chain: selectedKeys.currentKey,
-      });
-    }
-  }, [selectedKeys]);
-
-  useEffect(() => {
-    setNftData({
-      ...nftData,
-      Stats: statArray,
-      Traits: traitArray,
-    });
-  }, [statArray, traitArray]);
 
   useEffect(() => {
     const getAccount = async () => {
@@ -155,30 +118,7 @@ const UploadNFT = ({ collectionArray }) => {
       setAccount(accounts[0]);
     };
     getAccount();
-    console.log(state.userData._id);
-    setNftData({
-      ...nftData,
-      Owner: state.userData._id,
-    });
   }, []);
-
-  useEffect(() => {
-    console.log(state.userData);
-    console.log(state.userData._id);
-    setNftData({
-      ...nftData,
-      Owner: state.userData._id,
-    });
-  }, [state.userData._id]);
-
-  useEffect(() => {
-    console.log("account");
-    console.log(account);
-    setNftData({
-      ...nftData,
-      Creator: account,
-    });
-  }, [account]);
 
   return (
     <div className={Style.upload}>
@@ -190,11 +130,16 @@ const UploadNFT = ({ collectionArray }) => {
           onChange={(e) =>
             setNftData({ ...nftData, MediaLink: e.target.value })
           }
+          isInValid={isSubmited && nftData.MediaLink == ""}
+          invalidText={"LOL"}
+          isRequired={true}
         />
         <InputField
           label="Item Name"
-          placeholder="Item Name"
+          value={nftData.Name}
           onChange={(e) => setNftData({ ...nftData, Name: e.target.value })}
+          isInValid={isSubmited && nftData.Name == ""}
+          invalidText={"LOL"}
         />
 
         <div className={Style.upload_box_dropdown}>
@@ -202,7 +147,9 @@ const UploadNFT = ({ collectionArray }) => {
           <div className={Style.upload_box_dropdown_dropdown}>
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="bordered">{selectedKeys}</Button>
+                <Button variant="bordered">
+                  {selectedKeys.currentKey ? selectedKeys.currentKey : "Chain"}
+                </Button>
               </DropdownTrigger>
               <DropdownMenu
                 aria-label="Static Actions"

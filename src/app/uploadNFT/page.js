@@ -6,16 +6,20 @@ import images from "../../../img";
 import Style from "./upload-nft.module.css";
 import UploadNFT from "../../UploadNFT/UploadNFT";
 import axios from "axios";
+import mongoose from "mongoose";
+import { useUser } from "@/Context/UserProvider";
 
 const UploadNFTPage = () => {
   const [collectionArray, setCollectionArray] = useState([]);
+  const [state, dispatch] = useUser();
 
   useEffect(() => {
     const GetCollections = async () => {
       try {
+        console.log(state.userData._id)
         const res = await axios.get("/api/Collections", {
           params: {
-            owner: "MetaRivals",
+            owner: state.userData._id,
             id: null,
             sort: null,
             limit: null,
@@ -27,7 +31,7 @@ const UploadNFTPage = () => {
           const newData = {
             Name: ele.CollectionName,
             image: ele.BannerImage,
-            category: "LOL",
+            category: ele.category ? ele.category : "LOL",
             chain: ele.Chain,
             id: ele._id,
           };
@@ -37,12 +41,12 @@ const UploadNFTPage = () => {
         console.log("Success retrieval");
         console.log(res.data);
       } catch (error) {
-        console.log("Collection retrieval failed ");
+        console.log("Collection retrieval failed ", error);
         console.log(error.response);
       }
     };
-    GetCollections();
-  }, []);
+    if (state.userData._id) GetCollections();
+  }, [state.userData._id]);
 
   return (
     <div className={Style.uploadNFT}>

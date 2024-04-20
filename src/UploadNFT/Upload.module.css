@@ -64,8 +64,6 @@
 
 .upload_box_btn_style {
   width: 100%;
-  display: grid;
-  align-self: center;
   font-size: 1.3rem;
 }
 

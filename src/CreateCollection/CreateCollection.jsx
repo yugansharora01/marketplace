@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MdOutlineHttp, MdOutlineAttachFile } from "react-icons/md";
-import Image from "next/image";
+import { MdOutlineHttp } from "react-icons/md";
 import axios from "axios";
+import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 //INTERNAL IMPORT
 import Style from "./CreateCollection.module.css";
@@ -10,10 +11,14 @@ import { MyCustomButton } from "../component/componentindex";
 import { useUser } from "@/Context/UserProvider";
 import InputField from "@/UIComponents/InputField/InputField";
 import TextArea from "@/UIComponents/TextArea/TextArea";
+import CustomModal from "@/UIComponents/CustomModal/CustomModal";
 
 const CreateCollection = () => {
+  const Router = useRouter();
   const [loading, setLoading] = useState(false);
   const [state, dispatch] = useUser();
+  const [isCollectionCreated, setIsCollectionCreated] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [collection, setCollection] = useState({
     CollectionName: "",
@@ -35,13 +40,14 @@ const CreateCollection = () => {
       setLoading(true);
       console.log(collection);
       const response = await axios.post("/api/Collections", collection);
-      console.log("Success submission ");
-      console.log(response.data);
+      setIsCollectionCreated(true);
+      console.log("Success submission", response.data);
     } catch (error) {
-      console.log("Collection submit failed ");
-      console.log(error.response);
+      console.log("Collection submit failed ", error?.response?.data);
+      setIsCollectionCreated(false);
     } finally {
       setLoading(false);
+      setIsModalOpen(true);
     }
   };
 
@@ -112,7 +118,32 @@ const CreateCollection = () => {
           btnName="Create"
           handleClick={OnCreate}
           classStyle={Style.upload_box_btn_style}
+          btnProps={{ isLoading: loading }}
         />
+        <CustomModal
+          isOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          title={
+            isCollectionCreated
+              ? "Collection Created Successfully!!"
+              : "Unable to Create Collection"
+          }
+          footer={
+            isCollectionCreated ? (
+              <Button color="primary" onPress={() => Router.push("/profile")}>
+                Go to Profile
+              </Button>
+            ) : (
+              ""
+            )
+          }
+        >
+          {isCollectionCreated ? (
+            <p>You can view your created collection in your profile</p>
+          ) : (
+            <p>Unable to Create Collection please try again </p>
+          )}
+        </CustomModal>
       </div>
     </div>
   );
