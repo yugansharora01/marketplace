@@ -16,12 +16,14 @@ export async function GET(request) {
     let collections;
     if (owner) {
       if (sort) {
-        collections = await Collections.find({ owner })
+        collections = await Collections.find({ Owner: owner })
           .populate("Owner")
           .sort({ CreatedAt: sort })
           .limit(limit);
       } else {
-        collections = await Collections.find({ owner }).populate("Owner");
+        collections = await Collections.find({ Owner: owner }).populate(
+          "Owner"
+        );
       }
     } else {
       collections = await Collections.find()

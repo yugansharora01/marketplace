@@ -121,7 +121,7 @@ const CreateCollection = () => {
           btnProps={{ isLoading: loading }}
         />
         <CustomModal
-          isOpen={isModalOpen}
+          isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           title={
             isCollectionCreated

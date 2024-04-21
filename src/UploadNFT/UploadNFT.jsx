@@ -23,6 +23,7 @@ import DynamicList from "@/UIComponents/DynamicList/DynamicList";
 import NFTMinting from "./NFTMinting";
 import CustomModal from "@/UIComponents/CustomModal/CustomModal";
 import CustomDropdown from "@/Utils/Dropdown/CustomDropdown";
+import AiImageModal from "@/UIComponents/AiImageModal/AiImageModal";
 
 const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
   const [account, setAccount] = useState("");
@@ -42,6 +43,8 @@ const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
   const [isSubmited, setIsSubmited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isNftCreated, setIsNftCreated] = useState(false);
+
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const [state, dispatch] = useUser();
   const Router = useRouter();
@@ -127,6 +130,19 @@ const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
           isInValid={isSubmited && nftData.MediaLink == ""}
           invalidText={"Image Link is Required"}
           isRequired={true}
+        />
+        <div className="py-5 px-10 flex justify-center text-xl">
+        OR
+        </div>
+        <MyCustomButton
+          btnName="Create your Own AI Image"
+          handleClick={() => setIsImageModalOpen(true)}
+          classStyle={Style.upload_box_btn_style}
+          btnProps={{ isLoading: isLoading }}
+        />
+        <AiImageModal
+          isModalOpen={isImageModalOpen}
+          setIsModalOpen={setIsImageModalOpen}
         />
         <InputField
           label="Item Name"
@@ -225,7 +241,7 @@ const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
             btnProps={{ isLoading: isLoading }}
           />
           <CustomModal
-            isOpen={isModalOpen}
+            isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
             title={
               isNftCreated

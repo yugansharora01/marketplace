@@ -1,9 +1,9 @@
 import React from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button} from "@nextui-org/react";
 
-const CustomModal = ({ title, children, isOpen,footer,setIsModalOpen }) => {
+const CustomModal = ({ title, children, isModalOpen,footer,setIsModalOpen }) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={setIsModalOpen}>
+    <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
       <ModalContent>
         {(onClose) => (
           <>

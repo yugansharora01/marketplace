@@ -30,7 +30,11 @@ const InputField = ({
             onChange={onChange}
             isInvalid={isInValid}
             errorMessage={
-              isInValid ? (!invalidText ? "This field is Required" : "") : ""
+              isInValid
+                ? !invalidText
+                  ? "This field is Required"
+                  : invalidText
+                : ""
             }
             startContent={startIcon}
             endContent={endIcon}
@@ -45,7 +49,13 @@ const InputField = ({
           value={value}
           onChange={onChange}
           isInvalid={isInValid}
-          errorMessage={isInValid ? (invalidText ? "This field is Required" : "") : ""}
+          errorMessage={
+            isInValid
+              ? !invalidText
+                ? "This field is Required"
+                : invalidText
+              : ""
+          }
           startContent={startIcon}
           endContent={endIcon}
           classNames={{
