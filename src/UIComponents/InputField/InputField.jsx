@@ -30,7 +30,7 @@ const InputField = ({
             onChange={onChange}
             isInvalid={isInValid}
             errorMessage={
-              isInValid ? (invalidText ? "This field is Required" : "") : ""
+              isInValid ? (!invalidText ? "This field is Required" : "") : ""
             }
             startContent={startIcon}
             endContent={endIcon}

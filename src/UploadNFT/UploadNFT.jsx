@@ -10,6 +10,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 //INTERNAL IMPORT
 import Style from "./Upload.module.css";
@@ -20,15 +21,15 @@ import TextArea from "@/UIComponents/TextArea/TextArea";
 import InputField from "@/UIComponents/InputField/InputField";
 import DynamicList from "@/UIComponents/DynamicList/DynamicList";
 import NFTMinting from "./NFTMinting";
+import CustomModal from "@/UIComponents/CustomModal/CustomModal";
+import CustomDropdown from "@/Utils/Dropdown/CustomDropdown";
 
-const { ethers } = require("ethers");
-
-const UploadNFT = ({ collectionArray }) => {
+const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
   const [account, setAccount] = useState("");
   const [active, setActive] = useState(0);
   const [traitArray, setTraitArray] = useState([]);
   const [statArray, setStatArray] = useState([]);
-  const [selectedKeys, setSelectedKeys] = useState(new Set(["sepolia"]));
+  const [selectedKeys, setSelectedKeys] = useState(new Set([""]));
   const [chainsArray, setChainsArray] = useState([
     {
       data: "mainnet",
@@ -39,31 +40,11 @@ const UploadNFT = ({ collectionArray }) => {
   ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmited, setIsSubmited] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isNftCreated, setIsNftCreated] = useState(false);
 
   const [state, dispatch] = useUser();
-
-  const [nftData, setNftData] = useState({
-    Name: "",
-    Owner: state.userData._id,
-    Price: {
-      amount: 0,
-      coinName: "weth",
-      coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    },
-    MediaLink:
-      "https://miro.medium.com/v2/resize:fit:540/0*vUlSsz1sMQ38o5gd.jpg",
-    TokenStandard: "ERC-721",
-    Chain: "sepolia",
-    Metadata: "",
-    LastUpdated: Date.now(),
-    Stats: [],
-    Traits: [],
-    Count: 0,
-    Description: "",
-    Creator: "",
-    CreatedAt: Date.now(),
-    CollectionID: "",
-  });
+  const Router = useRouter();
 
   const OnUpload = async () => {
     setIsSubmited(true);
@@ -75,6 +56,7 @@ const UploadNFT = ({ collectionArray }) => {
       nftData.CollectionID
     ) {
       try {
+        setIsLoading(true);
         const { tokenId, nftAddress } = await NFTMinting(
           nftData,
           setNftData,
@@ -103,10 +85,22 @@ const UploadNFT = ({ collectionArray }) => {
           Owner: state.userData._id,
           Creator: account,
         });
-        console.log("Success upload " + response.data);
+        setIsNftCreated(true);
+        console.log("Success upload ", response.data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
+        setIsModalOpen(true);
       }
+    } else {
+      console.log(
+        selectedKeys.currentKey,
+        nftData.MediaLink,
+        nftData.Name,
+        nftData.Creator,
+        nftData.CollectionID
+      );
     }
   };
 
@@ -131,7 +125,7 @@ const UploadNFT = ({ collectionArray }) => {
             setNftData({ ...nftData, MediaLink: e.target.value })
           }
           isInValid={isSubmited && nftData.MediaLink == ""}
-          invalidText={"LOL"}
+          invalidText={"Image Link is Required"}
           isRequired={true}
         />
         <InputField
@@ -139,36 +133,20 @@ const UploadNFT = ({ collectionArray }) => {
           value={nftData.Name}
           onChange={(e) => setNftData({ ...nftData, Name: e.target.value })}
           isInValid={isSubmited && nftData.Name == ""}
-          invalidText={"LOL"}
+          invalidText={"Name is Required"}
+          isRequired={true}
         />
 
         <div className={Style.upload_box_dropdown}>
           <h1> Chain : </h1>
           <div className={Style.upload_box_dropdown_dropdown}>
-            <Dropdown>
-              <DropdownTrigger>
-                <Button variant="bordered">
-                  {selectedKeys.currentKey ? selectedKeys.currentKey : "Chain"}
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Static Actions"
-                disallowEmptySelection
-                selectionMode="single"
-                selectedKeys={selectedKeys}
-                onSelectionChange={setSelectedKeys}
-              >
-                {chainsArray.map((el, i) => (
-                  <DropdownItem
-                    key={el.key ? el.key : el.data}
-                    className={el.class}
-                    color={el.color}
-                  >
-                    {el.data}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+            <CustomDropdown
+              array={chainsArray}
+              selectedKeys={selectedKeys}
+              setSelectedKeys={setSelectedKeys}
+              selectionMode={"single"}
+              label={"Chain"}
+            />
           </div>
         </div>
 
@@ -244,7 +222,32 @@ const UploadNFT = ({ collectionArray }) => {
             btnName="Upload"
             handleClick={OnUpload}
             classStyle={Style.upload_box_btn_style}
+            btnProps={{ isLoading: isLoading }}
           />
+          <CustomModal
+            isOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            title={
+              isNftCreated
+                ? "NFT Created Successfully!!"
+                : "Unable to Create NFT"
+            }
+            footer={
+              isNftCreated ? (
+                <Button color="primary" onPress={() => Router.push("/profile")}>
+                  Go to Profile
+                </Button>
+              ) : (
+                ""
+              )
+            }
+          >
+            {isNftCreated ? (
+              <p>You can view your created NFT in your profile</p>
+            ) : (
+              <p>Unable to Mint NFT please try again </p>
+            )}
+          </CustomModal>
         </div>
       </div>
     </div>

@@ -49,7 +49,7 @@ const DynamicList = ({ heading, array, setArray, keys }) => {
                 name="key"
                 className={Style.input}
                 value={el.key}
-                onChange={(event) =>
+                onChange={(e) =>
                   handleFormChange(i, e.target.name, e.target.value)
                 }
               />

@@ -9,7 +9,6 @@ import {
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 import Style from "./DropDown.module.css";
-import { compareSync } from "bcryptjs";
 
 export default function DropDown({ keys, selectedVal, setSelectedVal }) {
   const [isOpen, setIsOpen] = useState(false);

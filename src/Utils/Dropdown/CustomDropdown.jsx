@@ -9,28 +9,33 @@ import {
   Button,
 } from "@nextui-org/react";
 
-const CustomDropdown = ({ array }) => {
+const CustomDropdown = ({
+  array,
+  selectedKeys,
+  setSelectedKeys,
+  selectionMode,
+  label
+}) => {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button variant="bordered">Open Menu</Button>
+        <Button variant="bordered">{selectedKeys.currentKey ? selectedKeys.currentKey : label}</Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label="Static Actions">
+      <DropdownMenu
+        aria-label="Static Actions"
+        selectionMode={selectionMode}
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+      >
         {array.map((el, i) => (
           <DropdownItem
-            key={el.key ? el.key : i}
+            key={el.key ? el.key : el.data}
             className={el.class}
             color={el.color}
           >
             {el.data}
           </DropdownItem>
         ))}
-        <DropdownItem key="new">New file</DropdownItem>
-        <DropdownItem key="copy">Copy link</DropdownItem>
-        <DropdownItem key="edit">Edit file</DropdownItem>
-        <DropdownItem key="delete" className="text-danger" color="danger">
-          Delete file
-        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );

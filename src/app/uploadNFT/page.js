@@ -12,6 +12,28 @@ import { useUser } from "@/Context/UserProvider";
 const UploadNFTPage = () => {
   const [collectionArray, setCollectionArray] = useState([]);
   const [state, dispatch] = useUser();
+  const [nftData, setNftData] = useState({
+    Name: "",
+    Owner: state.userData._id,
+    Price: {
+      amount: 0,
+      coinName: "weth",
+      coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    },
+    MediaLink:
+      "https://miro.medium.com/v2/resize:fit:540/0*vUlSsz1sMQ38o5gd.jpg",
+    TokenStandard: "ERC-721",
+    Chain: "sepolia",
+    Metadata: "",
+    LastUpdated: Date.now(),
+    Stats: [],
+    Traits: [],
+    Count: 0,
+    Description: "",
+    Creator: `${state.userData._id}`,
+    CreatedAt: Date.now(),
+    CollectionID: "",
+  });
 
   useEffect(() => {
     const GetCollections = async () => {
@@ -68,7 +90,7 @@ const UploadNFTPage = () => {
         </div> */}
 
         <div className={Style.uploadNFT_box_form}>
-          <UploadNFT collectionArray={collectionArray} />
+          <UploadNFT collectionArray={collectionArray} nftData={nftData} setNftData={setNftData}/>
         </div>
       </div>
     </div>
