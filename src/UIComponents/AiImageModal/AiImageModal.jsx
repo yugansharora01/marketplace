@@ -1,14 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import CustomModal from "../CustomModal/CustomModal";
 import { Button } from "@nextui-org/react";
 import axios from "axios";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+
 import InputField from "../InputField/InputField";
 
 const AiImageModal = ({ isModalOpen, setIsModalOpen, setSelectedImage }) => {
+  const scroller = useRef();
   const [images, setImages] = useState([]);
   const [textPrompt, setTextPrompt] = useState("");
   const [imageIndex, setImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleScroll = (direction) => {
+    console.log(direction);
+    console.log(imageIndex + direction);
+    if (
+      imageIndex + direction <= 0 &&
+      imageIndex + direction > -images.length
+    ) {
+      setImageIndex((prev) => prev + direction);
+      scroller.current.style.transform = `translateX(calc(${
+        imageIndex + direction
+      } * 100%))`;
+    }
+  };
 
   const generateImage = async () => {
     try {
@@ -17,8 +34,6 @@ const AiImageModal = ({ isModalOpen, setIsModalOpen, setSelectedImage }) => {
         prompt: textPrompt,
       });
       console.log(response);
-      console.log(response.data);
-      console.log(response.data.data);
       setImages((prev) => [...prev, response.data.data]);
     } catch (error) {
       console.log(error);
@@ -53,13 +68,36 @@ const AiImageModal = ({ isModalOpen, setIsModalOpen, setSelectedImage }) => {
       }
     >
       <>
-        <div>
-          {images.map((img,i) => (
-            <div key={i}>
-              <img src={img}></img>
+        {images.length != 0 ? (
+          <span className="flex ">
+            <span
+              className="h-full self-center px-2 cursor-pointer z-10"
+              onClick={() => handleScroll(1)}
+            >
+              <IoIosArrowBack size={30} />
+            </span>
+            <div className="overflow-hidden">
+              <span className="flex justify-evenly" ref={scroller}>
+                {images.map((img, i) => (
+                  <div
+                    key={i}
+                    className="flex min-w-[100%] max-h-[50vh] justify-center "
+                  >
+                    <img src={img} className="max-h-[50vh]"></img>
+                  </div>
+                ))}
+              </span>
             </div>
-          ))}
-        </div>
+            <span
+              className="h-full self-center px-2 cursor-pointer z-10"
+              onClick={() => handleScroll(-1)}
+            >
+              <IoIosArrowForward size={30} />
+            </span>
+          </span>
+        ) : (
+          ""
+        )}
         <InputField
           label="Prompt"
           value={textPrompt}
