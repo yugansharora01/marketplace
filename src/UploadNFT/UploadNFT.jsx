@@ -24,6 +24,11 @@ import NFTMinting from "./NFTMinting";
 import CustomModal from "@/UIComponents/CustomModal/CustomModal";
 import CustomDropdown from "@/Utils/Dropdown/CustomDropdown";
 import AiImageModal from "@/UIComponents/AiImageModal/AiImageModal";
+import {
+  downloadAndStoreFileFirebase,
+  storeFileFirebase,
+} from "@/Utils/storeFileFirebase";
+import { v4 } from "uuid";
 
 const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
   const [account, setAccount] = useState("");
@@ -60,8 +65,13 @@ const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
     ) {
       try {
         setIsLoading(true);
+        const imageUrl = await downloadAndStoreFileFirebase(
+          `NFTs/${state.userData._id}/${v4()}`,
+          nftData.MediaLink
+        );
+        setNftData({ ...nftData, MediaLink: imageUrl });
         const { tokenId, nftAddress } = await NFTMinting(
-          nftData,
+          { ...nftData, MediaLink: imageUrl },
           setNftData,
           account
         );
@@ -87,6 +97,7 @@ const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
           Traits: traitArray,
           Owner: state.userData._id,
           Creator: account,
+          MediaLink: imageUrl,
         });
         setIsNftCreated(true);
         console.log("Success upload ", response.data);
@@ -131,9 +142,7 @@ const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
           invalidText={"Image Link is Required"}
           isRequired={true}
         />
-        <div className="py-5 px-10 flex justify-center text-xl">
-        OR
-        </div>
+        <div className="py-5 px-10 flex justify-center text-xl">OR</div>
         <MyCustomButton
           btnName="Create your Own AI Image"
           handleClick={() => setIsImageModalOpen(true)}
@@ -143,6 +152,9 @@ const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
         <AiImageModal
           isModalOpen={isImageModalOpen}
           setIsModalOpen={setIsImageModalOpen}
+          setSelectedImage={(value) =>
+            setNftData({ ...nftData, MediaLink: value })
+          }
         />
         <InputField
           label="Item Name"
@@ -259,7 +271,11 @@ const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
             }
           >
             {isNftCreated ? (
-              <p>You can view your created NFT in your profile</p>
+              <>
+                <p>You can view your created NFT in your profile</p>
+                <p>{nftData.MediaLink}</p>
+                <img src={nftData.MediaLink}></img>
+              </>
             ) : (
               <p>Unable to Mint NFT please try again </p>
             )}

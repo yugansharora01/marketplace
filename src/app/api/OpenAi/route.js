@@ -15,14 +15,14 @@ export async function POST(request) {
   //     size === "small" ? "256x256" : size === "medium" ? "512x512" : "1024x1024";
 
   try {
-    // const response = await openai.images.generate({
-    //   model: "dall-e-2",
-    //   prompt,
-    //   n: 1,
-    //   size: "256x256",
-    // });
-    const randomIndex = Math.floor(Math.random() * 3) + 1;
-    const imageUrl = `/images/shinchan-${randomIndex}.jpg`; //response.data[0].url;
+    const response = await openai.images.generate({
+      model: "dall-e-2",
+      prompt,
+      n: 1,
+      size: "256x256",
+    });
+
+    const imageUrl = response.data[0].url;
     return NextResponse.json(
       {
         success: true,

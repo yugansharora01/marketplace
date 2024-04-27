@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import CustomModal from "../CustomModal/CustomModal";
 import { Button } from "@nextui-org/react";
 import axios from "axios";
@@ -16,12 +16,9 @@ const AiImageModal = ({ isModalOpen, setIsModalOpen, setSelectedImage }) => {
   const handleScroll = (direction) => {
     console.log(direction);
     console.log(imageIndex + direction);
-    if (
-      imageIndex + direction <= 0 &&
-      imageIndex + direction > -images.length
-    ) {
-      setImageIndex((prev) => prev + direction);
-      scroller.current.style.transform = `translateX(calc(${
+    if (imageIndex + direction >= 0 && imageIndex + direction < images.length) {
+      setImageIndex(imageIndex + direction);
+      scroller.current.style.transform = `translateX(calc(-${
         imageIndex + direction
       } * 100%))`;
     }
@@ -42,6 +39,15 @@ const AiImageModal = ({ isModalOpen, setIsModalOpen, setSelectedImage }) => {
     }
   };
 
+  useEffect(() => {
+    if (images.length != 0) {
+      setImageIndex(images.length - 1);
+      scroller.current.style.transform = `translateX(calc(-${
+        images.length - 1
+      } * 100%))`;
+    }
+  }, [images]);
+
   return (
     <CustomModal
       isModalOpen={isModalOpen}
@@ -59,7 +65,10 @@ const AiImageModal = ({ isModalOpen, setIsModalOpen, setSelectedImage }) => {
           </Button>
           <Button
             color="success"
-            onPress={() => setSelectedImage(images[imageIndex])}
+            onPress={() => {
+              setSelectedImage(images[imageIndex]);
+              setIsModalOpen(false);
+            }}
             isDisabled={images.length == 0}
           >
             Select
@@ -69,10 +78,10 @@ const AiImageModal = ({ isModalOpen, setIsModalOpen, setSelectedImage }) => {
     >
       <>
         {images.length != 0 ? (
-          <span className="flex ">
+          <div className="flex w-full">
             <span
               className="h-full self-center px-2 cursor-pointer z-10"
-              onClick={() => handleScroll(1)}
+              onClick={() => handleScroll(-1)}
             >
               <IoIosArrowBack size={30} />
             </span>
@@ -90,11 +99,11 @@ const AiImageModal = ({ isModalOpen, setIsModalOpen, setSelectedImage }) => {
             </div>
             <span
               className="h-full self-center px-2 cursor-pointer z-10"
-              onClick={() => handleScroll(-1)}
+              onClick={() => handleScroll(1)}
             >
               <IoIosArrowForward size={30} />
             </span>
-          </span>
+          </div>
         ) : (
           ""
         )}

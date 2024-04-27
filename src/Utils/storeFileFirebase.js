@@ -5,10 +5,17 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { storage } from "@/Config/firebase.config";
+import axios from "axios";
 
 export const storeAndDeleteFileFirebase = async (path, data, filePath) => {
   const url = await storeFileFirebase(path, data);
   await DeleteFileFirebase(filePath);
+  return url;
+};
+
+export const downloadAndStoreFileFirebase = async (path, fileUrl) => {
+  const file = await axios.get(fileUrl, { responseType: "blob" });
+  const url = await storeFileFirebase(path, file.data);
   return url;
 };
 

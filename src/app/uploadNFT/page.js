@@ -38,7 +38,7 @@ const UploadNFTPage = () => {
   useEffect(() => {
     const GetCollections = async () => {
       try {
-        console.log(state.userData._id)
+        console.log(state.userData._id);
         const res = await axios.get("/api/Collections", {
           params: {
             owner: state.userData._id,
@@ -48,7 +48,7 @@ const UploadNFTPage = () => {
           },
         });
         console.log(res.data.data);
-
+        setCollectionArray([]);
         res.data.data.forEach((ele) => {
           const newData = {
             Name: ele.CollectionName,
@@ -90,7 +90,11 @@ const UploadNFTPage = () => {
         </div> */}
 
         <div className={Style.uploadNFT_box_form}>
-          <UploadNFT collectionArray={collectionArray} nftData={nftData} setNftData={setNftData}/>
+          <UploadNFT
+            collectionArray={collectionArray}
+            nftData={nftData}
+            setNftData={setNftData}
+          />
         </div>
       </div>
     </div>

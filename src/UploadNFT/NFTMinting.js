@@ -14,12 +14,9 @@ const NFTMinting = async (nftData, setNftData, account) => {
       console.log(nftAddress);
       const signer = provider.getSigner(account);
       const contract = new ethers.Contract(nftAddress, nftAbi, signer);
-      console.log(contract);
-      console.log(nftData);
       let result = await contract.safeMint(account, JSON.stringify(nftData));
       console.log(result);
       const reciept = await result.wait(1);
-      console.log(reciept);
       tokenId = reciept.events[0].args.tokenId.toString();
 
       const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
