@@ -69,23 +69,23 @@ export async function POST(request) {
 
     const NFT = await newNFT.save();
 
-    console.log(NFT);
+    //console.log(NFT);
 
     const collection = await Collections.findById(CollectionID);
     collection.NFTs.push(id);
 
     const collectionSaved = await collection.save();
 
-    console.log("collectionSaved");
-    console.log(collectionSaved);
+    // console.log("collectionSaved");
+    // console.log(collectionSaved);
 
     const user = await Users.findById(Owner);
     user.NFTs.push(id);
 
     const userSaved = await user.save();
 
-    console.log("userSaved");
-    console.log(userSaved);
+    // console.log("userSaved");
+    // console.log(userSaved);
 
     return NextResponse.json(
       {

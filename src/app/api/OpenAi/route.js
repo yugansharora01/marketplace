@@ -21,7 +21,7 @@ export async function POST(request) {
       n: 1,
       size: "256x256",
     });
-
+   
     const imageUrl = response.data[0].url;
     return NextResponse.json(
       {

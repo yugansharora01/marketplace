@@ -65,10 +65,14 @@ const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
     ) {
       try {
         setIsLoading(true);
-        const imageUrl = await downloadAndStoreFileFirebase(
-          `NFTs/${state.userData._id}/${v4()}`,
-          nftData.MediaLink
+        const imageResponse = await axios.post(
+          "/api/Firebase/DownloadAndStore",
+          {
+            path: `NFTs/${state.userData._id}/${v4()}`,
+            fileUrl: nftData.MediaLink,
+          }
         );
+        const imageUrl = imageResponse.data.data;
         setNftData({ ...nftData, MediaLink: imageUrl });
         const { tokenId, nftAddress } = await NFTMinting(
           { ...nftData, MediaLink: imageUrl },
