@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 //INTERNAL IMPORT
 import Style from "./AuthorNFTCardBox.module.css";
@@ -7,6 +7,7 @@ import { NFTCardTwo } from "../../CollectionPage/collectionIndex";
 import CollectionCard from "@/component/CollectionCard/CollectionCard";
 import FollowerTabCard from "../../component/FollowerTab/FollowerTabCard/FollowerTabCard";
 import { useUser } from "@/Context/UserProvider";
+import axios from "axios";
 
 const AuthorNFTCardBox = ({
   collectiables,
@@ -16,32 +17,7 @@ const AuthorNFTCardBox = ({
   following,
 }) => {
   const [state, dispatch] = useUser();
-
-  let collectiablesArray = [
-    images.nft_image_1,
-    images.nft_image_2,
-    images.nft_image_3,
-    images.nft_image_1,
-    images.nft_image_2,
-    images.nft_image_3,
-    images.nft_image_1,
-    images.nft_image_2,
-  ];
-
-  let createdArray = [
-    images.nft_image_1,
-    images.nft_image_2,
-    images.nft_image_3,
-    images.nft_image_1,
-  ];
-
-  let likeArray = [
-    images.nft_image_1,
-    images.nft_image_2,
-    images.nft_image_3,
-    images.nft_image_1,
-    images.nft_image_2,
-  ];
+  const [collections, setCollections] = useState();
 
   let followerArray = [
     {
@@ -94,21 +70,28 @@ const AuthorNFTCardBox = ({
   ];
 
   useEffect(() => {
-    const getUserInfo = async () => {
-      if (state.userData.NFTs != undefined) {
-        collectiablesArray = state.userData.Collections;
-        createdArray = state.userData.NFTs;
-        likeArray = state.userData.LikedNFTs;
-        console.log(state.userData);
-      }
-    };
-    getUserInfo();
+    if (state.userData) {
+      console.log(state.userData._id);
+      const getUserInfo = async () => {
+        const res = await axios.get("/api/Collections", {
+          params: {
+            owner: state.userData._id,
+            id: null,
+            sort: null,
+            limit: null,
+          },
+        });
+        console.log(res.data.data);
+        setCollections(res.data.data);
+      };
+      getUserInfo();
+    }
   }, [state.userData]);
 
   return (
     <div className={Style.AuthorNFTCardBox}>
-      {collectiables && state.userData.Collections != undefined && (
-        <CollectionCard CollectionData={state.userData.Collections} />
+      {collectiables && collections != undefined && (
+        <CollectionCard CollectionData={collections} />
       )}
       {created && state.userData.NFTs != undefined && (
         <NFTCardTwo NFTData={state.userData.NFTs} />

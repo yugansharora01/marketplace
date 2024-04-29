@@ -5,6 +5,10 @@ const usersSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide a Collection Name"],
   },
+  Description: {
+    type: String,
+    default: "",
+  },
   WalletAddress: {
     type: String,
     unique: true,
@@ -12,10 +16,25 @@ const usersSchema = new mongoose.Schema({
   },
   ProfileImage: {
     type: String,
+    default: "",
   },
   BannerImage: {
     type: String,
+    default: "",
   },
+  Socials: [
+    {
+      platform: {
+        type: String,
+        enum: ["Facebook", "Instagram", "Reddit", "Others"],
+        required: true,
+      },
+      link: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   Collections: [
     {
       type: mongoose.Schema.Types.ObjectId,

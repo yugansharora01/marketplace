@@ -9,27 +9,33 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 //INTERNAL IMPORT
 import Style from "./Upload.module.css";
 import formStyle from "../AccountPage/Form/Form.module.css";
 import { MyCustomButton } from "../component/componentindex";
-import axios from "axios";
-import DynamicList from "./DynamicList/DynamicList";
-
-import addresses from "../../constants/networkMapping.json";
-import nftAbi from "../../constants/Nft.json";
-
 import { useUser } from "@/Context/UserProvider";
+import TextArea from "@/UIComponents/TextArea/TextArea";
+import InputField from "@/UIComponents/InputField/InputField";
+import DynamicList from "@/UIComponents/DynamicList/DynamicList";
+import NFTMinting from "./NFTMinting";
+import CustomModal from "@/UIComponents/CustomModal/CustomModal";
+import CustomDropdown from "@/Utils/Dropdown/CustomDropdown";
+import AiImageModal from "@/UIComponents/AiImageModal/AiImageModal";
+import {
+  downloadAndStoreFileFirebase,
+  storeFileFirebase,
+} from "@/Utils/storeFileFirebase";
+import { v4 } from "uuid";
 
-const { ethers } = require("ethers");
-
-const UploadNFT = ({ collectionArray }) => {
+const UploadNFT = ({ collectionArray, nftData, setNftData }) => {
   const [account, setAccount] = useState("");
   const [active, setActive] = useState(0);
   const [traitArray, setTraitArray] = useState([]);
   const [statArray, setStatArray] = useState([]);
-  const [selectedKeys, setSelectedKeys] = useState(new Set(["sepolia"]));
+  const [selectedKeys, setSelectedKeys] = useState(new Set([""]));
   const [chainsArray, setChainsArray] = useState([
     {
       data: "mainnet",
@@ -38,112 +44,83 @@ const UploadNFT = ({ collectionArray }) => {
       data: "sepolia",
     },
   ]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmited, setIsSubmited] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isNftCreated, setIsNftCreated] = useState(false);
+
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const [state, dispatch] = useUser();
-
-  const [nftData, setNftData] = useState({
-    Name: "",
-    Owner: state.userData._id,
-    Price: {
-      amount: 0,
-      coinName: "weth",
-      coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    },
-    MediaLink:
-      "https://miro.medium.com/v2/resize:fit:540/0*vUlSsz1sMQ38o5gd.jpg",
-    TokenStandard: "ERC-721",
-    Chain: "sepolia",
-    Metadata: "",
-    LastUpdated: Date.now(),
-    Stats: [],
-    Traits: [],
-    Count: 0,
-    Description: "",
-    Creator: "",
-    CreatedAt: Date.now(),
-    CollectionID: "",
-  });
+  const Router = useRouter();
 
   const OnUpload = async () => {
-    try {
-      let tokenId, nftAddress;
-      if (window.ethereum) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const { chainId } = await provider.getNetwork();
-        console.log("chainid " + chainId.toString());
-        nftAddress = addresses[chainId].Nft[0];
-
-        const signer = provider.getSigner(account);
-        const contract = new ethers.Contract(nftAddress, nftAbi, signer);
-
-        let result = await contract.safeMint(account, JSON.stringify(nftData));
-
-        console.log(result);
-        const reciept = await result.wait(1);
-        console.log(reciept);
-        tokenId = reciept.events[0].args.tokenId.toString();
-
-        const nftMarketplaceAddress = addresses[chainId].NftMarketplace[0];
-        result = await contract.approve(nftMarketplaceAddress, tokenId);
-        console.log(result);
+    setIsSubmited(true);
+    if (
+      selectedKeys.currentKey &&
+      nftData.MediaLink &&
+      nftData.Name &&
+      nftData.Creator &&
+      nftData.CollectionID
+    ) {
+      try {
+        setIsLoading(true);
+        const imageResponse = await axios.post(
+          "/api/Firebase/DownloadAndStore",
+          {
+            path: `NFTs/${state.userData._id}/${v4()}`,
+            fileUrl: nftData.MediaLink,
+          }
+        );
+        const imageUrl = imageResponse.data.data;
+        setNftData({ ...nftData, MediaLink: imageUrl });
+        const { tokenId, nftAddress } = await NFTMinting(
+          { ...nftData, MediaLink: imageUrl },
+          setNftData,
+          account
+        );
+        console.log(selectedKeys.currentKey);
+        setNftData((prev) => {
+          return {
+            ...prev,
+            tokenId,
+            nftAddress,
+            Chain: selectedKeys.currentKey,
+            Stats: statArray,
+            Traits: traitArray,
+            Owner: state.userData._id,
+            Creator: account,
+          };
+        });
+        const response = await axios.post("/api/NFTs", {
+          ...nftData,
+          tokenId,
+          nftAddress,
+          Chain: selectedKeys.currentKey,
+          Stats: statArray,
+          Traits: traitArray,
+          Owner: state.userData._id,
+          Creator: account,
+          MediaLink: imageUrl,
+        });
+        setIsNftCreated(true);
+        console.log("Success upload ", response.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+        setIsModalOpen(true);
       }
-
-      console.log("nftData:");
-      console.log(nftData);
-      console.log(tokenId);
-
-      const response = await axios.post("/api/NFTs", {
-        ...nftData,
-        tokenId,
-        nftAddress,
-      });
-      console.log("Success upload " + response.data);
-      setNftData({
-        ...nftData,
-        Name: "",
-        Price: {
-          amount: 0,
-          coinName: "weth",
-          coinAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-        },
-        ContractAddress: nftAddress,
-        TokenStandard: "ERC-721",
-        Chain: "sepolia",
-        Metadata: "",
-        LastUpdated: Date.now(),
-        Stats: [],
-        Traits: [],
-        Count: 0,
-        Description: "",
-        CreatedAt: Date.now(),
-      });
-    } catch (error) {
-      console.log("NFT upload failed " + error.response);
-      console.log(error.response);
-      console.log(error);
+    } else {
+      console.log(
+        selectedKeys.currentKey,
+        nftData.MediaLink,
+        nftData.Name,
+        nftData.Creator,
+        nftData.CollectionID
+      );
     }
   };
-
-  const onPreview = () => {
-    console.log(state.userData);
-  };
-
-  useEffect(() => {
-    if (selectedKeys.currentKey != "Chain") {
-      setNftData({
-        ...nftData,
-        Chain: selectedKeys.currentKey,
-      });
-    }
-  }, [selectedKeys]);
-
-  useEffect(() => {
-    setNftData({
-      ...nftData,
-      Stats: statArray,
-      Traits: traitArray,
-    });
-  }, [statArray, traitArray]);
 
   useEffect(() => {
     const getAccount = async () => {
@@ -153,83 +130,55 @@ const UploadNFT = ({ collectionArray }) => {
       setAccount(accounts[0]);
     };
     getAccount();
-    console.log(state.userData._id);
-    setNftData({
-      ...nftData,
-      Owner: state.userData._id,
-    });
   }, []);
-
-  useEffect(() => {
-    console.log(state.userData);
-    console.log(state.userData._id);
-    setNftData({
-      ...nftData,
-      Owner: state.userData._id,
-    });
-  }, [state.userData._id]);
-
-  useEffect(() => {
-    console.log("account");
-    console.log(account);
-    setNftData({
-      ...nftData,
-      Creator: account,
-    });
-  }, [account]);
 
   return (
     <div className={Style.upload}>
       <div className={Style.upload_box}>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="IPFS link">NFT media IPFS link</label>
-          <input
-            type="text"
-            id="IPFS link"
-            placeholder="Profile Image"
-            value={nftData.MediaLink}
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) =>
-              setNftData({ ...nftData, MediaLink: e.target.value })
-            }
-          />
-        </div>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="Name">Item Name</label>
-          <input
-            type="text"
-            id="Name"
-            placeholder="Item Name"
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) => setNftData({ ...nftData, Name: e.target.value })}
-          />
-        </div>
+        <InputField
+          label="NFT media IPFS link"
+          placeholder="Profile Image"
+          value={nftData.MediaLink}
+          onChange={(e) =>
+            setNftData({ ...nftData, MediaLink: e.target.value })
+          }
+          isInValid={isSubmited && nftData.MediaLink == ""}
+          invalidText={"Image Link is Required"}
+          isRequired={true}
+        />
+        <div className="py-5 px-10 flex justify-center text-xl">OR</div>
+        <MyCustomButton
+          btnName="Create your Own AI Image"
+          handleClick={() => setIsImageModalOpen(true)}
+          classStyle={Style.upload_box_btn_style}
+          btnProps={{ isLoading: isLoading }}
+        />
+        <AiImageModal
+          isModalOpen={isImageModalOpen}
+          setIsModalOpen={setIsImageModalOpen}
+          setSelectedImage={(value) =>
+            setNftData({ ...nftData, MediaLink: value })
+          }
+        />
+        <InputField
+          label="Item Name"
+          value={nftData.Name}
+          onChange={(e) => setNftData({ ...nftData, Name: e.target.value })}
+          isInValid={isSubmited && nftData.Name == ""}
+          invalidText={"Name is Required"}
+          isRequired={true}
+        />
 
         <div className={Style.upload_box_dropdown}>
           <h1> Chain : </h1>
           <div className={Style.upload_box_dropdown_dropdown}>
-            <Dropdown>
-              <DropdownTrigger>
-                <Button variant="bordered">{selectedKeys}</Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Static Actions"
-                disallowEmptySelection
-                selectionMode="single"
-                selectedKeys={selectedKeys}
-                onSelectionChange={setSelectedKeys}
-              >
-                {chainsArray.map((el, i) => (
-                  <DropdownItem
-                    key={el.key ? el.key : el.data}
-                    className={el.class}
-                    color={el.color}
-                  >
-                    {el.data}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+            <CustomDropdown
+              array={chainsArray}
+              selectedKeys={selectedKeys}
+              setSelectedKeys={setSelectedKeys}
+              selectionMode={"single"}
+              label={"Chain"}
+            />
           </div>
         </div>
 
@@ -244,80 +193,97 @@ const UploadNFT = ({ collectionArray }) => {
           setArray={setStatArray}
         />
 
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="description">Description</label>
-          <textarea
-            name=""
-            id="description"
-            cols="30"
-            rows="6"
-            placeholder="something about yourself in few words"
-            className={formStyle.Form_box_input_textarea}
-            onChange={(e) =>
-              setNftData({ ...nftData, Description: e.target.value })
-            }
-          ></textarea>
-          <p>
-            {
-              "The description will be included on the item's detail page \nunderneath its image. Markdown syntax is supported."
-            }
-          </p>
-        </div>
+        <TextArea
+          placeholder="something about yourself in few words"
+          label="Description"
+          note="The description will be included on the item's detail page underneath its image. Markdown syntax is supported."
+          onChange={(e) =>
+            setNftData({ ...nftData, Description: e.target.value })
+          }
+        />
 
-        <div className={formStyle.Form_box_input}>
-          <label>Choose collection</label>
-          <p className={Style.upload_box_input_para}>
-            Choose an exiting collection or create a new one
-          </p>
+        {collectionArray.length !== 0 ? (
+          <div className={formStyle.Form_box_input}>
+            <label>Choose collection</label>
+            <p className={Style.upload_box_input_para}>
+              Choose an exiting collection or create a new one
+            </p>
 
-          <div className={Style.upload_box_slider_div}>
-            {collectionArray.map((el, i) => (
-              <div
-                className={`${Style.upload_box_slider} ${
-                  active == i + 1 ? Style.active : ""
-                }`}
-                key={i + 1}
-                onClick={() => (
-                  setActive(i + 1),
-                  setNftData({ ...nftData, CollectionID: el.id })
-                )}
-              >
-                <div className={Style.upload_box_slider_box}>
-                  <div className={Style.upload_box_slider_box_img}>
-                    <img
-                      src={el.image}
-                      alt="background image"
-                      width={70}
-                      height={70}
-                      onClick={() =>
-                        setNftData({ ...nftData, CollectionID: el.id })
-                      }
-                      className={Style.upload_box_slider_box_img_img}
-                    />
+            <div className={Style.upload_box_slider_div}>
+              {collectionArray.map((el, i) => (
+                <div
+                  className={`${Style.upload_box_slider} ${
+                    active == i + 1 ? Style.active : ""
+                  }`}
+                  key={i + 1}
+                  onClick={() => (
+                    setActive(i + 1),
+                    setNftData({ ...nftData, CollectionID: el.id })
+                  )}
+                >
+                  <div className={Style.upload_box_slider_box}>
+                    <div className={Style.upload_box_slider_box_img}>
+                      <img
+                        src={el.image}
+                        alt="background image"
+                        width={70}
+                        height={70}
+                        onClick={() =>
+                          setNftData({ ...nftData, CollectionID: el.id })
+                        }
+                        className={Style.upload_box_slider_box_img_img}
+                      />
+                    </div>
+                    <div className={Style.upload_box_slider_box_img_icon}>
+                      <TiTick />
+                    </div>
                   </div>
-                  <div className={Style.upload_box_slider_box_img_icon}>
-                    <TiTick />
-                  </div>
+                  <p>
+                    {el.Name} - {el.chain}{" "}
+                  </p>
                 </div>
-                <p>
-                  {el.Name} - {el.chain}{" "}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
 
         <div className={Style.upload_box_btn}>
           <MyCustomButton
             btnName="Upload"
             handleClick={OnUpload}
             classStyle={Style.upload_box_btn_style}
+            btnProps={{ isLoading: isLoading }}
           />
-          <MyCustomButton
-            btnName="Preview"
-            handleClick={onPreview}
-            classStyle={Style.upload_box_btn_style}
-          />
+          <CustomModal
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            title={
+              isNftCreated
+                ? "NFT Created Successfully!!"
+                : "Unable to Create NFT"
+            }
+            footer={
+              isNftCreated ? (
+                <Button color="primary" onPress={() => Router.push("/profile")}>
+                  Go to Profile
+                </Button>
+              ) : (
+                ""
+              )
+            }
+          >
+            {isNftCreated ? (
+              <>
+                <p>You can view your created NFT in your profile</p>
+                <p>{nftData.MediaLink}</p>
+                <img src={nftData.MediaLink}></img>
+              </>
+            ) : (
+              <p>Unable to Mint NFT please try again </p>
+            )}
+          </CustomModal>
         </div>
       </div>
     </div>

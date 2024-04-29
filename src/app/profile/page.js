@@ -6,7 +6,7 @@ import Style from "../../styles/profile.module.css";
 import { Banner, NFTCardTwo } from "../../CollectionPage/collectionIndex";
 import { Brand, Title } from "../../component/componentindex";
 import FollowerTabCard from "../../component/FollowerTab/FollowerTabCard/FollowerTabCard";
-import images from "../../../img";
+import images from "../../../img/index";
 import {
   AuthorProfileCard,
   AuthorTaps,

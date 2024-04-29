@@ -19,7 +19,6 @@ import {
   arbitrum,
   base,
   zora,
-  goerli,
   sepolia,
   hardhat,
 } from "wagmi/chains";
@@ -29,17 +28,17 @@ import { publicProvider } from "wagmi/providers/public";
 import { UserProvider } from "@/Context/UserProvider";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, polygon, optimism, arbitrum, base, zora, sepolia, hardhat],
+  [sepolia, hardhat], //mainnet, polygon, optimism, arbitrum, base, zora,
   [
     alchemyProvider({
-      apiKey: "5XnurvtEOmmKWf2Aattemfs8MWQBDkCU",
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_API_KEY,
       stallTimeout: 1_000,
     }),
     publicProvider(),
   ]
 );
 
-const projectId = "7a0d2b34527221c509859a3c9e1f4370";
+const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
 
 const { wallets } = getDefaultWallets({
   appName: "NFT Nexus",

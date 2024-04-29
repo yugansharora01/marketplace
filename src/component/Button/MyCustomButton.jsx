@@ -1,18 +1,24 @@
 "use client";
 import React from "react";
-
 import Style from "./MyCustomButton.module.css";
+import { Button } from "@nextui-org/react";
 
-const MyCustomButton = ({ btnName, handleClick, icon, classStyle }) => {
+const MyCustomButton = ({
+  btnName,
+  handleClick,
+  icon,
+  classStyle,
+  btnProps,
+}) => {
   return (
-    <div className={Style.box}>
-      <button
-        className={`${Style.button} ${classStyle}`}
-        onClick={() => handleClick()}
-      >
-        {icon} {btnName}
-      </button>
-    </div>
+    <Button
+      {...btnProps}
+      className={`${Style.button} ${classStyle}`}
+      onClick={() => handleClick()}
+    >
+      {icon}
+      {btnName}
+    </Button>
   );
 };
 export default MyCustomButton;

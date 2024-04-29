@@ -3,7 +3,7 @@ import React from "react";
 
 //INTERNAL IMPORT
 import Style from "../uploadNFT/upload-nft.module.css";
-import { CreateCollection } from "../../CreateCollection/CreateCollectionIndex";
+import CreateCollection from "../../CreateCollection/CreateCollection";
 
 const CreateCollectionPage = () => {
   return (

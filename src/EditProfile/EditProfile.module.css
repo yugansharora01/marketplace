@@ -1,0 +1,28 @@
+.upload_box_btn {
+  margin-block: 4rem;
+  text-align: center;
+}
+
+.upload_box_btn_style {
+  width: 100%;
+  display: grid;
+  align-self: center;
+  font-size: 1.3rem;
+}
+
+.Form_box_input {
+  margin-top: 2rem;
+}
+
+.Form_box_input label {
+  display: block;
+  width: 100%;
+  margin-left: 1rem;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.Form_box_input::placeholder {
+  font-size: 1.2rem;
+  color: var(--icons-color);
+}

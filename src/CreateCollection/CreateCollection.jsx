@@ -1,18 +1,24 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MdOutlineHttp, MdOutlineAttachFile } from "react-icons/md";
-import Image from "next/image";
+import { MdOutlineHttp } from "react-icons/md";
 import axios from "axios";
+import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 //INTERNAL IMPORT
 import Style from "./CreateCollection.module.css";
-import formStyle from "../AccountPage/Form/Form.module.css";
 import { MyCustomButton } from "../component/componentindex";
 import { useUser } from "@/Context/UserProvider";
+import InputField from "@/UIComponents/InputField/InputField";
+import TextArea from "@/UIComponents/TextArea/TextArea";
+import CustomModal from "@/UIComponents/CustomModal/CustomModal";
 
 const CreateCollection = () => {
+  const Router = useRouter();
   const [loading, setLoading] = useState(false);
   const [state, dispatch] = useUser();
+  const [isCollectionCreated, setIsCollectionCreated] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [collection, setCollection] = useState({
     CollectionName: "",
@@ -34,13 +40,14 @@ const CreateCollection = () => {
       setLoading(true);
       console.log(collection);
       const response = await axios.post("/api/Collections", collection);
-      console.log("Success submission ");
-      console.log(response.data);
+      setIsCollectionCreated(true);
+      console.log("Success submission", response.data);
     } catch (error) {
-      console.log("Collection submit failed ");
-      console.log(error.response);
+      console.log("Collection submit failed ", error?.response?.data);
+      setIsCollectionCreated(false);
     } finally {
       setLoading(false);
+      setIsModalOpen(true);
     }
   };
 
@@ -55,110 +62,88 @@ const CreateCollection = () => {
 
   return (
     <div className={Style.upload}>
-      <div className={Style.upload_banner}>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="nft">Banner Image IPFS link</label>
-          <input
-            type="text"
-            placeholder="Banner Image"
-            value={collection.BannerImage}
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) =>
-              setCollection({ ...collection, BannerImage: e.target.value })
-            }
-          />
-        </div>
-      </div>
+      <InputField
+        label="Banner Image IPFS link"
+        placeholder="Banner Image"
+        value={collection.BannerImage}
+        onChange={(e) =>
+          setCollection({ ...collection, BannerImage: e.target.value })
+        }
+      />
+      <InputField
+        label="Profile Image IPFS link"
+        placeholder="Profile Image"
+        value={collection.ProfileImage}
+        onChange={(e) =>
+          setCollection({ ...collection, ProfileImage: e.target.value })
+        }
+      />
+      <InputField
+        label="Collection Name"
+        placeholder="Collection Name"
+        value={collection.CollectionName}
+        onChange={(e) =>
+          setCollection({ ...collection, CollectionName: e.target.value })
+        }
+      />
+      <InputField
+        label="Category"
+        placeholder="Category"
+        value={collection.Category}
+        onChange={(e) =>
+          setCollection({ ...collection, Category: e.target.value })
+        }
+      />
 
-      <div className={Style.upload_profile}>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="nft">Profile Image IPFS link</label>
-          <input
-            type="text"
-            placeholder="Profile Image"
-            value={collection.ProfileImage}
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) =>
-              setCollection({ ...collection, ProfileImage: e.target.value })
-            }
-          />
-        </div>
-      </div>
+      <InputField
+        label="website"
+        placeholder="website"
+        value={collection.Website}
+        onChange={(e) =>
+          setCollection({ ...collection, Website: e.target.value })
+        }
+        icon={<MdOutlineHttp />}
+      />
+      <TextArea
+        label="Description"
+        placeholder="something about collection in few words"
+        value={collection.Description}
+        onChange={(e) =>
+          setCollection({ ...collection, Description: e.target.value })
+        }
+      />
 
-      <div className={Style.upload_box}>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="nft">Collection Name</label>
-          <input
-            type="text"
-            placeholder="Collection Name"
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) =>
-              setCollection({ ...collection, CollectionName: e.target.value })
-            }
-          />
-        </div>
-
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="nft">Category</label>
-          <input
-            type="text"
-            placeholder="Category"
-            className={formStyle.Form_box_input_userName}
-            onChange={(e) =>
-              setCollection({ ...collection, Category: e.target.value })
-            }
-          />
-        </div>
-
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="website">website</label>
-          <div className={formStyle.Form_box_input_box}>
-            <div className={formStyle.Form_box_input_box_icon}>
-              <MdOutlineHttp />
-            </div>
-
-            <input
-              type="text"
-              placeholder="website"
-              onChange={(e) =>
-                setCollection({ ...collection, Website: e.target.value })
-              }
-            />
-          </div>
-
-          <p className={Style.upload_box_input_para}>
-            {
-              "Ciscrypt will include a link to this URL on this item's detail \npage, so that users can click to learn more about it. You are \nwelcome to link to your own webpage with more details."
-            }
-          </p>
-        </div>
-
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="description">Description</label>
-          <textarea
-            name=""
-            id=""
-            cols="30"
-            rows="6"
-            placeholder="something about collection in few words"
-            onChange={(e) =>
-              setCollection({ ...collection, Description: e.target.value })
-            }
-          ></textarea>
-          <p>
-            {
-              "The description will be included on the item's detail page \nunderneath its image. Markdown syntax is supported."
-            }
-          </p>
-        </div>
-
-        <div className={Style.upload_box_btn}>
-          <MyCustomButton
-            btnName="Create"
-            handleClick={OnCreate}
-            classStyle={Style.upload_box_btn_style}
-          />
-        </div>
+      <div className={Style.upload_box_btn}>
+        <MyCustomButton
+          btnName="Create"
+          handleClick={OnCreate}
+          classStyle={Style.upload_box_btn_style}
+          btnProps={{ isLoading: loading }}
+        />
+        <CustomModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          title={
+            isCollectionCreated
+              ? "Collection Created Successfully!!"
+              : "Unable to Create Collection"
+          }
+          footer={
+            isCollectionCreated ? (
+              <Button color="primary" onPress={() => Router.push("/profile")}>
+                Go to Profile
+              </Button>
+            ) : (
+              ""
+            )
+          }
+        >
+          {isCollectionCreated ? (
+            <p>You can view your created collection in your profile</p>
+          ) : (
+            <p>Unable to Create Collection please try again </p>
+          )}
+        </CustomModal>
       </div>
     </div>
   );

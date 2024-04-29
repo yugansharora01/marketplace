@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useReducer } from "react";
 import Image from "next/image";
 import axios from "axios";
+import Link from "next/link";
 
 import { MdNotifications } from "react-icons/md";
 import { BsSearch } from "react-icons/bs";
@@ -17,8 +18,6 @@ import { MyCustomButton } from "../componentindex";
 import images from "../../../img";
 import { useUser } from "@/Context/UserProvider";
 import { AuthConstants } from "@/Constants/Constants";
-
-const getBalance = (address) => {};
 
 const Navbar = () => {
   const [discover, setDiscover] = useState(false);
@@ -69,15 +68,15 @@ const Navbar = () => {
       const balance = await fetchBalance({
         address: WalletAddress,
       });
+
+      console.log(JSON.stringify(balance));
       dispatch({
         type: AuthConstants.LOGIN_SUCCESS,
         payload: { ...response.data.data, balance },
       });
     } catch (error) {
       console.log("Users submit failed ");
-      console.log(error);
-      console.log(error.response);
-      console.log(error.response.data);
+      console.log(error?.response?.data);
       dispatch({
         type: AuthConstants.LOGIN_FAILURE,
         payload: error.response.data,
@@ -116,12 +115,14 @@ const Navbar = () => {
       <div className={Style.navbar_container}>
         <div className={Style.navbar_container_left}>
           <div className={Style.logo}>
-            <Image
-              src={images.logo}
-              alt="NFT Market Place"
-              width={100}
-              height={100}
-            />
+            <Link href="/">
+              <Image
+                src={images.logo}
+                alt="NFT Market Place"
+                width={100}
+                height={100}
+              />
+            </Link>
           </div>
           <div className={Style.navbar_container_left_box_input}>
             <div className={Style.navbar_container_left_box_input_box}>

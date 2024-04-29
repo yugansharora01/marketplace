@@ -1,0 +1,49 @@
+.Form_box_input {
+  margin-top: 2rem;
+}
+
+.Form_box_input_box {
+  width: 100%;
+  border: 1px solid var(--icons-color);
+  border-radius: 1rem;
+  align-items: center;
+  display: flex;
+  overflow: hidden;
+}
+
+.Form_box_input_box input {
+  width: 90%;
+  margin-left: 2vw;
+  background-color: transparent;
+  outline: none;
+}
+
+.Form_box_input_box_icon {
+  font-size: 2rem;
+  background-color: var(--icons-color);
+  padding: 0.5rem 1rem;
+  color: var(--main-bg-color);
+  cursor: pointer;
+}
+
+.Form_box_input_textarea {
+  border: 1px solid var(--icons-color);
+}
+
+.Form_box_input_label {
+  display: flex;
+  width: 100%;
+  margin-left: 1rem;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.Form_box_input_userName {
+  width: 100%;
+  border: 1px solid var(--icons-color);
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: transparent;
+  margin-top: 0.5rem;
+  outline: none;
+}

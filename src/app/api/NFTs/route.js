@@ -69,23 +69,23 @@ export async function POST(request) {
 
     const NFT = await newNFT.save();
 
-    console.log(NFT);
+    //console.log(NFT);
 
     const collection = await Collections.findById(CollectionID);
     collection.NFTs.push(id);
 
     const collectionSaved = await collection.save();
 
-    console.log("collectionSaved");
-    console.log(collectionSaved);
+    // console.log("collectionSaved");
+    // console.log(collectionSaved);
 
     const user = await Users.findById(Owner);
     user.NFTs.push(id);
 
     const userSaved = await user.save();
 
-    console.log("userSaved");
-    console.log(userSaved);
+    // console.log("userSaved");
+    // console.log(userSaved);
 
     return NextResponse.json(
       {
@@ -103,10 +103,6 @@ export async function POST(request) {
 
 export async function GET(request) {
   try {
-    // const owner = request.nextUrl.searchParams.get("owner");
-    // const id = request.nextUrl.searchParams.get("id");
-    // const sort = request.nextUrl.searchParams.get("sort");
-    // let limit = request.nextUrl.searchParams.get("limit");
     const queryParams = url.parse(request.url, true).query; // To read query params
     let { owner, id, sort, limit } = queryParams;
     if (limit > 50) limit = 50;

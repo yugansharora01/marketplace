@@ -5,8 +5,13 @@ import Navbar from "@/component/Navbar/Navbar";
 import { Footer } from "@/component/componentindex";
 import { NextUIProvider } from "@nextui-org/react";
 import { Providers } from "./providers";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default function RootLayout({ children }) {
+  BigInt.prototype["toJSON"] = function () {
+    return this.toString();
+  };
   return (
     <html lang="en">
       <body>
