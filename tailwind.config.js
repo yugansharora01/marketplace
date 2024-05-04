@@ -15,17 +15,17 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        primary: {
+        primary: {//icons-color
           DEFAULT: "#4c5773",
           dark: "#4c5773",
           light: "#4c577341",
         },
-        secondary: {
+        secondary: {//shadow-dark-color
           DEFAULT: "#d3dae7",
           dark: "#d3dae7",
           light: "#fff",
         },
-        tertiary: {
+        tertiary: {//main-bg-color
           DEFAULT: "#ecf0f3",
           dark: "#ecf0f3",
           light: "#ecf0f3",
@@ -40,20 +40,3 @@ module.exports = {
   darkMode: "class",
   plugins: [nextui()],
 };
-
-/** @type {import('tailwindcss').Config} */
-// const { nextui } = require("@nextui-org/react");
-
-// module.exports = {
-//   content: [
-//     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-//     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-//     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-//     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-//   ],
-//   theme: {
-//     extend: {},
-//   },
-//   darkMode: "class",
-//   plugins: [nextui()],
-// };

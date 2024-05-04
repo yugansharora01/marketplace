@@ -4,28 +4,36 @@ import Image from "next/image";
 import axios from "axios";
 import Link from "next/link";
 
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Input,
+  DropdownItem,
+  DropdownTrigger,
+  Dropdown,
+  DropdownMenu,
+  Avatar,
+  NavbarMenuItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  Button,
+} from "@nextui-org/react";
 import { MdNotifications } from "react-icons/md";
 import { BsSearch } from "react-icons/bs";
-import { CgMenuLeft, CgMenuRight } from "react-icons/cg";
+import { IoIosArrowDown } from "react-icons/io";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useBalance } from "wagmi";
 import { fetchBalance } from "@wagmi/core";
-
 import Style from "./NavBar.module.css";
-import { Discover, HelpCenter, Profile, Notification, SideBar } from "./index";
 import { MyCustomButton } from "../componentindex";
-
 import images from "../../../img";
 import { useUser } from "@/Context/UserProvider";
 import { AuthConstants } from "@/Constants/Constants";
+import { discoverMenu, helpCenterMenu } from "./dropdownsContent";
 
-const Navbar = () => {
-  const [discover, setDiscover] = useState(false);
-  const [help, setHelp] = useState(false);
-  const [notification, setNotification] = useState(false);
-  const [profile, setProfile] = useState(false);
-  const [openSideMenu, setOpenSideMenu] = useState(false);
-
+const NavbarComponent = () => {
   const { isConnected, connector: activeConnector } = useAccount({
     onConnect({ address, connector, isReconnected }) {
       postUser(address);
@@ -84,123 +92,171 @@ const Navbar = () => {
     }
   };
 
-  const Unset = () => {
-    setDiscover(false);
-    setHelp(false);
-    setNotification(false);
-    setProfile(false);
-  };
-
-  const openMenu = (e) => {
-    if (e == "Discover") {
-      Unset();
-      setDiscover(!discover);
-    } else if (e == "Help") {
-      Unset();
-      setHelp(!help);
-    } else if (e == "Notification") {
-      Unset();
-      setNotification(!notification);
-    } else if (e == "Profile") {
-      Unset();
-      setProfile(!profile);
-    } else if (e == "Sidebar") {
-      Unset();
-      setOpenSideMenu(!openSideMenu);
-    }
-  };
+  const menuItems = [
+    "Profile",
+    "Dashboard",
+    "Activity",
+    "Analytics",
+    "System",
+    "Deployments",
+    "My Settings",
+    "Team Settings",
+    "Help & Feedback",
+    "Log Out",
+  ];
 
   return (
-    <div className={Style.navbar}>
-      <div className={Style.navbar_container}>
-        <div className={Style.navbar_container_left}>
-          <div className={Style.logo}>
-            <Link href="/">
-              <Image
-                src={images.logo}
-                alt="NFT Market Place"
-                width={100}
-                height={100}
-              />
-            </Link>
-          </div>
-          <div className={Style.navbar_container_left_box_input}>
-            <div className={Style.navbar_container_left_box_input_box}>
-              <input type="text" placeholder="Search NFT" />
-              <BsSearch onClick={() => {}} className={Style.search_icon} />
-            </div>
-          </div>
-        </div>
-        <div className={Style.navbar_container_right}>
-          {/* Discover */}
-          <div className={Style.navbar_container_right_discover}>
-            <p onClick={(e) => openMenu("Discover")}>Discover</p>
-            {discover && (
-              <div className={Style.navbar_container_right_discover_box}>
-                <Discover />
-              </div>
-            )}
-          </div>
-          {/* Help Center */}
-          <div className={Style.navbar_container_right_help}>
-            <p onClick={(e) => openMenu("Help")}>Help Center</p>
-            {help && (
-              <div className={Style.navbar_container_right_help_box}>
-                <HelpCenter />
-              </div>
-            )}
-          </div>
-          {isConnected ? (
-            <div className={Style.navbar_container_right_right_box}>
-              {/* Notification */}
-              <div className={Style.navbar_container_right_notify}>
-                <MdNotifications
-                  className={Style.notify}
-                  onClick={() => openMenu("Notification")}
-                />
-                {notification && <Notification />}
-              </div>
-              {/*CREATE BUTTON SECTIONS*/}
-              <div className={Style.navbar_container_right_button}>
-                <MyCustomButton btnName="Create" handleClick={() => {}} />
-              </div>
-
-              {/*USER PROFILE*/}
-              <div className={Style.navbar_container_right_profile_box}>
-                <div className={Style.navbar_container_right_profile}>
-                  <Image
-                    src={images.user1}
-                    alt="Profile"
-                    width={40}
-                    height={40}
-                    onClick={() => openMenu("Profile")}
-                    className={Style.navbar_container_right_profile}
-                  />
-                  {profile && <Profile />}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <ConnectButton />
-          )}
-
-          {/*Menu Button*/}
-          <div className={Style.navbar_container_right_menuBtn}>
-            <CgMenuRight
-              className={Style.menuIcon}
-              onClick={() => openMenu("Sidebar")}
+    <Navbar
+      shouldHideOnScroll
+      classNames={{
+        base: "bg-tertiary bg-opacity-20",
+        wrapper: "max-w-[100vw]",
+      }}
+    >
+      <NavbarContent
+        className="sm:hidden data-[justify=start]:grow-0"
+        justify="start"
+      >
+        <NavbarMenuToggle />
+      </NavbarContent>
+      <NavbarContent justify="start" className="grow-0">
+        <NavbarBrand className="mr-4 min-w-[20vw] pl-5">
+          <Link href="/">
+            <Image
+              src={images.logo}
+              alt="NFT Market Place"
+              width={100}
+              height={100}
             />
-          </div>
-        </div>
-      </div>
-      {/*SIDE BAR*/}
-      {openSideMenu && (
-        <div className={Style.sideBar}>
-          <SideBar setOpenSideMenu={setOpenSideMenu} />
-        </div>
-      )}
-    </div>
+          </Link>
+        </NavbarBrand>
+        <NavbarContent
+          justify="start"
+          className="hidden sm:flex grow-1 w-full data-[justify=start]:justify-evenly data-[justify=start]:basis-full"
+        >
+          <Dropdown className="bg-tertiary shadow-custom1">
+            <NavbarItem>
+              <DropdownTrigger>
+                <Button
+                  disableRipple
+                  className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                  endContent={<IoIosArrowDown />}
+                  radius="sm"
+                >
+                  Discover
+                </Button>
+              </DropdownTrigger>
+            </NavbarItem>
+            <DropdownMenu
+              aria-label="ACME features"
+              className=""
+              itemClasses={{
+                base: "gap-4 bg-tertiary",
+              }}
+            >
+              {discoverMenu.map((val) => (
+                <DropdownItem key={val.name} href={val.link}>
+                  {val.name}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+          <Dropdown className="bg-tertiary shadow-custom1">
+            <NavbarItem>
+              <DropdownTrigger>
+                <Button
+                  disableRipple
+                  className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                  endContent={<IoIosArrowDown />}
+                  radius="sm"
+                >
+                  Help Center
+                </Button>
+              </DropdownTrigger>
+            </NavbarItem>
+            <DropdownMenu
+              aria-label="ACME features"
+              className=""
+              itemClasses={{
+                base: "gap-4 bg-tertiary",
+              }}
+            >
+              {helpCenterMenu.map((val) => (
+                <DropdownItem key={val.name} href={val.link}>
+                  {val.name}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+        </NavbarContent>
+      </NavbarContent>
+
+      <NavbarContent as="div" className="items-center " justify="end">
+        <Input
+          classNames={{
+            base: "max-w-full sm:w-[10rem] xl:w-full h-10",
+            mainWrapper: "h-full",
+            input: "text-small",
+            inputWrapper:
+              "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+          }}
+          placeholder="Type to search..."
+          size="sm"
+          startContent={<BsSearch size={18} />}
+          type="search"
+        />
+        <Dropdown placement="bottom-end">
+          <DropdownTrigger>
+            <Avatar
+              isBordered
+              as="button"
+              className="transition-transform"
+              color="secondary"
+              name="Jason Hughes"
+              size="sm"
+              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+            />
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem key="profile" className="h-14 gap-2">
+              <p className="font-semibold">Signed in as</p>
+              <p className="font-semibold">zoey@example.com</p>
+            </DropdownItem>
+            <DropdownItem key="settings">My Settings</DropdownItem>
+            <DropdownItem key="team_settings">Team Settings</DropdownItem>
+            <DropdownItem key="analytics">Analytics</DropdownItem>
+            <DropdownItem key="system">System</DropdownItem>
+            <DropdownItem key="configurations">Configurations</DropdownItem>
+            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+            <DropdownItem key="logout" color="danger">
+              Log Out
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </NavbarContent>
+
+      <NavbarMenu>
+        {menuItems.map((item, index) => (
+          <NavbarMenuItem key={`${item}-${index}`}>
+            <Link
+              className="w-full"
+              color={
+                index === 2
+                  ? "warning"
+                  : index === menuItems.length - 1
+                  ? "danger"
+                  : "foreground"
+              }
+              href="#"
+              size="lg"
+            >
+              {item}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default NavbarComponent;
