@@ -62,4 +62,4 @@ const profileMenu = [
   },
 ];
 
-export { discoverMenu, helpCenterMenu,profileMenu };
+export { discoverMenu, helpCenterMenu, profileMenu };

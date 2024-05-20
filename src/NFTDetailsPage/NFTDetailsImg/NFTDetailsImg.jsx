@@ -64,7 +64,7 @@ const NFTDetailsImg = ({ NFTData }) => {
 
           <div className={Style.NFTDetailsImg_box_NFT_img}>
             <img
-              src={images.nft_image_1.src}
+              src={NFTData.media}
               className={Style.NFTDetailsImg_box_NFT_img_img}
               alt="NFT image"
               width={700}

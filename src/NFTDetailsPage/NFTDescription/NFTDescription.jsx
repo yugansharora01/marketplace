@@ -409,12 +409,6 @@ const NFTDescription = ({ NFTData, setNFTData }) => {
                     }}
                     classStyle={Style.button}
                   />
-                  <MyCustomButton
-                    icon={<FaPercentage />}
-                    btnName="Make offer"
-                    handleClick={() => {}}
-                    classStyle={Style.button}
-                  />
                 </div>
               ) : (
                 <div>
@@ -438,28 +432,6 @@ const NFTDescription = ({ NFTData, setNFTData }) => {
               )}
             </div>
 
-            <div className={Style.NFTDescription_box_profile_biding_box_tabs}>
-              <button onClick={(e) => openTabs(e)}>Bid History</button>
-              <button onClick={(e) => openTabs(e)}>Provanance</button>
-              <button onClick={() => openOwmer()}>Owner</button>
-            </div>
-
-            {history && (
-              <div className={Style.NFTDescription_box_profile_biding_box_card}>
-                <NFTTabs dataTab={historyArray} />
-              </div>
-            )}
-            {provanance && (
-              <div className={Style.NFTDescription_box_profile_biding_box_card}>
-                <NFTTabs dataTab={provananceArray} />
-              </div>
-            )}
-
-            {owner && (
-              <div className={Style.NFTDescription_box_profile_biding_box_card}>
-                <NFTTabs dataTab={ownerArray} icon={<MdVerified />} />
-              </div>
-            )}
           </div>
         </div>
       </div>
